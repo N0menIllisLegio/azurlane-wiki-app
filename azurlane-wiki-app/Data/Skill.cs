@@ -18,7 +18,7 @@ namespace azurlane_wiki_app.Data
         [Index]
         [MaxLength(100)]
         public string Name { get; set; }
-        [MaxLength(800)]
+        [MaxLength(2000)]
         public string Detail { get; set; }
         [MaxLength(5)]
         public string Remodel { get; set; }

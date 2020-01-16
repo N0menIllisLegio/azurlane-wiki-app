@@ -24,28 +24,41 @@ namespace azurlane_wiki_app.Data
 
         protected async Task<string> GetData(string table, string fields)
         {
+            int offset = 0;
+
             //TODO: Remove limit (Default = 50)
-            string requestUrl = WikiApiEndpoint + "?action=cargoquery&tables=" + table 
-                                + "&format=json&fields=" + fields + "&limit=500";
+            
+            string result = "[";
+            string responseJson;
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
-            HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync();
-
-            string responseJson = "";
-
-            using (Stream stream = response?.GetResponseStream())
+            do
             {
-                if (stream != null)
+                string requestUrl = WikiApiEndpoint + "?action=cargoquery&tables=" + table
+                                    + "&format=json&fields=" + fields + "&limit=500&offset=" + offset;
+                responseJson = "";
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
+                HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync();
+
+                using (Stream stream = response?.GetResponseStream())
                 {
-                    using (StreamReader reader = new StreamReader(stream))
+                    if (stream != null)
                     {
-                        responseJson = reader.ReadToEnd();
+                        using (StreamReader reader = new StreamReader(stream))
+                        {
+                            responseJson = reader.ReadToEnd();
+                        }
                     }
                 }
-            }
 
-            responseJson = responseJson.Remove(0, 14);   // remove {"cargoquery":
-            return responseJson.Remove(responseJson.Length - 1);        // remove }
+                responseJson = responseJson.Remove(0, 15);           // remove {"cargoquery":[
+                responseJson = responseJson.Remove(responseJson.Length - 2);        // remove ]}
+
+                result += responseJson + ",";
+                offset += 500;
+            } while (responseJson.Length != 0);
+
+            return result.Remove(result.Length - 2) + ']'; // remove last , and add ]
         }
 
         #region Notify
