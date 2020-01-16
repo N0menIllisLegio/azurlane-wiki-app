@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace azurlane_wiki_app
 {
@@ -23,15 +13,53 @@ namespace azurlane_wiki_app
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            DataDownloader dd = new DataDownloader();
+            ShipDownloader dd = new ShipDownloader();
 
-            dd.DownloadShips();
-            
+            DownloadProgress.DataContext = dd;
+            CurrentCount.DataContext = dd;
+            TotalCount.DataContext = dd;
+
+            dd.Download();
+
+            //List<Task> tasks = new List<Task>();
+
+            //tasks.Add(
+            //    Task.Run(() =>
+            //        {
+            //            for (int i = 0; i < 900000; i++) ;
+            //        }
+            //    ));tasks.Add(
+            //    Task.Run(() =>
+            //        {
+            //            for (int i = 0; i < 10000; i++) ;
+            //        }
+            //    ));tasks.Add(
+            //    Task.Run(() =>
+            //        {
+            //            for (int i = 0; i < 101230000; i++) ;
+            //        }
+            //    ));tasks.Add(
+            //    Task.Run(() =>
+            //        {
+            //            for (int i = 0; i < 1000; i++) ;
+            //        }
+            //    ));tasks.Add(
+            //    Task.Run(() =>
+            //        {
+            //            for (int i = 0; i < 10440000; i++) ;
+            //        }
+            //    ));
+
+            //Task.WaitAny(tasks.ToArray());
+            //tasks.Add(Task.Run(() =>
+            //    {
+            //        for (int i = 0; i < 100000; i++) ;
+            //    }
+            //));
         }
     }
 }
