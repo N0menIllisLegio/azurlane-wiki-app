@@ -1,46 +1,75 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace azurlane_wiki_app
+namespace azurlane_wiki_app.Data
 {
     abstract class DataDownloader : INotifyPropertyChanged
     {
-        public const string ImagesFolderPath = "./Images";
-        public const string WikiAPIEndpoint = "https://azurlane.koumakan.jp/w/api.php";
-        public const string ImageInfoAPIEndpoint =
+        protected const string ImagesFolderPath = "./Images";
+        private const string WikiApiEndpoint = "https://azurlane.koumakan.jp/w/api.php";
+        private const string ImageInfoApiEndpoint =
             "https://azurlane.koumakan.jp/w/api.php?action=query&format=json&list=allimages&ailimit=1&aifrom=";
 
-        protected List<string> ReloadImages = new List<string>();
-
-        public abstract string GetImageFolder(string imageName);
         public abstract void Download();
+
+        /// <summary>
+        /// Gets path to folder for image. Depends on image name. (Image containing ShipyardIcon in name gets path to ShipyardIcons folder).
+        /// </summary>
+        /// <param name="imageName">Image name (example: 22Chibi.png)</param>
+        /// <returns></returns>
+        public abstract string GetImageFolder(string imageName);
+
+        protected async Task<string> GetData(string table, string fields)
+        {
+            //TODO: Remove limit (Default = 50)
+            string requestUrl = WikiApiEndpoint + "?action=cargoquery&tables=" + table 
+                                + "&format=json&fields=" + fields + "&limit=500";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
+            HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync();
+
+            string responseJson = "";
+
+            using (Stream stream = response?.GetResponseStream())
+            {
+                if (stream != null)
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        responseJson = reader.ReadToEnd();
+                    }
+                }
+            }
+
+            responseJson = responseJson.Remove(0, 14);   // remove {"cargoquery":
+            return responseJson.Remove(responseJson.Length - 1);        // remove }
+        }
 
         #region Notify
 
-        private int _currentImageCount = 0;
-        public int _totalImageCount = 0;
+        private int _currentImageCount;
+        private int _totalImageCount;
 
-        public int totalImageCount
+        public int TotalImageCount
         {
             get => _totalImageCount;
             set
             {
                 _totalImageCount = value;
-                OnPropertyChanged(nameof(totalImageCount));
+                OnPropertyChanged(nameof(TotalImageCount));
             }
         }
 
-        public int currentImageCount
+        public int CurrentImageCount
         {
             get => _currentImageCount;
             set
             {
                 _currentImageCount = value;
-                OnPropertyChanged(nameof(currentImageCount));
+                OnPropertyChanged(nameof(CurrentImageCount));
             }
         }
 
@@ -67,25 +96,26 @@ namespace azurlane_wiki_app
         /// <param name="imageName">Image name (example: 22Chibi.png)</param>
         public async Task DownloadImage(string imageName)
         {
-            string imageURL = "";
+            string imageUrl;
 
             try
             {
-                imageURL = await GetImageInfo(imageName);
+                imageUrl = await GetImageInfo(imageName);
             }
             catch
             {
-                ReloadImages.Add(imageName);
-                imageURL = "";
+                //TODO: Add error display
+
+                imageUrl = "";
             }
 
-            if (imageName != "" && imageURL != "")
+            if (imageName != "" && imageUrl != "")
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls |
                                                        SecurityProtocolType.Tls11 |
                                                        SecurityProtocolType.Tls12;
 
-                HttpWebRequest request = (HttpWebRequest) WebRequest.Create(imageURL);
+                HttpWebRequest request = (HttpWebRequest) WebRequest.Create(imageUrl);
                 request.Timeout = 14400000;
                 request.KeepAlive = true;
 
@@ -126,11 +156,11 @@ namespace azurlane_wiki_app
                     }
                     catch
                     {
-                        ReloadImages.Add(imageName);
+                        //TODO: Add error display
                     }
                 }
             }
-            currentImageCount++;
+            CurrentImageCount++;
         }
 
         /// <summary>
@@ -146,31 +176,34 @@ namespace azurlane_wiki_app
 
             if (imageName != "" && !File.Exists(dirName + "/" + imageName))
             {
-                string requestURL = ImageInfoAPIEndpoint + imageName;
-                string responseJSON = "";
+                string requestUrl = ImageInfoApiEndpoint + imageName;
+                string responseJson = "";
 
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestURL);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
 
                 using (HttpWebResponse response = (HttpWebResponse) await request.GetResponseAsync())
                 {
-                    using (Stream stream = response.GetResponseStream())
+                    using (Stream stream = response?.GetResponseStream())
                     {
-                        using (StreamReader reader = new StreamReader(stream))
+                        if (stream != null)
                         {
-                            responseJSON = reader.ReadToEnd();
+                            using (StreamReader reader = new StreamReader(stream))
+                            {
+                                responseJson = reader.ReadToEnd();
+                            }
                         }
                     }
                 }
 
                 Regex name = new Regex("\"url\":\".*?\"", RegexOptions.Compiled);
-                MatchCollection matches = name.Matches(responseJSON);
+                MatchCollection matches = name.Matches(responseJson);
 
                 if (matches.Count > 0)
                 {
-                    requestURL = matches[0].Value.Remove(0, 7); // removing "url":" 
-                    requestURL = requestURL.Remove(requestURL.Length - 1); // removing last "
+                    requestUrl = matches[0].Value.Remove(0, 7); // removing "url":" 
+                    requestUrl = requestUrl.Remove(requestUrl.Length - 1); // removing last "
 
-                    result = requestURL;
+                    result = requestUrl;
                 }
             }
 

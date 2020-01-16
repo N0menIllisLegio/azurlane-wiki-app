@@ -1,17 +1,15 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
+using azurlane_wiki_app.Data;
 
 namespace azurlane_wiki_app
 {
     class ShipDownloader : DataDownloader
     {
-        private string KaiImagesFolderPath = "./Images/Ships/KaiImages";
-        private string NonKaiImagesFolderPath = "./Images/Ships/Images";
+        private string KaiImagesFolderPath = ImagesFolderPath + "/Ships/KaiImages";
+        private string NonKaiImagesFolderPath = ImagesFolderPath + "/Ships/Images";
 
         public ShipDownloader() : base()
         {
@@ -35,30 +33,14 @@ namespace azurlane_wiki_app
                                 "Acc120,ASW120,Oxygen120,Ammo120,HealthKai120,FireKai120,AAKai120,TorpKai120,AirKai120,ReloadKai120,EvadeKai120,ConsumptionKai120,AccKai120," +
                                 "ASWKai120,OxygenKai120,AmmoKai120,Eq1Type,Eq1EffInit,Eq1EffInitMax,Eq1EffInitKai,Eq2Type,Eq2EffInit,Eq2EffInitMax,Eq2EffInitKai,Eq3Type," +
                                 "Eq3EffInit,Eq3EffInitMax,Eq3EffInitKai,LB1,LB2,LB3";
-            
-            //TODO: Remove limit (Default = 50)
-            string requestURL = WikiAPIEndpoint + "?action=cargoquery&tables=ships&format=json&fields=" + shipFields + "&limit=500"; 
-            string responseJSON = "";
-            
-            HttpWebRequest request = (HttpWebRequest) WebRequest.Create(requestURL);
-            HttpWebResponse response = (HttpWebResponse) await request.GetResponseAsync();
 
-            using (Stream stream = response.GetResponseStream())
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    responseJSON = reader.ReadToEnd();
-                }
-            }
-
-            responseJSON = responseJSON.Remove(0, 14);    // remove {"cargoquery":
-            responseJSON = responseJSON.Remove(responseJSON.Length - 1); // remove }
+            string responseJSON = await GetData("ships", shipFields);
 
             List<ShipGirlJsonWrapper> wrappedGirls = JsonConvert.DeserializeObject<List<ShipGirlJsonWrapper>>(responseJSON);
 
             using (CargoContext cargoContext = new CargoContext())
             {
-                totalImageCount = wrappedGirls.Count * 10;
+                TotalImageCount = wrappedGirls.Count * 10;
                 foreach (ShipGirlJsonWrapper wrappedGirl in wrappedGirls)
                 {
                      await Task.WhenAll(
@@ -83,11 +65,6 @@ namespace azurlane_wiki_app
             }
         }
 
-        /// <summary>
-        /// Gets path to folder for image. Depends on image name. (Image containing ShipyardIcon in name gets path to ShipyardIcons folder).
-        /// </summary>
-        /// <param name="imageName">Image name (example: 22Chibi.png)</param>
-        /// <returns></returns>
         public override string GetImageFolder(string imageName)
         {
             string folderName;

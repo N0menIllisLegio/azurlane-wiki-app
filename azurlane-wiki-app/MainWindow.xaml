@@ -8,16 +8,16 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Button Content="Download" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click"/>
-        <ProgressBar Name="DownloadProgress" Value="{Binding currentImageCount}" Maximum="{Binding totalImageCount}" HorizontalAlignment="Center" Height="10" VerticalAlignment="Center" Width="500" Margin="0,184,0,225"/>
+        <ProgressBar Name="DownloadProgress" Value="{Binding CurrentImageCount}" Maximum="{Binding TotalImageCount}" HorizontalAlignment="Center" Height="10" VerticalAlignment="Center" Width="500" Margin="0,184,0,225"/>
         <Grid HorizontalAlignment="Center" Height="53" Margin="281,126,268,240" VerticalAlignment="Center" Width="243">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Name="CurrentCount" Content="{Binding currentImageCount}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Label Grid.Column="0" Name="CurrentCount" Content="{Binding CurrentImageCount}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Label Grid.Column="1" Content="/" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Label Grid.Column="2" Name="TotalCount" Content="{Binding totalImageCount}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Label Grid.Column="2" Name="TotalCount" Content="{Binding TotalImageCount}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
     </Grid>
 </Window>

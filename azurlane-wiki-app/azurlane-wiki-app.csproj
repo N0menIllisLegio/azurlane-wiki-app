@@ -83,6 +83,8 @@
     </ApplicationDefinition>
     <Compile Include="Data\CargoContext.cs" />
     <Compile Include="Data\DataDownloader.cs" />
+    <Compile Include="Data\Equipment.cs" />
+    <Compile Include="Data\EquipmentDownloader.cs" />
     <Compile Include="Data\ShipGirl.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
