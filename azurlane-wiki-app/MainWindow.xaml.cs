@@ -16,8 +16,9 @@ namespace azurlane_wiki_app
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //ShipDownloader dd = new ShipDownloader();
-            EquipmentDownloader dd = new EquipmentDownloader();
-
+            //EquipmentDownloader dd = new EquipmentDownloader();
+            SkillDownloader dd = new SkillDownloader();
+            
             DownloadProgress.DataContext = dd;
             CurrentCount.DataContext = dd;
             TotalCount.DataContext = dd;

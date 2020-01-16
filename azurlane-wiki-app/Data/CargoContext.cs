@@ -8,6 +8,7 @@ namespace azurlane_wiki_app
     {
         public DbSet<ShipGirl> ShipGirls { get; set; }
         public DbSet<Equipment> ShipGirlsEquipment { get; set; }
+        public DbSet<Skill> Skills { get; set; }
 
         public CargoContext() : base("CargoConnection") { }
 
