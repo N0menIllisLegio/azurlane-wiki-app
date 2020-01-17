@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using azurlane_wiki_app.Data;
+using azurlane_wiki_app.Data.Tables;
+using Newtonsoft.Json;
 
-namespace azurlane_wiki_app
+namespace azurlane_wiki_app.Data
 {
     class ShipDownloader : DataDownloader
     {
@@ -23,7 +23,7 @@ namespace azurlane_wiki_app
             }
         }
 
-        public override async void Download()
+        public override async Task Download()
         {
             string shipFields = "ShipGroup,ShipID,Name,Rarity,Nationality,ConstructTime,Type,SubtypeRetro,Class,Remodel,Image,ImageShipyardIcon,ImageChibi,ImageIcon," +
                                 "ImageBanner,ImageKai,ImageShipyardIconKai,ImageChibiKai,ImageIconKai,ImageBannerKai,HealthInitial,Armor,FireInitial,AAInitial,TorpInitial," +
@@ -35,8 +35,16 @@ namespace azurlane_wiki_app
                                 "Eq3EffInit,Eq3EffInitMax,Eq3EffInitKai,LB1,LB2,LB3";
 
             string responseJSON = await GetData("ships", shipFields);
+            List<ShipGirlJsonWrapper> wrappedGirls;
 
-            List<ShipGirlJsonWrapper> wrappedGirls = JsonConvert.DeserializeObject<List<ShipGirlJsonWrapper>>(responseJSON);
+            try
+            {
+                wrappedGirls = JsonConvert.DeserializeObject<List<ShipGirlJsonWrapper>>(responseJSON);
+            }
+            catch 
+            {
+                return;
+            }
 
             using (CargoContext cargoContext = new CargoContext())
             {

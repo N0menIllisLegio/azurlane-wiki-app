@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace azurlane_wiki_app
+namespace azurlane_wiki_app.Data.Tables
 {
     class ShipGirlJsonWrapper
     {
@@ -9,7 +10,7 @@ namespace azurlane_wiki_app
         public ShipGirl ShipGirl { get; set; }
     }
 
-    class ShipGirl
+    public class ShipGirl
     {
         [Key]
         [MaxLength(40)]
@@ -155,5 +156,19 @@ namespace azurlane_wiki_app
         public string ImageIconKai { get; set; }
         [MaxLength(250)]
         public string ImageBannerKai { get; set; }
+
+
+        #region Relationships
+
+        public ShipGirl()
+        {
+            WhereToGetShipGirl = new List<ShipGirlWhereToGetShipGirl>();
+            Skills = new List<Skill>();
+        }
+
+        public virtual ICollection<ShipGirlWhereToGetShipGirl> WhereToGetShipGirl { get; set; }
+        public virtual ICollection<Skill> Skills { get; set; }
+
+        #endregion
     }
 }

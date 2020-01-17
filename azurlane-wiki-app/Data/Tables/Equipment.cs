@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
-namespace azurlane_wiki_app.Data
+namespace azurlane_wiki_app.Data.Tables
 {
     class EquipmentJsonWrapper
     {
@@ -11,7 +11,7 @@ namespace azurlane_wiki_app.Data
     }
 
     [Table("Equipment")]
-    class Equipment
+    public class Equipment
     {
         [Key]
         public int EquipmentId { get; set; }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using azurlane_wiki_app.Data.Tables;
 
 namespace azurlane_wiki_app.Data
 {
@@ -22,7 +24,7 @@ namespace azurlane_wiki_app.Data
             return EquipmentImagesFolderPath;
         }
 
-        public override async void Download()
+        public override async Task Download()
         {
             string equipFields = "Name,Image,Type,Stars,Nationality,Tech,Health,HealthMax,Torpedo,TorpMax,Firepower,FPMax," +
                                  "Aviation,AvMax,Evasion,EvasionMax,PlaneHP,PlaneHPMax,Reload,ReloadMax,ASW,ASWMax,Oxygen," +

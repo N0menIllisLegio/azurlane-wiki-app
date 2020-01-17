@@ -7,17 +7,78 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="Download" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click"/>
-        <ProgressBar Name="DownloadProgress" Value="{Binding CurrentImageCount}" Maximum="{Binding TotalImageCount}" HorizontalAlignment="Center" Height="10" VerticalAlignment="Center" Width="500" Margin="0,184,0,225"/>
-        <Grid HorizontalAlignment="Center" Height="53" Margin="281,126,268,240" VerticalAlignment="Center" Width="243">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Name="CurrentCount" Content="{Binding CurrentImageCount}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Label Grid.Column="1" Content="/" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Label Grid.Column="2" Name="TotalCount" Content="{Binding TotalImageCount}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Button Content="Download" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click" Height="40" Width="130" Margin="0,10,10,0"/>
+
+        <Grid HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="0,0,150,0" >
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid HorizontalAlignment="Stretch" Grid.Row="0" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Name="SkillDownloadProgress" Value="{Binding CurrentImageCount}" Maximum="{Binding TotalImageCount}" HorizontalAlignment="Center" Height="10" VerticalAlignment="Center" Width="500"/>
+                <Label Grid.Row="0" Grid.Column="0" Content="Skill:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.Column="1" Name="SkillCurrentCount" Content="{Binding CurrentImageCount}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.Column="2" Content="/" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.Column="3" Name="SkillTotalCount" Content="{Binding TotalImageCount}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+
+            <Grid HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Name="ShipDownloadProgress" Value="{Binding CurrentImageCount}" Maximum="{Binding TotalImageCount}" HorizontalAlignment="Center" Height="10" VerticalAlignment="Center" Width="500"/>
+                <Label Grid.Row="0" Grid.Column="0" Content="Ship:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.Column="1" Name="ShipCurrentCount" Content="{Binding CurrentImageCount}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.Column="2" Content="/" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.Column="3" Name="ShipTotalCount" Content="{Binding TotalImageCount}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+
+            <Grid HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Name="EquipDownloadProgress" Value="{Binding CurrentImageCount}" Maximum="{Binding TotalImageCount}" HorizontalAlignment="Center" Height="10" VerticalAlignment="Center" Width="500"/>
+                <Label Grid.Row="0" Grid.Column="0" Content="Equipment:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.Column="1" Name="EquipCurrentCount" Content="{Binding CurrentImageCount}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.Column="2" Content="/" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.Column="3" Name="EquipTotalCount" Content="{Binding TotalImageCount}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+
+
         </Grid>
+        <Label Name="InfoLabel" Content="Empty" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="200" Width="130" Margin="0,0,10,10"/>
+        <Button Content="Display info" HorizontalAlignment="Right" Margin="0,55,10,0" VerticalAlignment="Top" Width="130" Height="40" Click="Button_Click_1"/>
     </Grid>
 </Window>

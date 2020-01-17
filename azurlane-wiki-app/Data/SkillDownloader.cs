@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using azurlane_wiki_app.Data.Tables;
 
 namespace azurlane_wiki_app.Data
 {
@@ -17,10 +20,14 @@ namespace azurlane_wiki_app.Data
             }
         }
 
-        public override async void Download()
+        public override async Task Download()
         {
-            string skillFields = "Num,Name,Detail,Remodel,Type,Icon";
-            string responseJson = await GetData("ship_skills", skillFields);
+            string skillFields = "ships.ShipID,ship_skills.Num,ship_skills.Name,ship_skills.Detail," +
+                                 "ship_skills.Remodel,ship_skills.Type,ship_skills.Icon";
+
+            string joinOn = "ship_skills._pageName=ships._pageName";
+
+            string responseJson = await GetData("ship_skills, ships", skillFields, joinOn);
 
             List<SkillJsonWrapper> wrappedSkills;
 
@@ -43,6 +50,8 @@ namespace azurlane_wiki_app.Data
 
                     if (cargoContext.Skills.Count(e => e.Name == wrappedSkill.Skill.Name) == 0)
                     {
+                        wrappedSkill.Skill.FK_ShipGirl 
+                            = cargoContext.ShipGirls.Find(wrappedSkill.Skill.ShipID);
                         cargoContext.Skills.Add(wrappedSkill.Skill);
                     }
                 }

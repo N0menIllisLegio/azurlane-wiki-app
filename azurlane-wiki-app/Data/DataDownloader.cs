@@ -9,11 +9,11 @@ namespace azurlane_wiki_app.Data
     abstract class DataDownloader : INotifyPropertyChanged
     {
         protected const string ImagesFolderPath = "./Images";
-        private const string WikiApiEndpoint = "https://azurlane.koumakan.jp/w/api.php";
+        protected const string WikiApiEndpoint = "https://azurlane.koumakan.jp/w/api.php";
         private const string ImageInfoApiEndpoint =
             "https://azurlane.koumakan.jp/w/api.php?action=query&format=json&list=allimages&ailimit=1&aifrom=";
 
-        public abstract void Download();
+        public abstract Task Download();
 
         /// <summary>
         /// Gets path to folder for image. Depends on image name. (Image containing ShipyardIcon in name gets path to ShipyardIcons folder).
@@ -22,12 +22,16 @@ namespace azurlane_wiki_app.Data
         /// <returns></returns>
         public abstract string GetImageFolder(string imageName);
 
+        /// <summary>
+        /// Gets all data from specified table.
+        /// </summary>
+        /// <param name="table">Table to get data from</param>
+        /// <param name="fields">Fields from table</param>
+        /// <returns>Json array with data</returns>
         protected async Task<string> GetData(string table, string fields)
         {
             int offset = 0;
 
-            //TODO: Remove limit (Default = 50)
-            
             string result = "[";
             string responseJson;
 
@@ -35,6 +39,51 @@ namespace azurlane_wiki_app.Data
             {
                 string requestUrl = WikiApiEndpoint + "?action=cargoquery&tables=" + table
                                     + "&format=json&fields=" + fields + "&limit=500&offset=" + offset;
+                responseJson = "";
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
+                HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync();
+
+                using (Stream stream = response?.GetResponseStream())
+                {
+                    if (stream != null)
+                    {
+                        using (StreamReader reader = new StreamReader(stream))
+                        {
+                            responseJson = reader.ReadToEnd();
+                        }
+                    }
+                }
+
+                responseJson = responseJson.Remove(0, 15);           // remove {"cargoquery":[
+                responseJson = responseJson.Remove(responseJson.Length - 2);        // remove ]}
+
+                result += responseJson + ",";
+                offset += 500;
+            } while (responseJson.Length != 0);
+
+            return result.Remove(result.Length - 2) + ']'; // remove last , and add ]
+        }
+
+        /// <summary>
+        /// Gets all data from joined tables.
+        /// </summary>
+        /// <param name="tables">Tables to get data from (shipDrops,ship_skills,equipment,ships)</param>
+        /// <param name="fields">Fields from tables (shipDrops.Name, ships.ShipID etc)</param>
+        /// <param name="joinOn">Fields to join on (ships._pageName=ship_skills._pageName)</param>
+        /// <returns>Json array with data</returns>
+        protected async Task<string> GetData(string tables, string fields, string joinOn)
+        {
+            int offset = 0;
+            int limit = 500;
+
+            string result = "[";
+            string responseJson;
+
+            do
+            {
+                string requestUrl = WikiApiEndpoint + "?action=cargoquery&tables=" + tables
+                                    + "&format=json&fields=" + fields + "&limit=" + limit + "&offset=" + offset + "&join_on=" + joinOn;
                 responseJson = "";
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);

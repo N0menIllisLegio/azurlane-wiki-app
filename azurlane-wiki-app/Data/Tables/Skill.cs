@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
-namespace azurlane_wiki_app.Data
+namespace azurlane_wiki_app.Data.Tables
 {
     class SkillJsonWrapper
     {
@@ -10,12 +10,12 @@ namespace azurlane_wiki_app.Data
         public Skill Skill { get; set; }
     }
 
-    class Skill
+    public class Skill
     {
         [Key]
         public int SkillID { get; set; }
+
         public int Num { get; set; }
-        [Index]
         [MaxLength(100)]
         public string Name { get; set; }
         [MaxLength(2000)]
@@ -26,5 +26,10 @@ namespace azurlane_wiki_app.Data
         public string Type { get; set; }
         [MaxLength(150)]
         public string Icon { get; set; }
+
+        [Index]
+        [MaxLength(40)]
+        public string ShipID { get; set; }
+        public virtual ShipGirl FK_ShipGirl { get; set; }
     }
 }

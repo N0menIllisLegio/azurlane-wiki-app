@@ -82,10 +82,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\CargoContext.cs" />
+    <Compile Include="Data\CargoDbInitializer.cs" />
     <Compile Include="Data\DataDownloader.cs" />
-    <Compile Include="Data\Equipment.cs" />
+    <Compile Include="Data\Tables\Equipment.cs" />
     <Compile Include="Data\EquipmentDownloader.cs" />
-    <Compile Include="Data\ShipGirl.cs" />
+    <Compile Include="Data\Tables\ShipGirl.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -95,9 +96,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data\ShipDownloader.cs" />
-    <Compile Include="Data\ShipGirlsDrop.cs" />
-    <Compile Include="Data\Skill.cs" />
+    <Compile Include="Data\Tables\ShipGirlWhereToGetShipGirl.cs" />
+    <Compile Include="Data\Tables\WhereToGetShipGirl.cs" />
+    <Compile Include="Data\Tables\Skill.cs" />
     <Compile Include="Data\SkillDownloader.cs" />
+    <Compile Include="Data\WTGShipGirlDownloader.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
