@@ -22,6 +22,8 @@ namespace azurlane_wiki_app.Data
 
         public override async Task Download()
         {
+            Status = Statuses.InProgress;
+
             string skillFields = "ships.ShipID,ship_skills.Num,ship_skills.Name,ship_skills.Detail," +
                                  "ship_skills.Remodel,ship_skills.Type,ship_skills.Icon";
 
@@ -37,7 +39,8 @@ namespace azurlane_wiki_app.Data
             }
             catch
             {
-                // TODO: Add error display
+                Status = Statuses.ErrorInDeserialization;
+
                 return;
             }
 
@@ -58,6 +61,8 @@ namespace azurlane_wiki_app.Data
 
                 cargoContext.SaveChanges();
             }
+
+            Status = Statuses.DownloadComplete;
         }
 
         public override string GetImageFolder(string imageName)

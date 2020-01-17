@@ -26,6 +26,8 @@ namespace azurlane_wiki_app.Data
 
         public override async Task Download()
         {
+            Status = Statuses.InProgress;
+
             string equipFields = "Name,Image,Type,Stars,Nationality,Tech,Health,HealthMax,Torpedo,TorpMax,Firepower,FPMax," +
                                  "Aviation,AvMax,Evasion,EvasionMax,PlaneHP,PlaneHPMax,Reload,ReloadMax,ASW,ASWMax,Oxygen," +
                                  "OxygenMax,AA,AAMax,Luck,LuckMax,Acc,AccMax,Spd,SpdMax,Damage,DamageMax,RoF,RoFMax,Number," +
@@ -42,8 +44,9 @@ namespace azurlane_wiki_app.Data
                 wrappedEquipment = JsonConvert.DeserializeObject<List<EquipmentJsonWrapper>>(responseJson);
             }
             catch
-            { 
-                // TODO: Add error display
+            {
+                Status = Statuses.ErrorInDeserialization;
+
                 return;
             }
             
@@ -62,6 +65,8 @@ namespace azurlane_wiki_app.Data
 
                 cargoContext.SaveChanges();
             }
+
+            Status = Statuses.DownloadComplete;
         }
     }
 }

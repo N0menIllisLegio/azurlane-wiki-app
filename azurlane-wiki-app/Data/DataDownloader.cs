@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace azurlane_wiki_app.Data
 {
+    enum Statuses
+    {
+        Pending,
+        DownloadComplete,
+        ErrorInDeserialization,
+        InProgress
+    }
+
     abstract class DataDownloader : INotifyPropertyChanged
     {
         protected const string ImagesFolderPath = "./Images";
@@ -114,6 +122,7 @@ namespace azurlane_wiki_app.Data
 
         private int _currentImageCount;
         private int _totalImageCount;
+        private Statuses _statuses;
 
         public int TotalImageCount
         {
@@ -135,6 +144,16 @@ namespace azurlane_wiki_app.Data
             }
         }
 
+        public Statuses Status
+        {
+            get => _statuses;
+            set
+            {
+                _statuses = value;
+                OnPropertyChanged(nameof(Status));
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
@@ -146,6 +165,8 @@ namespace azurlane_wiki_app.Data
 
         protected DataDownloader()
         {
+            Status = Statuses.Pending;
+
             if (!Directory.Exists(ImagesFolderPath))
             {
                 Directory.CreateDirectory(ImagesFolderPath);

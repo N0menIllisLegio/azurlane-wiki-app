@@ -1,14 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using azurlane_wiki_app.Data;
+using azurlane_wiki_app.Data.Tables;
+using System;
+using System.Globalization;
 using System.Linq;
-using azurlane_wiki_app.Data;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Documents;
-using azurlane_wiki_app.Data.Tables;
+using System.Windows.Data;
 
 namespace azurlane_wiki_app
 {
+    public class FAConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string output = "";
+            
+            if (parameter.ToString() == "Icon")
+            {
+                switch ((Statuses)value)
+                {
+                    case Statuses.InProgress:
+                        output = "Cog";
+                        break;
+                    case Statuses.ErrorInDeserialization:
+                        output = "Stop";
+                        break;
+                    case Statuses.DownloadComplete:
+                        output = "Download";
+                        break;
+                    case Statuses.Pending:
+                        output = "WPForms";
+                        break;
+                }
+            }
+            else
+            {
+                switch ((Statuses)value)
+                {
+                    case Statuses.InProgress:
+                        output = "True";
+                        break;
+                    case Statuses.ErrorInDeserialization:
+                    case Statuses.DownloadComplete:
+                    case Statuses.Pending:
+                        output = "False";
+                        break;
+                }
+            }
+            
+
+            return output;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return DependencyProperty.UnsetValue;
+        }
+    }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -16,34 +65,38 @@ namespace azurlane_wiki_app
     {
         private Random random;
 
+        private ShipDownloader shipDownloader = new ShipDownloader();
+        private EquipmentDownloader equipmentDownloader = new EquipmentDownloader();
+        private SkillDownloader skillDownloader = new SkillDownloader();
+        private WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
+
         public MainWindow()
         {
             InitializeComponent(); 
             random = new Random();
-        }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            ShipDownloader shipDownloader = new ShipDownloader();
-            EquipmentDownloader equipmentDownloader = new EquipmentDownloader();
-            SkillDownloader skillDownloader = new SkillDownloader();
-            WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
+            StatusGrid.Visibility = Visibility.Hidden;
 
-            SkillCurrentCount.DataContext =
+            DropSpinner.DataContext = wtgShipGirlDownloader;
+
+            SkillCurrentCount.DataContext = SkillSpinner.DataContext =
                 SkillDownloadProgress.DataContext = SkillTotalCount.DataContext = skillDownloader;
 
-            ShipCurrentCount.DataContext =
+            ShipCurrentCount.DataContext = ShipSpinner.DataContext =
                 ShipDownloadProgress.DataContext = ShipTotalCount.DataContext = shipDownloader;
 
-            EquipCurrentCount.DataContext =
+            EquipCurrentCount.DataContext = EuipSpinner.DataContext =
                 EquipDownloadProgress.DataContext = EquipTotalCount.DataContext = equipmentDownloader;
+        }
 
-            Task task = Task.WhenAll(
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            StatusGrid.Visibility = Visibility.Visible;
+
+            await Task.WhenAll(
                 shipDownloader.Download(),
                 equipmentDownloader.Download()
-                );
-
-            task.ContinueWith(delegate
+            ).ContinueWith(delegate
                 {
                     Task.WhenAll(
                         skillDownloader.Download(),

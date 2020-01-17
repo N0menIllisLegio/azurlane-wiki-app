@@ -25,6 +25,8 @@ namespace azurlane_wiki_app.Data
 
         public override async Task Download()
         {
+            Status = Statuses.InProgress;
+
             string shipFields = "ShipGroup,ShipID,Name,Rarity,Nationality,ConstructTime,Type,SubtypeRetro,Class,Remodel,Image,ImageShipyardIcon,ImageChibi,ImageIcon," +
                                 "ImageBanner,ImageKai,ImageShipyardIconKai,ImageChibiKai,ImageIconKai,ImageBannerKai,HealthInitial,Armor,FireInitial,AAInitial,TorpInitial," +
                                 "AirInitial,ReloadInitial,EvadeInitial,ConsumptionInitial,Speed,Luck,AccInitial,ASWInitial,OxygenInitial,AmmoInitial,HealthMax,FireMax,AAMax," +
@@ -34,21 +36,23 @@ namespace azurlane_wiki_app.Data
                                 "ASWKai120,OxygenKai120,AmmoKai120,Eq1Type,Eq1EffInit,Eq1EffInitMax,Eq1EffInitKai,Eq2Type,Eq2EffInit,Eq2EffInitMax,Eq2EffInitKai,Eq3Type," +
                                 "Eq3EffInit,Eq3EffInitMax,Eq3EffInitKai,LB1,LB2,LB3";
 
-            string responseJSON = await GetData("ships", shipFields);
+            string responseJson = await GetData("ships", shipFields);
             List<ShipGirlJsonWrapper> wrappedGirls;
 
             try
             {
-                wrappedGirls = JsonConvert.DeserializeObject<List<ShipGirlJsonWrapper>>(responseJSON);
+                wrappedGirls = JsonConvert.DeserializeObject<List<ShipGirlJsonWrapper>>(responseJson);
             }
-            catch 
+            catch
             {
+                Status = Statuses.ErrorInDeserialization;
                 return;
             }
 
             using (CargoContext cargoContext = new CargoContext())
             {
                 TotalImageCount = wrappedGirls.Count * 10;
+
                 foreach (ShipGirlJsonWrapper wrappedGirl in wrappedGirls)
                 {
                      await Task.WhenAll(
@@ -63,14 +67,16 @@ namespace azurlane_wiki_app.Data
                         DownloadImage(wrappedGirl.ShipGirl.ImageShipyardIcon),
                         DownloadImage(wrappedGirl.ShipGirl.ImageShipyardIconKai));
 
-                    if (cargoContext.ShipGirls.Find(wrappedGirl.ShipGirl.ShipID) == null)
+                    if (await cargoContext.ShipGirls.FindAsync(wrappedGirl.ShipGirl.ShipID) == null)
                     {
                         cargoContext.ShipGirls.Add(wrappedGirl.ShipGirl);
                     }
                 }
 
-                cargoContext.SaveChanges();
+                await cargoContext.SaveChangesAsync();
             }
+
+            Status = Statuses.DownloadComplete;
         }
 
         public override string GetImageFolder(string imageName)
