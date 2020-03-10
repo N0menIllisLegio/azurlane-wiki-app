@@ -1,11 +1,14 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using azurlane_wiki_app.Data.Tables;
+using Newtonsoft.Json;
 
-namespace azurlane_wiki_app.Data
+namespace azurlane_wiki_app.Data.Downloaders
 {
+    /// <summary>
+    /// Where To Get Ship Girl
+    /// </summary>
     class WTGShipGirlDownloader : DataDownloader
     {
         #region Schemas
@@ -339,6 +342,8 @@ namespace azurlane_wiki_app.Data
 
         #endregion
 
+        public WTGShipGirlDownloader(int ThreadsCount = 0) : base(ThreadsCount) { }
+
         public override async Task Download()
         {
             Status = Statuses.InProgress;
@@ -371,35 +376,30 @@ namespace azurlane_wiki_app.Data
 
             using (CargoContext cargoContext = new CargoContext())
             {
-                List<Task> tasks = new List<Task>();
-
                 foreach (WTGShipGirlJsonWrapper wrappedDrop in wrappedDrops)
                 {
-                    ShipGirl shipGirl = cargoContext.ShipGirls.Find(wrappedDrop.WtgShipGirlJson.ID);
+                    ShipGirl shipGirl = await cargoContext.ShipGirls.FindAsync(wrappedDrop.WtgShipGirlJson.ID);
 
                     if (shipGirl != null)
                     {
-                        Dictionary<string,string> dictionary = wrappedDrop.WtgShipGirlJson.GetDrops();
+                        Dictionary<string, string> dictionary = wrappedDrop.WtgShipGirlJson.GetDrops();
 
                         if (dictionary.Count > 0)
                         {
                             foreach (string key in dictionary.Keys)
                             {
-                                WhereToGetShipGirl whereToGetShipGirl = cargoContext.WhereToGetShipGirls.Find(key);
-                                cargoContext.CreateRelationshipGirlDrop(whereToGetShipGirl, shipGirl, dictionary[key]);
+                                WhereToGetShipGirl whereToGetShipGirl =
+                                    await cargoContext.WhereToGetShipGirls.FindAsync(key);
+                                await cargoContext.CreateRelationshipGirlDrop(whereToGetShipGirl, shipGirl,
+                                    dictionary[key]);
                             }
                         }
                     }
                 }
-
-                Task.WaitAll(tasks.ToArray());
-                cargoContext.SaveChanges();
             }
 
             Status = Statuses.DownloadComplete;
         }
-
-
 
         public override string GetImageFolder(string imageName)
         {

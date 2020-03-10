@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using azurlane_wiki_app.Data.Tables;
 using Newtonsoft.Json;
 
-namespace azurlane_wiki_app.Data
+namespace azurlane_wiki_app.Data.Downloaders
 {
     class ShipDownloader : DataDownloader
     {
         private string KaiImagesFolderPath = ImagesFolderPath + "/Ships/KaiImages";
         private string NonKaiImagesFolderPath = ImagesFolderPath + "/Ships/Images";
 
-        public ShipDownloader() : base()
+        public ShipDownloader(int ThreadsCount = 0) : base(ThreadsCount)
         {
             if (!Directory.Exists(KaiImagesFolderPath))
             {
@@ -35,8 +35,18 @@ namespace azurlane_wiki_app.Data
                                 "Acc120,ASW120,Oxygen120,Ammo120,HealthKai120,FireKai120,AAKai120,TorpKai120,AirKai120,ReloadKai120,EvadeKai120,ConsumptionKai120,AccKai120," +
                                 "ASWKai120,OxygenKai120,AmmoKai120,Eq1Type,Eq1EffInit,Eq1EffInitMax,Eq1EffInitKai,Eq2Type,Eq2EffInit,Eq2EffInitMax,Eq2EffInitKai,Eq3Type," +
                                 "Eq3EffInit,Eq3EffInitMax,Eq3EffInitKai,LB1,LB2,LB3";
+            string responseJson;
 
-            string responseJson = await GetData("ships", shipFields);
+            try
+            {
+                responseJson = await GetData("ships", shipFields);
+            }
+            catch
+            {
+                Status = Statuses.DownloadError;
+                return;
+            }
+                
             List<ShipGirlJsonWrapper> wrappedGirls;
 
             try
@@ -49,23 +59,22 @@ namespace azurlane_wiki_app.Data
                 return;
             }
 
+            TotalImageCount = wrappedGirls.Count * 10;
+
             using (CargoContext cargoContext = new CargoContext())
             {
-                TotalImageCount = wrappedGirls.Count * 10;
-
                 foreach (ShipGirlJsonWrapper wrappedGirl in wrappedGirls)
                 {
-                     await Task.WhenAll(
-                        DownloadImage(wrappedGirl.ShipGirl.Image),
-                        DownloadImage(wrappedGirl.ShipGirl.ImageBanner),
-                        DownloadImage(wrappedGirl.ShipGirl.ImageChibi),
-                        DownloadImage(wrappedGirl.ShipGirl.ImageIcon),
-                        DownloadImage(wrappedGirl.ShipGirl.ImageKai),
-                        DownloadImage(wrappedGirl.ShipGirl.ImageBannerKai),
-                        DownloadImage(wrappedGirl.ShipGirl.ImageChibiKai),
-                        DownloadImage(wrappedGirl.ShipGirl.ImageIconKai),
-                        DownloadImage(wrappedGirl.ShipGirl.ImageShipyardIcon),
-                        DownloadImage(wrappedGirl.ShipGirl.ImageShipyardIconKai));
+                    downloadBlock.Post(wrappedGirl.ShipGirl.Image);
+                    downloadBlock.Post(wrappedGirl.ShipGirl.ImageBanner);
+                    downloadBlock.Post(wrappedGirl.ShipGirl.ImageChibi);
+                    downloadBlock.Post(wrappedGirl.ShipGirl.ImageIcon);
+                    downloadBlock.Post(wrappedGirl.ShipGirl.ImageKai);
+                    downloadBlock.Post(wrappedGirl.ShipGirl.ImageBannerKai);
+                    downloadBlock.Post(wrappedGirl.ShipGirl.ImageChibiKai);
+                    downloadBlock.Post(wrappedGirl.ShipGirl.ImageIconKai);
+                    downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIcon);
+                    downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIconKai);
 
                     if (await cargoContext.ShipGirls.FindAsync(wrappedGirl.ShipGirl.ShipID) == null)
                     {
@@ -73,6 +82,8 @@ namespace azurlane_wiki_app.Data
                     }
                 }
 
+                downloadBlock.Complete();
+                downloadBlock.Completion.Wait();
                 await cargoContext.SaveChangesAsync();
             }
 

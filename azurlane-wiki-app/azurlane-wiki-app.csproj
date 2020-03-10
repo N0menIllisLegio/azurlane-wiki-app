@@ -66,6 +66,9 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.112.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Threading.Tasks.Dataflow, Version=4.6.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Dataflow.4.11.0\lib\netstandard2.0\System.Threading.Tasks.Dataflow.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -86,9 +89,9 @@
     </ApplicationDefinition>
     <Compile Include="Data\CargoContext.cs" />
     <Compile Include="Data\CargoDbInitializer.cs" />
-    <Compile Include="Data\DataDownloader.cs" />
+    <Compile Include="Data\Downloaders\DataDownloader.cs" />
     <Compile Include="Data\Tables\Equipment.cs" />
-    <Compile Include="Data\EquipmentDownloader.cs" />
+    <Compile Include="Data\Downloaders\EquipmentDownloader.cs" />
     <Compile Include="Data\Tables\ShipGirl.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -98,12 +101,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\ShipDownloader.cs" />
+    <Compile Include="Data\Downloaders\ShipDownloader.cs" />
     <Compile Include="Data\Tables\ShipGirlWhereToGetShipGirl.cs" />
     <Compile Include="Data\Tables\WhereToGetShipGirl.cs" />
     <Compile Include="Data\Tables\Skill.cs" />
-    <Compile Include="Data\SkillDownloader.cs" />
-    <Compile Include="Data\WTGShipGirlDownloader.cs" />
+    <Compile Include="Data\Downloaders\SkillDownloader.cs" />
+    <Compile Include="Data\Downloaders\WTGShipGirlDownloader.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

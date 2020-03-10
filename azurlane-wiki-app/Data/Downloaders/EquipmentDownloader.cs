@@ -1,17 +1,17 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using azurlane_wiki_app.Data.Tables;
+using Newtonsoft.Json;
 
-namespace azurlane_wiki_app.Data
+namespace azurlane_wiki_app.Data.Downloaders
 {
     class EquipmentDownloader : DataDownloader
     {
         private string EquipmentImagesFolderPath = ImagesFolderPath + "/Equipment";
 
-        public EquipmentDownloader() : base()
+        public EquipmentDownloader(int ThreadsCount = 0) : base(ThreadsCount)
         {
             if (!Directory.Exists(EquipmentImagesFolderPath))
             {
@@ -50,21 +50,25 @@ namespace azurlane_wiki_app.Data
                 return;
             }
             
-            using (CargoContext cargoContext = new CargoContext())
-            {
-                TotalImageCount = wrappedEquipment.Count;
-                foreach (EquipmentJsonWrapper wrpEquipment in wrappedEquipment)
-                {
-                    await DownloadImage(wrpEquipment.Equipment.Image);
+            TotalImageCount = wrappedEquipment.Count;
 
-                    if (cargoContext.ShipGirlsEquipment.Count(e => e.Name == wrpEquipment.Equipment.Name) == 0)
+            foreach (EquipmentJsonWrapper wrpEquipment in wrappedEquipment)
+            {
+                using (CargoContext cargoContext = new CargoContext())
+                {
+                    if (await cargoContext.ShipGirlsEquipment.CountAsync(e => e.Name == wrpEquipment.Equipment.Name) == 0)
                     {
                         cargoContext.ShipGirlsEquipment.Add(wrpEquipment.Equipment);
                     }
+
+                    await cargoContext.SaveChangesAsync();
                 }
 
-                cargoContext.SaveChanges();
+                downloadBlock.Post(wrpEquipment.Equipment.Image);
             }
+
+            downloadBlock.Complete();
+            downloadBlock.Completion.Wait();
 
             Status = Statuses.DownloadComplete;
         }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using azurlane_wiki_app.Data.Downloaders;
 
 namespace azurlane_wiki_app
 {
@@ -65,17 +66,20 @@ namespace azurlane_wiki_app
     {
         private Random random;
 
-        private ShipDownloader shipDownloader = new ShipDownloader();
-        private EquipmentDownloader equipmentDownloader = new EquipmentDownloader();
-        private SkillDownloader skillDownloader = new SkillDownloader();
-        private WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
-
         public MainWindow()
         {
             InitializeComponent(); 
             random = new Random();
 
             StatusGrid.Visibility = Visibility.Hidden;
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ShipDownloader shipDownloader = new ShipDownloader(6);
+            EquipmentDownloader equipmentDownloader = new EquipmentDownloader(2);
+            SkillDownloader skillDownloader = new SkillDownloader();
+            WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
 
             DropSpinner.DataContext = wtgShipGirlDownloader;
 
@@ -87,23 +91,20 @@ namespace azurlane_wiki_app
 
             EquipCurrentCount.DataContext = EuipSpinner.DataContext =
                 EquipDownloadProgress.DataContext = EquipTotalCount.DataContext = equipmentDownloader;
-        }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
             StatusGrid.Visibility = Visibility.Visible;
+            
+            Task[] tasks = new Task[2];
 
-            await Task.WhenAll(
-                shipDownloader.Download(),
-                equipmentDownloader.Download()
-            ).ContinueWith(delegate
-                {
-                    Task.WhenAll(
-                        skillDownloader.Download(),
-                        wtgShipGirlDownloader.Download()
-                    );
-                },
-                TaskContinuationOptions.RunContinuationsAsynchronously);
+            tasks[0] = Task.Run(() => shipDownloader.Download());
+            tasks[1] = Task.Run(() => equipmentDownloader.Download());
+
+            await Task.WhenAll(tasks);
+
+            tasks[0] = Task.Run(() => skillDownloader.Download());
+            tasks[1] = Task.Run(() => wtgShipGirlDownloader.Download());
+
+            await Task.WhenAll(tasks);
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -115,7 +116,7 @@ namespace azurlane_wiki_app
 
                 if (shipGirl != null)
                 {
-                    InfoLabel.Content = "Girl Name:" + shipGirl.Name
+                    InfoLabel.Content = "Girl Name: " + shipGirl.Name
                                                      + "\n" +
                                                      "Girl skill: " + (shipGirl.Skills.FirstOrDefault()?.Name ?? "Suka") 
                                                      + "\n" + 

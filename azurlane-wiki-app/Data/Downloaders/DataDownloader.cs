@@ -1,122 +1,30 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Net;
-using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
-namespace azurlane_wiki_app.Data
+namespace azurlane_wiki_app.Data.Downloaders
 {
     enum Statuses
     {
         Pending,
         DownloadComplete,
         ErrorInDeserialization,
-        InProgress
+        InProgress,
+        DownloadError
     }
 
     abstract class DataDownloader : INotifyPropertyChanged
     {
         protected const string ImagesFolderPath = "./Images";
         protected const string WikiApiEndpoint = "https://azurlane.koumakan.jp/w/api.php";
+        protected ActionBlock<string> downloadBlock;
+
         private const string ImageInfoApiEndpoint =
             "https://azurlane.koumakan.jp/w/api.php?action=query&format=json&list=allimages&ailimit=1&aifrom=";
-
-        public abstract Task Download();
-
-        /// <summary>
-        /// Gets path to folder for image. Depends on image name. (Image containing ShipyardIcon in name gets path to ShipyardIcons folder).
-        /// </summary>
-        /// <param name="imageName">Image name (example: 22Chibi.png)</param>
-        /// <returns></returns>
-        public abstract string GetImageFolder(string imageName);
-
-        /// <summary>
-        /// Gets all data from specified table.
-        /// </summary>
-        /// <param name="table">Table to get data from</param>
-        /// <param name="fields">Fields from table</param>
-        /// <returns>Json array with data</returns>
-        protected async Task<string> GetData(string table, string fields)
-        {
-            int offset = 0;
-
-            string result = "[";
-            string responseJson;
-
-            do
-            {
-                string requestUrl = WikiApiEndpoint + "?action=cargoquery&tables=" + table
-                                    + "&format=json&fields=" + fields + "&limit=500&offset=" + offset;
-                responseJson = "";
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
-                HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync();
-
-                using (Stream stream = response?.GetResponseStream())
-                {
-                    if (stream != null)
-                    {
-                        using (StreamReader reader = new StreamReader(stream))
-                        {
-                            responseJson = reader.ReadToEnd();
-                        }
-                    }
-                }
-
-                responseJson = responseJson.Remove(0, 15);           // remove {"cargoquery":[
-                responseJson = responseJson.Remove(responseJson.Length - 2);        // remove ]}
-
-                result += responseJson + ",";
-                offset += 500;
-            } while (responseJson.Length != 0);
-
-            return result.Remove(result.Length - 2) + ']'; // remove last , and add ]
-        }
-
-        /// <summary>
-        /// Gets all data from joined tables.
-        /// </summary>
-        /// <param name="tables">Tables to get data from (shipDrops,ship_skills,equipment,ships)</param>
-        /// <param name="fields">Fields from tables (shipDrops.Name, ships.ShipID etc)</param>
-        /// <param name="joinOn">Fields to join on (ships._pageName=ship_skills._pageName)</param>
-        /// <returns>Json array with data</returns>
-        protected async Task<string> GetData(string tables, string fields, string joinOn)
-        {
-            int offset = 0;
-            int limit = 500;
-
-            string result = "[";
-            string responseJson;
-
-            do
-            {
-                string requestUrl = WikiApiEndpoint + "?action=cargoquery&tables=" + tables
-                                    + "&format=json&fields=" + fields + "&limit=" + limit + "&offset=" + offset + "&join_on=" + joinOn;
-                responseJson = "";
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
-                HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync();
-
-                using (Stream stream = response?.GetResponseStream())
-                {
-                    if (stream != null)
-                    {
-                        using (StreamReader reader = new StreamReader(stream))
-                        {
-                            responseJson = reader.ReadToEnd();
-                        }
-                    }
-                }
-
-                responseJson = responseJson.Remove(0, 15);           // remove {"cargoquery":[
-                responseJson = responseJson.Remove(responseJson.Length - 2);        // remove ]}
-
-                result += responseJson + ",";
-                offset += 500;
-            } while (responseJson.Length != 0);
-
-            return result.Remove(result.Length - 2) + ']'; // remove last , and add ]
-        }
 
         #region Notify
 
@@ -163,7 +71,11 @@ namespace azurlane_wiki_app.Data
 
         #endregion
 
-        protected DataDownloader()
+        /// <summary>
+        /// Initializer.
+        /// </summary>
+        /// <param name="ThreadsCount"> Count of threads for download. If ThreadsCount &lt;= 0 then Max possible amount.</param>
+        protected DataDownloader(int ThreadsCount)
         {
             Status = Statuses.Pending;
 
@@ -171,15 +83,124 @@ namespace azurlane_wiki_app.Data
             {
                 Directory.CreateDirectory(ImagesFolderPath);
             }
+
+            downloadBlock = ThreadsCount <= 0 ? 
+                new ActionBlock<string>(
+                    image => DownloadImage(image).Wait())
+                : new ActionBlock<string>(
+                    image => DownloadImage(image).Wait(),
+                    new ExecutionDataflowBlockOptions
+                    {
+                        MaxDegreeOfParallelism = ThreadsCount
+                    });
+        }
+
+        public abstract Task Download();
+
+        /// <summary>
+        /// Gets path to folder for image. Depends on image name. (Image containing ShipyardIcon in name gets path to ShipyardIcons folder).
+        /// </summary>
+        /// <param name="imageName">Image name (example: 22Chibi.png)</param>
+        /// <returns></returns>
+        public abstract string GetImageFolder(string imageName);
+
+        /// <summary>
+        /// Gets all data from specified table.
+        /// </summary>
+        /// <param name="table">Table to get data from</param>
+        /// <param name="fields">Fields from table</param>
+        /// <returns>Json array with data</returns>
+        protected async Task<string> GetData(string table, string fields)
+        {
+            int offset = 0;
+
+            string result = "[";
+            string responseJson;
+
+            do
+            {
+                string requestUrl = WikiApiEndpoint + "?action=cargoquery&tables=" + table
+                                    + "&format=json&fields=" + fields + "&limit=500&offset=" + offset;
+                responseJson = "";
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
+                HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync();
+
+                using (Stream stream = response?.GetResponseStream())
+                {
+                    if (stream != null)
+                    {
+                        using (StreamReader reader = new StreamReader(stream))
+                        {
+                            responseJson = await reader.ReadToEndAsync();
+                        }
+                    }
+                }
+
+                responseJson = responseJson.Remove(0, 15);           // remove {"cargoquery":[
+                responseJson = responseJson.Remove(responseJson.Length - 2);        // remove ]}
+
+                result += responseJson + ",";
+                offset += 500;
+            } while (responseJson.Length != 0);
+
+            return result.Remove(result.Length - 2) + ']'; // remove last , and add ]
+        }
+
+        /// <summary>
+        /// Gets all data from joined tables.
+        /// </summary>
+        /// <param name="tables">Tables to get data from (shipDrops,ship_skills,equipment,ships)</param>
+        /// <param name="fields">Fields from tables (shipDrops.Name, ships.ShipID etc)</param>
+        /// <param name="joinOn">Fields to join on (ships._pageName=ship_skills._pageName)</param>
+        /// <returns>Json array with data</returns>
+        protected async Task<string> GetData(string tables, string fields, string joinOn)
+        {
+            int offset = 0;
+            int limit = 500;
+
+            string result = "[";
+            string responseJson;
+
+            do
+            {
+                string requestUrl = WikiApiEndpoint + "?action=cargoquery&tables=" + tables
+                                    + "&format=json&fields=" + fields + "&limit=" + limit + "&offset=" + offset + "&join_on=" + joinOn;
+                responseJson = "";
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
+                HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync();
+
+                using (Stream stream = response?.GetResponseStream())
+                {
+                    if (stream != null)
+                    {
+                        using (StreamReader reader = new StreamReader(stream))
+                        {
+                            responseJson = await reader.ReadToEndAsync();
+                        }
+                    }
+                }
+
+                responseJson = responseJson.Remove(0, 15);           // remove {"cargoquery":[
+                responseJson = responseJson.Remove(responseJson.Length - 2);        // remove ]}
+
+                result += responseJson + ",";
+                offset += 500;
+            } while (responseJson.Length != 0);
+
+            return result.Remove(result.Length - 2) + ']'; // remove last , and add ]
         }
 
         /// <summary>
         /// Download image by its name.
         /// </summary>
         /// <param name="imageName">Image name (example: 22Chibi.png)</param>
-        public async Task DownloadImage(string imageName)
+        /// <returns>Relative image path</returns>
+        public async Task<string> DownloadImage(string imageName)
         {
             string imageUrl;
+            string imagePath = "";
 
             try
             {
@@ -224,14 +245,15 @@ namespace azurlane_wiki_app.Data
 
                                     byte[] fileBuffer = new byte[(int) memoryStream.Length];
                                     memoryStream.Position = 0;
-                                    memoryStream.Read(fileBuffer, 0, fileBuffer.Length);
+                                    await memoryStream.ReadAsync(fileBuffer, 0, fileBuffer.Length);
 
                                     string folderName = GetImageFolder(imageName);
+                                    imagePath = folderName + "/" + imageName;
 
                                     using (FileStream fileStream =
-                                        new FileStream(folderName + "/" + imageName, FileMode.Create))
+                                        new FileStream(imagePath, FileMode.Create))
                                     {
-                                        fileStream.Write(fileBuffer, 0, fileBuffer.Length);
+                                        await fileStream.WriteAsync(fileBuffer, 0, fileBuffer.Length);
                                     }
                                 }
                             }
@@ -243,7 +265,11 @@ namespace azurlane_wiki_app.Data
                     }
                 }
             }
-            CurrentImageCount++;
+
+            OnPropertyChanged(nameof(CurrentImageCount));
+            Interlocked.Increment(ref _currentImageCount);
+
+            return imagePath;
         }
 
         /// <summary>
@@ -256,7 +282,7 @@ namespace azurlane_wiki_app.Data
             string result = "";
 
             string dirName = GetImageFolder(imageName);
-
+            
             if (imageName != "" && !File.Exists(dirName + "/" + imageName))
             {
                 string requestUrl = ImageInfoApiEndpoint + imageName;
@@ -272,21 +298,17 @@ namespace azurlane_wiki_app.Data
                         {
                             using (StreamReader reader = new StreamReader(stream))
                             {
-                                responseJson = reader.ReadToEnd();
+                                responseJson = await reader.ReadToEndAsync();
                             }
                         }
                     }
                 }
 
-                Regex name = new Regex("\"url\":\".*?\"", RegexOptions.Compiled);
-                MatchCollection matches = name.Matches(responseJson);
-
-                if (matches.Count > 0)
+                int i = responseJson.IndexOf("\"url\":\"", StringComparison.Ordinal) + 7;
+                
+                while (responseJson[i] != '"')
                 {
-                    requestUrl = matches[0].Value.Remove(0, 7); // removing "url":" 
-                    requestUrl = requestUrl.Remove(requestUrl.Length - 1); // removing last "
-
-                    result = requestUrl;
+                    result += responseJson[i++];
                 }
             }
 

@@ -1,7 +1,9 @@
 ﻿using azurlane_wiki_app.Data;
 using azurlane_wiki_app.Data.Tables;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace azurlane_wiki_app
 {
@@ -21,7 +23,7 @@ namespace azurlane_wiki_app
             Database.SetInitializer(sqliteInitializer);
         }
 
-        public void CreateRelationshipGirlDrop(WhereToGetShipGirl wtg, ShipGirl shipGirl, string note)
+        public async Task CreateRelationshipGirlDrop(WhereToGetShipGirl wtg, ShipGirl shipGirl, string note)
         {
             ShipGirlWhereToGetShipGirl mtm = new ShipGirlWhereToGetShipGirl
             {
@@ -34,8 +36,18 @@ namespace azurlane_wiki_app
                                                       && e.FK_WhereToGetShipGirl.Name == mtm.FK_WhereToGetShipGirl.Name) == 0)
             {
                 ShipGirlWhereToGetShipGirl.Add(mtm);
-                SaveChanges();
+                await SaveChangesAsync();
             }
+        }
+
+        public bool Remove(ShipGirl shipGirl)
+        {
+            if (ShipGirls.Find(shipGirl.ShipID) != null)
+            {
+                // File.Delete();
+            }
+
+            return false;
         }
     }
 }

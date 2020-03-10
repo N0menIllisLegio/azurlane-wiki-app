@@ -1,24 +1,27 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using azurlane_wiki_app.Data.Tables;
+using Newtonsoft.Json;
 
-namespace azurlane_wiki_app.Data
+namespace azurlane_wiki_app.Data.Downloaders
 {
     class SkillDownloader : DataDownloader
     {
         private string SkillImagesFolderPath = ImagesFolderPath + "/SkillsIcons";
 
-        public SkillDownloader() : base()
+        public SkillDownloader(int ThreadsCount = 0) : base(ThreadsCount)
         {
             if (!Directory.Exists(SkillImagesFolderPath))
             {
                 Directory.CreateDirectory(SkillImagesFolderPath);
             }
         }
+
+        /*
+         * Надо разделить скачивание картинок и текстовых данных и связывание таблиц (хотя с ВТГ так не покатит). 
+         */
 
         public override async Task Download()
         {
@@ -44,23 +47,27 @@ namespace azurlane_wiki_app.Data
                 return;
             }
 
+            TotalImageCount = wrappedSkills.Count;
+
             using (CargoContext cargoContext = new CargoContext())
             {
-                TotalImageCount = wrappedSkills.Count;
                 foreach (SkillJsonWrapper wrappedSkill in wrappedSkills)
                 {
-                    await DownloadImage(wrappedSkill.Skill.Icon);
+                    downloadBlock.Post(wrappedSkill.Skill.Icon);
 
-                    if (cargoContext.Skills.Count(e => e.Name == wrappedSkill.Skill.Name) == 0)
+                    if (await cargoContext.Skills.CountAsync(e => e.Name == wrappedSkill.Skill.Name) == 0)
                     {
-                        wrappedSkill.Skill.FK_ShipGirl 
-                            = cargoContext.ShipGirls.Find(wrappedSkill.Skill.ShipID);
+                        wrappedSkill.Skill.FK_ShipGirl
+                            = await cargoContext.ShipGirls.FindAsync(wrappedSkill.Skill.ShipID);
                         cargoContext.Skills.Add(wrappedSkill.Skill);
                     }
                 }
 
-                cargoContext.SaveChanges();
+                downloadBlock.Complete();
+                await cargoContext.SaveChangesAsync();
             }
+
+            downloadBlock.Completion.Wait();
 
             Status = Statuses.DownloadComplete;
         }
