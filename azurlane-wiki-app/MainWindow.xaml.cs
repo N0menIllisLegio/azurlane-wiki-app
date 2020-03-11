@@ -1,4 +1,4 @@
-﻿using azurlane_wiki_app.Data;
+﻿using azurlane_wiki_app.Data.Downloaders;
 using azurlane_wiki_app.Data.Tables;
 using System;
 using System.Globalization;
@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using azurlane_wiki_app.Data.Downloaders;
 
 namespace azurlane_wiki_app
 {
@@ -107,12 +106,12 @@ namespace azurlane_wiki_app
             await Task.WhenAll(tasks);
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
             using (CargoContext cargoContext = new CargoContext())
             {
                 int randomNum = random.Next(1, 350);
-                ShipGirl shipGirl = cargoContext.ShipGirls.Find(randomNum.ToString());
+                ShipGirl shipGirl = await cargoContext.ShipGirls.FindAsync("001");//randomNum.ToString());
 
                 if (shipGirl != null)
                 {
@@ -128,6 +127,12 @@ namespace azurlane_wiki_app
                     InfoLabel.Content = "Nothing to display.\nNumber: " + randomNum;
                 }
             }
+        }
+
+        private async void ActionEvent(object sender, RoutedEventArgs e)
+        {
+            ShipDownloader sd = new ShipDownloader();
+            await sd.Download("001");
         }
     }
 }

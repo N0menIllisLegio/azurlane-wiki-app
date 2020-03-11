@@ -107,6 +107,9 @@
         </Grid>
 
         <Label Name="InfoLabel" Content="Empty" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="200" Width="186" Margin="0,0,10,10"/>
-        <Button Content="Display info" HorizontalAlignment="Right" Margin="0,55,10,0" VerticalAlignment="Top" Width="186" Height="40" Click="Button_Click_1"/>
+        <Button Content="Display info" HorizontalAlignment="Right" Margin="0,55,106,0" VerticalAlignment="Top" Width="90" Height="40" Click="Button_Click_1"/>
+        <Button Content="Action" Background="Brown" HorizontalAlignment="Right" Margin="0,55,10,0" VerticalAlignment="Top" Width="90" Height="40" Click="ActionEvent"/>
+
+
     </Grid>
 </Window>

@@ -19,6 +19,11 @@ namespace azurlane_wiki_app.Data.Downloaders
             }
         }
 
+        public override Task Download(string id)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override string GetImageFolder(string imageName)
         {
             return EquipmentImagesFolderPath;
@@ -27,15 +32,24 @@ namespace azurlane_wiki_app.Data.Downloaders
         public override async Task Download()
         {
             Status = Statuses.InProgress;
+            string responseJson;
 
-            string equipFields = "Name,Image,Type,Stars,Nationality,Tech,Health,HealthMax,Torpedo,TorpMax,Firepower,FPMax," +
-                                 "Aviation,AvMax,Evasion,EvasionMax,PlaneHP,PlaneHPMax,Reload,ReloadMax,ASW,ASWMax,Oxygen," +
-                                 "OxygenMax,AA,AAMax,Luck,LuckMax,Acc,AccMax,Spd,SpdMax,Damage,DamageMax,RoF,RoFMax,Number," +
-                                 "Spread,Angle,WepRange,Shells,Salvoes,Characteristic,PingFreq,VolleyTime,Coef,Ammo,AAGun1," +
-                                 "AAGun2,Bombs1,Bombs2,DD,DDNote,CL,CLNote,CA,CANote,CB,CBNote,BM,BMNote,BB,BBNote,BC,BCNote," +
-                                 "BBV,BBVNote,CV,CVNote,CVL,CVLNote,AR,ARNote,SS,SSNote,SSV,SSVNote,DropLocation,Notes";
+            try
+            {
+                string equipFields = "Name,Image,Type,Stars,Nationality,Tech,Health,HealthMax,Torpedo,TorpMax,Firepower,FPMax," +
+                                     "Aviation,AvMax,Evasion,EvasionMax,PlaneHP,PlaneHPMax,Reload,ReloadMax,ASW,ASWMax,Oxygen," +
+                                     "OxygenMax,AA,AAMax,Luck,LuckMax,Acc,AccMax,Spd,SpdMax,Damage,DamageMax,RoF,RoFMax,Number," +
+                                     "Spread,Angle,WepRange,Shells,Salvoes,Characteristic,PingFreq,VolleyTime,Coef,Ammo,AAGun1," +
+                                     "AAGun2,Bombs1,Bombs2,DD,DDNote,CL,CLNote,CA,CANote,CB,CBNote,BM,BMNote,BB,BBNote,BC,BCNote," +
+                                     "BBV,BBVNote,CV,CVNote,CVL,CVLNote,AR,ARNote,SS,SSNote,SSV,SSVNote,DropLocation,Notes";
 
-            string responseJson = await GetData("equipment", equipFields);
+                responseJson = await GetData("equipment", equipFields, "");
+            }
+            catch
+            {
+                Status = Statuses.DownloadError;
+                return;
+            }
 
             List<EquipmentJsonWrapper> wrappedEquipment;
 
@@ -46,28 +60,27 @@ namespace azurlane_wiki_app.Data.Downloaders
             catch
             {
                 Status = Statuses.ErrorInDeserialization;
-
                 return;
             }
             
             TotalImageCount = wrappedEquipment.Count;
-
-            foreach (EquipmentJsonWrapper wrpEquipment in wrappedEquipment)
+            using (CargoContext cargoContext = new CargoContext())
             {
-                using (CargoContext cargoContext = new CargoContext())
+                foreach (EquipmentJsonWrapper wrpEquipment in wrappedEquipment)
                 {
-                    if (await cargoContext.ShipGirlsEquipment.CountAsync(e => e.Name == wrpEquipment.Equipment.Name) == 0)
+                    if (await cargoContext.ShipGirlsEquipment
+                            .CountAsync(e => e.Name == wrpEquipment.Equipment.Name) == 0)
                     {
                         cargoContext.ShipGirlsEquipment.Add(wrpEquipment.Equipment);
                     }
 
-                    await cargoContext.SaveChangesAsync();
+                    downloadBlock.Post(wrpEquipment.Equipment.Image);
                 }
 
-                downloadBlock.Post(wrpEquipment.Equipment.Image);
+                downloadBlock.Complete();
+                await cargoContext.SaveChangesAsync();
             }
 
-            downloadBlock.Complete();
             downloadBlock.Completion.Wait();
 
             Status = Statuses.DownloadComplete;

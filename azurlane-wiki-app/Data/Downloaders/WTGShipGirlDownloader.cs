@@ -290,7 +290,7 @@ namespace azurlane_wiki_app.Data.Downloaders
             public string note133 { get; set; }
             [JsonProperty("13-4note")]
             public string note134 { get; set; }
-
+            // When new locations are added, the scheme needs to be expanded and don't forget to add locations to request!
 
             /// <summary>
             /// Get names and notes of shipgirl's drop location or construction pool.
@@ -347,19 +347,30 @@ namespace azurlane_wiki_app.Data.Downloaders
         public override async Task Download()
         {
             Status = Statuses.InProgress;
+            string responseJson;
 
-            string fields = "ID,Light,Heavy,Aviation,Limited,Exchange,Collection,Event,1-1,1-2,1-3,1-4,2-1,2-2,2-3," +
-                            "2-4,3-1,3-2,3-3,3-5,3-4,4-1,4-2,4-3,4-4,4-5,5-1,5-2,5-3,5-4,5-5,6-1,6-2,6-3,6-4,6-5,7-1," +
-                            "7-2,7-3,7-4,7-5,8-1,8-2,8-3,8-4,8-5,9-1,9-2,9-3,9-4,9-5,10-1,10-2,10-3,10-4,10-5,11-1," +
-                            "11-2,11-3,11-4,12-1,12-2,12-3,12-4,13-1,13-2,13-3,13-4,LightNote,HeavyNote,AviationNote," +
-                            "LimitedNote,ExchangeNote,CollectionNote,EventNote,1-1note,1-2note,1-3note,1-4note,2-1note," +
-                            "2-2note,2-3note,2-4note,3-1note,3-2note,3-3note,3-4note,3-5note,4-1note,4-2note,4-3note," +
-                            "4-4note,4-5note,5-1note,5-2note,5-3note,5-4note,5-5note,6-1note,6-2note,6-3note,6-4note," +
-                            "6-5note,7-1note,7-2note,7-3note,7-4note,7-5note,8-1note,8-2note,8-3note,8-4note,8-5note," +
-                            "9-1note,9-2note,9-3note,9-4note,9-5note,10-1note,10-2note,10-3note,10-4note,10-5note," +
-                            "11-1note,11-2note,11-3note,11-4note,12-1note,12-2note,12-3note,12-4note,13-1note,13-2note," +
-                            "13-3note,13-4note";
-            string responseJson = await GetData("shipDrops", fields);
+            try
+            {
+                // if adding new locations don't forget to expand schema
+                string dropFields = "ID,Light,Heavy,Aviation,Limited,Exchange,Collection,Event,1-1,1-2,1-3,1-4,2-1,2-2,2-3," +
+                                "2-4,3-1,3-2,3-3,3-5,3-4,4-1,4-2,4-3,4-4,4-5,5-1,5-2,5-3,5-4,5-5,6-1,6-2,6-3,6-4,6-5,7-1," +
+                                "7-2,7-3,7-4,7-5,8-1,8-2,8-3,8-4,8-5,9-1,9-2,9-3,9-4,9-5,10-1,10-2,10-3,10-4,10-5,11-1," +
+                                "11-2,11-3,11-4,12-1,12-2,12-3,12-4,13-1,13-2,13-3,13-4,LightNote,HeavyNote,AviationNote," +
+                                "LimitedNote,ExchangeNote,CollectionNote,EventNote,1-1note,1-2note,1-3note,1-4note,2-1note," +
+                                "2-2note,2-3note,2-4note,3-1note,3-2note,3-3note,3-4note,3-5note,4-1note,4-2note,4-3note," +
+                                "4-4note,4-5note,5-1note,5-2note,5-3note,5-4note,5-5note,6-1note,6-2note,6-3note,6-4note," +
+                                "6-5note,7-1note,7-2note,7-3note,7-4note,7-5note,8-1note,8-2note,8-3note,8-4note,8-5note," +
+                                "9-1note,9-2note,9-3note,9-4note,9-5note,10-1note,10-2note,10-3note,10-4note,10-5note," +
+                                "11-1note,11-2note,11-3note,11-4note,12-1note,12-2note,12-3note,12-4note,13-1note,13-2note," +
+                                "13-3note,13-4note";
+
+                responseJson = await GetData("shipDrops", dropFields, "");
+            }
+            catch
+            {
+                Status = Statuses.DownloadError;
+                return;
+            }
 
             List<WTGShipGirlJsonWrapper> wrappedDrops;
 
@@ -374,22 +385,35 @@ namespace azurlane_wiki_app.Data.Downloaders
                 return;
             }
 
+            // Adding location if didn't exists and creating connection between drop location and ship girl
             using (CargoContext cargoContext = new CargoContext())
             {
                 foreach (WTGShipGirlJsonWrapper wrappedDrop in wrappedDrops)
                 {
+                    // get dropped ship girl
                     ShipGirl shipGirl = await cargoContext.ShipGirls.FindAsync(wrappedDrop.WtgShipGirlJson.ID);
 
                     if (shipGirl != null)
                     {
+                        // get all drops locations
                         Dictionary<string, string> dictionary = wrappedDrop.WtgShipGirlJson.GetDrops();
 
                         if (dictionary.Count > 0)
                         {
                             foreach (string key in dictionary.Keys)
                             {
+                                // get location
                                 WhereToGetShipGirl whereToGetShipGirl =
                                     await cargoContext.WhereToGetShipGirls.FindAsync(key);
+
+                                // check if it exists, if not create
+                                if (whereToGetShipGirl == null)
+                                {
+                                    whereToGetShipGirl = cargoContext.WhereToGetShipGirls.Add(new WhereToGetShipGirl{ Name = key });
+                                    cargoContext.SaveChanges();
+                                }
+
+                                //  create connection
                                 await cargoContext.CreateRelationshipGirlDrop(whereToGetShipGirl, shipGirl,
                                     dictionary[key]);
                             }
@@ -399,6 +423,11 @@ namespace azurlane_wiki_app.Data.Downloaders
             }
 
             Status = Statuses.DownloadComplete;
+        }
+
+        public override Task Download(string id)
+        {
+            throw new System.NotImplementedException();
         }
 
         public override string GetImageFolder(string imageName)

@@ -88,7 +88,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\CargoContext.cs" />
-    <Compile Include="Data\CargoDbInitializer.cs" />
     <Compile Include="Data\Downloaders\DataDownloader.cs" />
     <Compile Include="Data\Tables\Equipment.cs" />
     <Compile Include="Data\Downloaders\EquipmentDownloader.cs" />

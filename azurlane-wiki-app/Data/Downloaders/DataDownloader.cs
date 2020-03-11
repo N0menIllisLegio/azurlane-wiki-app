@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using azurlane_wiki_app.Data.Tables;
 
 namespace azurlane_wiki_app.Data.Downloaders
 {
@@ -14,12 +15,13 @@ namespace azurlane_wiki_app.Data.Downloaders
         DownloadComplete,
         ErrorInDeserialization,
         InProgress,
-        DownloadError
+        DownloadError,
+        EmptyResponse
     }
 
     abstract class DataDownloader : INotifyPropertyChanged
     {
-        protected const string ImagesFolderPath = "./Images";
+        public static readonly string ImagesFolderPath = "./Images";
         protected const string WikiApiEndpoint = "https://azurlane.koumakan.jp/w/api.php";
         protected ActionBlock<string> downloadBlock;
 
@@ -95,7 +97,16 @@ namespace azurlane_wiki_app.Data.Downloaders
                     });
         }
 
+        /// <summary>
+        /// Downloads all items and save them
+        /// </summary>
         public abstract Task Download();
+
+        /// <summary>
+        /// Downloads only specified item
+        /// </summary>
+        /// <param name="id">Item identifier (name, id etc.)</param>
+        public abstract Task Download(string id);
 
         /// <summary>
         /// Gets path to folder for image. Depends on image name. (Image containing ShipyardIcon in name gets path to ShipyardIcons folder).
@@ -110,17 +121,18 @@ namespace azurlane_wiki_app.Data.Downloaders
         /// <param name="table">Table to get data from</param>
         /// <param name="fields">Fields from table</param>
         /// <returns>Json array with data</returns>
-        protected async Task<string> GetData(string table, string fields)
+        protected async Task<string> GetData(string table, string fields, string where)
         {
             int offset = 0;
+            int limit = 500;
 
             string result = "[";
             string responseJson;
 
             do
             {
-                string requestUrl = WikiApiEndpoint + "?action=cargoquery&tables=" + table
-                                    + "&format=json&fields=" + fields + "&limit=500&offset=" + offset;
+                string requestUrl = WikiApiEndpoint + "?action=cargoquery&format=json&tables=" + table + "&fields=" + fields +
+                                    "&where=" + where + "&limit=" + limit + "&offset=" + offset;
                 responseJson = "";
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
@@ -154,7 +166,7 @@ namespace azurlane_wiki_app.Data.Downloaders
         /// <param name="fields">Fields from tables (shipDrops.Name, ships.ShipID etc)</param>
         /// <param name="joinOn">Fields to join on (ships._pageName=ship_skills._pageName)</param>
         /// <returns>Json array with data</returns>
-        protected async Task<string> GetData(string tables, string fields, string joinOn)
+        protected async Task<string> GetData(string tables, string fields, string joinOn, string where)
         {
             int offset = 0;
             int limit = 500;
@@ -164,8 +176,8 @@ namespace azurlane_wiki_app.Data.Downloaders
 
             do
             {
-                string requestUrl = WikiApiEndpoint + "?action=cargoquery&tables=" + tables
-                                    + "&format=json&fields=" + fields + "&limit=" + limit + "&offset=" + offset + "&join_on=" + joinOn;
+                string requestUrl = WikiApiEndpoint + "?action=cargoquery&format=json&tables=" + tables + "&where=" + where
+                                    + "&fields=" + fields + "&limit=" + limit + "&offset=" + offset + "&join_on=" + joinOn;
                 responseJson = "";
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);

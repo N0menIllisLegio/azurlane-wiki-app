@@ -135,9 +135,9 @@ namespace azurlane_wiki_app.Data.Tables
         public string SSV { get; set; }
         [MaxLength(250)]
         public string SSVNote { get; set; }
-        [MaxLength(250)]
+        [MaxLength(500)]
         public string DropLocation { get; set; }
-        [MaxLength(250)]
+        [MaxLength(4000)]
         public string Notes { get; set; }
     }
 }

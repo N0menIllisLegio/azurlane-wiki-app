@@ -26,13 +26,21 @@ namespace azurlane_wiki_app.Data.Downloaders
         public override async Task Download()
         {
             Status = Statuses.InProgress;
+            string responseJson;
+            
+            try
+            {
+                string skillFields = "ships.ShipID,ship_skills.Num,ship_skills.Name,ship_skills.Detail," +
+                                     "ship_skills.Remodel,ship_skills.Type,ship_skills.Icon";
+                string joinOn = "ship_skills._pageName=ships._pageName";
 
-            string skillFields = "ships.ShipID,ship_skills.Num,ship_skills.Name,ship_skills.Detail," +
-                                 "ship_skills.Remodel,ship_skills.Type,ship_skills.Icon";
-
-            string joinOn = "ship_skills._pageName=ships._pageName";
-
-            string responseJson = await GetData("ship_skills, ships", skillFields, joinOn);
+                responseJson = await GetData("ship_skills, ships", skillFields, joinOn, "");
+            }
+            catch
+            {
+                Status = Statuses.DownloadError;
+                return;
+            }
 
             List<SkillJsonWrapper> wrappedSkills;
 
@@ -43,7 +51,6 @@ namespace azurlane_wiki_app.Data.Downloaders
             catch
             {
                 Status = Statuses.ErrorInDeserialization;
-
                 return;
             }
 
@@ -55,7 +62,8 @@ namespace azurlane_wiki_app.Data.Downloaders
                 {
                     downloadBlock.Post(wrappedSkill.Skill.Icon);
 
-                    if (await cargoContext.Skills.CountAsync(e => e.Name == wrappedSkill.Skill.Name) == 0)
+                    if (await cargoContext.Skills
+                            .CountAsync(e => e.Name == wrappedSkill.Skill.Name) == 0)
                     {
                         wrappedSkill.Skill.FK_ShipGirl
                             = await cargoContext.ShipGirls.FindAsync(wrappedSkill.Skill.ShipID);
@@ -70,6 +78,11 @@ namespace azurlane_wiki_app.Data.Downloaders
             downloadBlock.Completion.Wait();
 
             Status = Statuses.DownloadComplete;
+        }
+
+        public override Task Download(string id)
+        {
+            throw new System.NotImplementedException();
         }
 
         public override string GetImageFolder(string imageName)
