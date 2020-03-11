@@ -5,7 +5,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using azurlane_wiki_app.Data.Tables;
 
 namespace azurlane_wiki_app.Data.Downloaders
 {

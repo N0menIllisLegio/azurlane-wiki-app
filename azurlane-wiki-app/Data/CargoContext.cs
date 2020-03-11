@@ -1,5 +1,4 @@
-﻿using System;
-using azurlane_wiki_app.Data.Downloaders;
+﻿using azurlane_wiki_app.Data.Downloaders;
 using azurlane_wiki_app.Data.Tables;
 using SQLite.CodeFirst;
 using System.Data.Entity;
@@ -75,8 +74,7 @@ namespace azurlane_wiki_app
         /// <summary>
         /// Updates data of Ship Girl. (Also removes Ship Girl's images)
         /// </summary>
-        /// <param name="newShipGirl">Ship Girl for update</param>
-        /// <returns></returns>
+        /// <param name="newShipGirl">New Ship Girl data</param>
         public async Task Update(ShipGirl newShipGirl)
         {
             ShipGirl oldShipGirl = await ShipGirls.FindAsync(newShipGirl.ShipID);
@@ -96,7 +94,7 @@ namespace azurlane_wiki_app
                 DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageShipyardIcon) + "/" + oldShipGirl.ImageShipyardIcon);
                 DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageShipyardIconKai) + "/" + oldShipGirl.ImageShipyardIconKai);
                     
-                #region Fuck it
+                #region Fuck Ship Girls
 
                 oldShipGirl.AA120 = newShipGirl.AA120;
                 oldShipGirl.AAInitial = newShipGirl.AAInitial;
@@ -206,72 +204,132 @@ namespace azurlane_wiki_app
         }
 
         /// <summary>
-        /// Removes Ship Girl and her images
+        /// Updates data of one piece of Equipment. (Also removes it image)
         /// </summary>
-        /// <param name="shipGirl">Ship Girl to ERADICATE</param>
-        /// <returns>TRUE - Success, FALSE - There is no such Ship Girl</returns>
-        public async Task<bool> Remove(ShipGirl shipGirl)
+        /// <param name="newEquipment">New Equipment data</param>
+        public async Task Update(Equipment newEquipment)
         {
-            if (ShipGirls.Find(shipGirl.ShipID) != null)
+            Equipment oldEquipment = await ShipGirlsEquipment.FirstOrDefaultAsync(e => e.Name == newEquipment.Name);
+
+            if (oldEquipment != null)
             {
-                File.Delete(shipGirl.Image);
-                File.Delete(shipGirl.ImageBanner);
-                File.Delete(shipGirl.ImageBannerKai);
-                File.Delete(shipGirl.ImageChibi);
-                File.Delete(shipGirl.ImageChibiKai);
-                File.Delete(shipGirl.ImageIcon);
-                File.Delete(shipGirl.ImageIconKai);
-                File.Delete(shipGirl.ImageKai);
-                File.Delete(shipGirl.ImageShipyardIcon);
-                File.Delete(shipGirl.ImageShipyardIconKai);
+                EquipmentDownloader equipmentDownloader = new EquipmentDownloader();
 
-                ShipGirls.Remove(shipGirl);
+                DeleteImage(equipmentDownloader.GetImageFolder(oldEquipment.Image) + "/" + oldEquipment.Image);
+
+                #region Fuck Equipment
+
+                oldEquipment.AA = newEquipment.AA;
+                oldEquipment.AAGun1 = newEquipment.AAGun1;
+                oldEquipment.AAGun2 = newEquipment.AAGun2;
+                oldEquipment.AAMax = newEquipment.AAMax;
+                oldEquipment.Acc = newEquipment.Acc;
+                oldEquipment.AccMax = newEquipment.AccMax;
+                oldEquipment.Ammo = newEquipment.Ammo;
+                oldEquipment.Angle = newEquipment.Angle;
+                oldEquipment.AR = newEquipment.AR;
+                oldEquipment.ARNote = newEquipment.ARNote;
+                oldEquipment.ASW = newEquipment.ASW;
+                oldEquipment.ASWMax = newEquipment.ASWMax;
+                oldEquipment.Aviation = newEquipment.Aviation;
+                oldEquipment.AvMax = newEquipment.AvMax;
+                oldEquipment.BB = newEquipment.BB;
+                oldEquipment.BBNote = newEquipment.BBNote;
+                oldEquipment.BBV = newEquipment.BBV;
+                oldEquipment.BBVNote = newEquipment.BBVNote;
+                oldEquipment.BC = newEquipment.BC;
+                oldEquipment.BCNote = newEquipment.BCNote;
+                oldEquipment.BM = newEquipment.BM;
+                oldEquipment.BMNote = newEquipment.BMNote;
+                oldEquipment.Bombs1 = newEquipment.Bombs1;
+                oldEquipment.Bombs2 = newEquipment.Bombs2;
+                oldEquipment.CA = newEquipment.CA;
+                oldEquipment.CANote = newEquipment.CANote;
+                oldEquipment.CB = newEquipment.CB;
+                oldEquipment.CBNote = newEquipment.CBNote;
+                oldEquipment.Characteristic = newEquipment.Characteristic;
+                oldEquipment.CL = newEquipment.CL;
+                oldEquipment.CLNote = newEquipment.CLNote;
+                oldEquipment.Coef = newEquipment.Coef;
+                oldEquipment.CV = newEquipment.CV;
+                oldEquipment.CVL = newEquipment.CVL;
+                oldEquipment.CVLNote = newEquipment.CVLNote;
+                oldEquipment.CVNote = newEquipment.CVNote;
+                oldEquipment.Damage = newEquipment.Damage;
+                oldEquipment.DamageMax = newEquipment.DamageMax;
+                oldEquipment.DD = newEquipment.DD;
+                oldEquipment.DDNote = newEquipment.DDNote;
+                oldEquipment.DropLocation = newEquipment.DropLocation;
+                oldEquipment.Evasion = newEquipment.Evasion;
+                oldEquipment.EvasionMax = newEquipment.EvasionMax;
+                oldEquipment.Firepower = newEquipment.Firepower;
+                oldEquipment.FPMax = newEquipment.FPMax;
+                oldEquipment.Health = newEquipment.Health;
+                oldEquipment.HealthMax = newEquipment.HealthMax;
+                oldEquipment.Image = newEquipment.Image;
+                oldEquipment.Luck = newEquipment.Luck;
+                oldEquipment.LuckMax = newEquipment.LuckMax;
+                oldEquipment.Name = newEquipment.Name;
+                oldEquipment.Nationality = newEquipment.Nationality;
+                oldEquipment.Notes = newEquipment.Notes;
+                oldEquipment.Number = newEquipment.Number;
+                oldEquipment.Oxygen = newEquipment.Oxygen;
+                oldEquipment.OxygenMax = newEquipment.OxygenMax;
+                oldEquipment.PingFreq = newEquipment.PingFreq;
+                oldEquipment.PlaneHP = newEquipment.PlaneHP;
+                oldEquipment.PlaneHPMax = newEquipment.PlaneHPMax;
+                oldEquipment.Reload = newEquipment.Reload;
+                oldEquipment.ReloadMax = newEquipment.ReloadMax;
+                oldEquipment.RoF = newEquipment.RoF;
+                oldEquipment.RoFMax = newEquipment.RoFMax;
+                oldEquipment.Salvoes = newEquipment.Salvoes;
+                oldEquipment.Shells = newEquipment.Shells;
+                oldEquipment.Spd = newEquipment.Spd;
+                oldEquipment.SpdMax = newEquipment.SpdMax;
+                oldEquipment.Spread = newEquipment.Spread;
+                oldEquipment.SS = newEquipment.SS;
+                oldEquipment.SSNote = newEquipment.SSNote;
+                oldEquipment.SSV = newEquipment.SSV;
+                oldEquipment.SSVNote = newEquipment.SSVNote;
+                oldEquipment.Stars = newEquipment.Stars;
+                oldEquipment.Tech = newEquipment.Tech;
+                oldEquipment.Torpedo = newEquipment.Torpedo;
+                oldEquipment.TorpMax = newEquipment.TorpMax;
+                oldEquipment.Type = newEquipment.Type;
+                oldEquipment.VolleyTime = newEquipment.VolleyTime;
+                oldEquipment.WepRange = newEquipment.WepRange;
+
+                #endregion
+
                 await SaveChangesAsync();
-
-                return true;
             }
-
-            return false;
         }
 
         /// <summary>
-        /// Removes Equipment and it image
+        /// Updates data of one Skill. (Also removes it icon)
         /// </summary>
-        /// <param name="equipment">Equipment to ERADICATE</param>
-        /// <returns>TRUE - Success, FALSE - There is no such Equipment</returns>
-        public async Task<bool> Remove(Equipment equipment)
+        /// <param name="newSkill">New Skill data</param>
+        public async Task Update(Skill newSkill)
         {
-            if (ShipGirlsEquipment.Find(equipment.EquipmentId) != null)
+            Skill oldSkill = await Skills.FirstOrDefaultAsync(e => e.Name == newSkill.Name);
+
+            if (oldSkill != null)
             {
-                File.Delete(equipment.Image);
+                SkillDownloader skillDownloader = new SkillDownloader();
 
-                ShipGirlsEquipment.Remove(equipment);
+                DeleteImage(skillDownloader.GetImageFolder(oldSkill.Icon) + "/" + oldSkill.Icon);
+
+                oldSkill.Num = newSkill.Num;
+                oldSkill.Name = newSkill.Name;
+                oldSkill.Type = newSkill.Type;
+                oldSkill.Detail = newSkill.Detail;
+                oldSkill.Remodel = newSkill.Remodel;
+                oldSkill.Icon = newSkill.Icon;
+
+                oldSkill.FK_ShipGirl = newSkill.FK_ShipGirl;
+
                 await SaveChangesAsync();
-
-                return true;
             }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Removes Skill and it image
-        /// </summary>
-        /// <param name="skill">Skill to ERADICATE</param>
-        /// <returns>TRUE - Success, FALSE - There is no such Skill</returns>
-        public async Task<bool> Remove(Skill skill)
-        {
-            if (Skills.Find(skill.SkillID) != null)
-            {
-                File.Delete(skill.Icon);
-
-                Skills.Remove(skill);
-                await SaveChangesAsync();
-
-                return true;
-            }
-
-            return false;
         }
     }
 }

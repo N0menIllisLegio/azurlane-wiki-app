@@ -131,8 +131,15 @@ namespace azurlane_wiki_app
 
         private async void ActionEvent(object sender, RoutedEventArgs e)
         {
-            ShipDownloader sd = new ShipDownloader();
-            await sd.Download("001");
+            ShipDownloader shipDownloader = new ShipDownloader();
+            EquipmentDownloader equipmentDownloader = new EquipmentDownloader(2);
+            SkillDownloader skillDownloader = new SkillDownloader();
+            WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
+
+            //await shipDownloader.Download("001");
+            //await equipmentDownloader.Download("Z Flag");
+            //await skillDownloader.Download("Martyr");
+            await wtgShipGirlDownloader.Download("363");
         }
     }
 }

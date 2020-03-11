@@ -9,8 +9,24 @@ namespace azurlane_wiki_app.Data.Downloaders
 {
     class ShipDownloader : DataDownloader
     {
-        private string KaiImagesFolderPath = ImagesFolderPath + "/Ships/KaiImages";
-        private string NonKaiImagesFolderPath = ImagesFolderPath + "/Ships/Images";
+        private readonly string KaiImagesFolderPath = ImagesFolderPath + "/Ships/KaiImages";
+        private readonly string NonKaiImagesFolderPath = ImagesFolderPath + "/Ships/Images";
+
+        private const string ShipFields = "ShipGroup,ShipID,Name,Rarity,Nationality,ConstructTime,Type," +
+                                          "SubtypeRetro,Class,Remodel,Image,ImageShipyardIcon,ImageChibi,ImageIcon," +
+                                          "ImageBanner,ImageKai,ImageShipyardIconKai,ImageChibiKai," +
+                                          "ImageIconKai,ImageBannerKai,HealthInitial,Armor,FireInitial,AAInitial,TorpInitial," +
+                                          "AirInitial,ReloadInitial,EvadeInitial,ConsumptionInitial," +
+                                          "Speed,Luck,AccInitial,ASWInitial,OxygenInitial,AmmoInitial,HealthMax,FireMax,AAMax," +
+                                          "TorpMax,AirMax,ReloadMax,EvadeMax,ConsumptionMax,AccMax," +
+                                          "ASWMax,OxygenMax,AmmoMax,HealthKai,ArmorKai,FireKai,AAKai,TorpKai,AirKai,ReloadKai," +
+                                          "EvadeKai,ConsumptionKai,SpeedKai,ASWKai,AccKai,OxygenKai," +
+                                          "AmmoKai,Health120,Fire120,AA120,Torp120,Air120,Reload120,Evade120,Consumption120," +
+                                          "Acc120,ASW120,Oxygen120,Ammo120,HealthKai120,FireKai120," +
+                                          "AAKai120,TorpKai120,AirKai120,ReloadKai120,EvadeKai120,ConsumptionKai120,AccKai120," +
+                                          "ASWKai120,OxygenKai120,AmmoKai120,Eq1Type,Eq1EffInit," +
+                                          "Eq1EffInitMax,Eq1EffInitKai,Eq2Type,Eq2EffInit,Eq2EffInitMax,Eq2EffInitKai,Eq3Type," +
+                                          "Eq3EffInit,Eq3EffInitMax,Eq3EffInitKai,LB1,LB2,LB3";
 
         public ShipDownloader(int ThreadsCount = 0) : base(ThreadsCount)
         {
@@ -24,42 +40,30 @@ namespace azurlane_wiki_app.Data.Downloaders
             }
         }
 
+        /// <summary>
+        /// Download all Ship Girls and save them.
+        /// </summary>
         public override async Task Download()
         {
             Status = Statuses.InProgress;
-            string responseJson;
+            List<ShipGirlJsonWrapper> wrappedGirls;
 
             try
             {
-                string shipFields = "ShipGroup,ShipID,Name,Rarity,Nationality,ConstructTime,Type,SubtypeRetro,Class,Remodel,Image,ImageShipyardIcon,ImageChibi,ImageIcon," +
-                                    "ImageBanner,ImageKai,ImageShipyardIconKai,ImageChibiKai,ImageIconKai,ImageBannerKai,HealthInitial,Armor,FireInitial,AAInitial,TorpInitial," +
-                                    "AirInitial,ReloadInitial,EvadeInitial,ConsumptionInitial,Speed,Luck,AccInitial,ASWInitial,OxygenInitial,AmmoInitial,HealthMax,FireMax,AAMax," +
-                                    "TorpMax,AirMax,ReloadMax,EvadeMax,ConsumptionMax,AccMax,ASWMax,OxygenMax,AmmoMax,HealthKai,ArmorKai,FireKai,AAKai,TorpKai,AirKai,ReloadKai," +
-                                    "EvadeKai,ConsumptionKai,SpeedKai,ASWKai,AccKai,OxygenKai,AmmoKai,Health120,Fire120,AA120,Torp120,Air120,Reload120,Evade120,Consumption120," +
-                                    "Acc120,ASW120,Oxygen120,Ammo120,HealthKai120,FireKai120,AAKai120,TorpKai120,AirKai120,ReloadKai120,EvadeKai120,ConsumptionKai120,AccKai120," +
-                                    "ASWKai120,OxygenKai120,AmmoKai120,Eq1Type,Eq1EffInit,Eq1EffInitMax,Eq1EffInitKai,Eq2Type,Eq2EffInit,Eq2EffInitMax,Eq2EffInitKai,Eq3Type," +
-                                    "Eq3EffInit,Eq3EffInitMax,Eq3EffInitKai,LB1,LB2,LB3";
-
-                responseJson = await GetData("ships", shipFields, "");
+                string responseJson = await GetData("ships", ShipFields, "");
+                wrappedGirls = JsonConvert.DeserializeObject<List<ShipGirlJsonWrapper>>(responseJson);
+            }
+            catch(JsonException)
+            {
+                Status = Statuses.ErrorInDeserialization;
+                return;
             }
             catch
             {
                 Status = Statuses.DownloadError;
                 return;
             }
-                
-            List<ShipGirlJsonWrapper> wrappedGirls;
-
-            try
-            {
-                wrappedGirls = JsonConvert.DeserializeObject<List<ShipGirlJsonWrapper>>(responseJson);
-            }
-            catch
-            {
-                Status = Statuses.ErrorInDeserialization;
-                return;
-            }
-
+            
             TotalImageCount = wrappedGirls.Count * 10;
 
             using (CargoContext cargoContext = new CargoContext())
@@ -93,50 +97,31 @@ namespace azurlane_wiki_app.Data.Downloaders
             Status = Statuses.DownloadComplete;
         }
 
+        /// <summary>
+        /// Download one ShipGirl and update her or save if she doesn't exist.
+        /// </summary>
+        /// <param name="id">Ship Girl's id</param>
         public override async Task Download(string id)
         {
             Status = Statuses.InProgress;
-            string responseJson;
+            List<ShipGirlJsonWrapper> wrappedGirls;
 
             try
             {
-                string shipFields = "ShipGroup,ShipID,Name,Rarity,Nationality,ConstructTime,Type,SubtypeRetro,Class,Remodel,Image,ImageShipyardIcon,ImageChibi,ImageIcon," +
-                                    "ImageBanner,ImageKai,ImageShipyardIconKai,ImageChibiKai,ImageIconKai,ImageBannerKai,HealthInitial,Armor,FireInitial,AAInitial,TorpInitial," +
-                                    "AirInitial,ReloadInitial,EvadeInitial,ConsumptionInitial,Speed,Luck,AccInitial,ASWInitial,OxygenInitial,AmmoInitial,HealthMax,FireMax,AAMax," +
-                                    "TorpMax,AirMax,ReloadMax,EvadeMax,ConsumptionMax,AccMax,ASWMax,OxygenMax,AmmoMax,HealthKai,ArmorKai,FireKai,AAKai,TorpKai,AirKai,ReloadKai," +
-                                    "EvadeKai,ConsumptionKai,SpeedKai,ASWKai,AccKai,OxygenKai,AmmoKai,Health120,Fire120,AA120,Torp120,Air120,Reload120,Evade120,Consumption120," +
-                                    "Acc120,ASW120,Oxygen120,Ammo120,HealthKai120,FireKai120,AAKai120,TorpKai120,AirKai120,ReloadKai120,EvadeKai120,ConsumptionKai120,AccKai120," +
-                                    "ASWKai120,OxygenKai120,AmmoKai120,Eq1Type,Eq1EffInit,Eq1EffInitMax,Eq1EffInitKai,Eq2Type,Eq2EffInit,Eq2EffInitMax,Eq2EffInitKai,Eq3Type," +
-                                    "Eq3EffInit,Eq3EffInitMax,Eq3EffInitKai,LB1,LB2,LB3";
-
-                responseJson = await GetData("ships", shipFields, "ships.ShipID=\'" + id + "\'");
+                string responseJson = await GetData("ships", ShipFields, "ships.ShipID=\'" + id + "\'");
+                wrappedGirls = JsonConvert.DeserializeObject<List<ShipGirlJsonWrapper>>(responseJson);
+            }
+            catch(JsonException)
+            {
+                Status = Statuses.ErrorInDeserialization;
+                return;
             }
             catch
             {
                 Status = Statuses.DownloadError;
                 return;
             }
-
-            List<ShipGirlJsonWrapper> wrappedGirls;
-
-            try
-            {
-                wrappedGirls = JsonConvert.DeserializeObject<List<ShipGirlJsonWrapper>>(responseJson);
-            }
-            catch
-            {
-                Status = Statuses.ErrorInDeserialization;
-                return;
-            }
-
-            TotalImageCount = wrappedGirls.Count * 10;
-
-            // Nothing get from server
-            if (wrappedGirls.Count == 0)
-            {
-                return;
-            }
-
+            
             ShipGirlJsonWrapper wrappedGirl = wrappedGirls.FirstOrDefault();
 
             if (wrappedGirl == null)
@@ -144,6 +129,8 @@ namespace azurlane_wiki_app.Data.Downloaders
                 Status = Statuses.EmptyResponse;
                 return;
             }
+
+            TotalImageCount = wrappedGirls.Count * 10;
 
             using (CargoContext cargoContext = new CargoContext())
             {
@@ -159,31 +146,10 @@ namespace azurlane_wiki_app.Data.Downloaders
                 downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIcon);
                 downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIconKai);
 
-                // Saving in DB relative paths of images
-                wrappedGirl.ShipGirl.Image =
-                    GetImageFolder(wrappedGirl.ShipGirl.Image) + "/" + wrappedGirl.ShipGirl.Image;
-                wrappedGirl.ShipGirl.Image =
-                    GetImageFolder(wrappedGirl.ShipGirl.ImageBanner) + "/" + wrappedGirl.ShipGirl.ImageBanner;
-                wrappedGirl.ShipGirl.Image =
-                    GetImageFolder(wrappedGirl.ShipGirl.ImageChibi) + "/" + wrappedGirl.ShipGirl.ImageChibi;
-                wrappedGirl.ShipGirl.Image =
-                    GetImageFolder(wrappedGirl.ShipGirl.ImageIcon) + "/" + wrappedGirl.ShipGirl.ImageIcon;
-                wrappedGirl.ShipGirl.Image =
-                    GetImageFolder(wrappedGirl.ShipGirl.ImageKai) + "/" + wrappedGirl.ShipGirl.ImageKai;
-                wrappedGirl.ShipGirl.Image =
-                    GetImageFolder(wrappedGirl.ShipGirl.ImageBannerKai) + "/" + wrappedGirl.ShipGirl.ImageBannerKai;
-                wrappedGirl.ShipGirl.Image =
-                    GetImageFolder(wrappedGirl.ShipGirl.ImageChibiKai) + "/" + wrappedGirl.ShipGirl.ImageChibiKai;
-                wrappedGirl.ShipGirl.Image =
-                    GetImageFolder(wrappedGirl.ShipGirl.ImageIconKai) + "/" + wrappedGirl.ShipGirl.ImageIconKai;
-                wrappedGirl.ShipGirl.Image =
-                    GetImageFolder(wrappedGirl.ShipGirl.ImageShipyardIcon) + "/" + wrappedGirl.ShipGirl.ImageShipyardIcon;
-                wrappedGirl.ShipGirl.Image =
-                    GetImageFolder(wrappedGirl.ShipGirl.ImageShipyardIconKai) + "/" + wrappedGirl.ShipGirl.ImageShipyardIconKai;
-
                 if (await cargoContext.ShipGirls.FindAsync(wrappedGirl.ShipGirl.ShipID) == null)
                 {
                     cargoContext.ShipGirls.Add(wrappedGirl.ShipGirl);
+                    await cargoContext.SaveChangesAsync();
                 }
                 else
                 {
@@ -191,13 +157,17 @@ namespace azurlane_wiki_app.Data.Downloaders
                 }
 
                 downloadBlock.Complete();
-                await cargoContext.SaveChangesAsync();
             }
 
             downloadBlock.Completion.Wait();
             Status = Statuses.DownloadComplete;
         }
 
+        /// <summary>
+        /// Get path to image folder that stores ShipGirls images.
+        /// </summary>
+        /// <param name="imageName">Name of image for saving</param>
+        /// <returns>Path</returns>
         public override string GetImageFolder(string imageName)
         {
             string folderName;
