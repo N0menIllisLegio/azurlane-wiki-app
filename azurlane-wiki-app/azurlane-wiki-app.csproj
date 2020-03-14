@@ -90,7 +90,6 @@
     <Compile Include="Data\CargoContext.cs" />
     <Compile Include="Data\Downloaders\DataDownloader.cs" />
     <Compile Include="Data\Downloaders\IconDownloader.cs" />
-    <Compile Include="Data\Seeder.cs" />
     <Compile Include="Data\Tables\Equipment.cs" />
     <Compile Include="Data\Downloaders\EquipmentDownloader.cs" />
     <Compile Include="Data\Tables\Icon.cs" />

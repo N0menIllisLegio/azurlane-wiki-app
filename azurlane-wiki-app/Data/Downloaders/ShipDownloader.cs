@@ -11,11 +11,7 @@ namespace azurlane_wiki_app.Data.Downloaders
     {
         private readonly string KaiImagesFolderPath = ImagesFolderPath + "/Ships/KaiImages";
         private readonly string NonKaiImagesFolderPath = ImagesFolderPath + "/Ships/Images";
-
-        /// <summary>
-        /// Can't find where i can get them 
-        /// </summary>
-        private Dictionary<string, string> Abbreviations = new Dictionary<string, string>
+        private readonly Dictionary<string, string> Abbreviations = new Dictionary<string, string>
         {
             ["Destroyer"] = "DD",
             ["Light Cruiser"] = "CL",
@@ -24,12 +20,12 @@ namespace azurlane_wiki_app.Data.Downloaders
             ["Light Aircraft Carrier"] = "CVL",
             ["Battleship"] = "BB",
             ["Submarine"] = "SS",
-            ["Large Cruiser"] = "DD",
+            ["Large Cruiser"] = "CB",
             ["Repair Ship"] = "AR",
             ["Battlecruiser"] = "BC",
             ["Monitor"] = "BM",
             ["Submarine Carrier"] = "SSV",
-            ["Aviation Battleship"] = "BBV"
+            ["Aviation Battleship"] = "BBV" 
         };
 
         private const string ShipFields = "ShipGroup,ShipID,Name,Rarity,Nationality,ConstructTime,Type," +
@@ -258,6 +254,12 @@ namespace azurlane_wiki_app.Data.Downloaders
             return folderName;
         }
 
+        /// <summary>
+        /// Create relationships depending on values of shipGirl.{ nationality, rarity, class, type, subtyperetro, group }.
+        /// If { nationality, rarity, class, type, subtyperetro, group } doesn't exists, creates it.
+        /// </summary>
+        /// <param name="shipGirl">ShipGirl</param>
+        /// <param name="cargoContext">CargoContext</param>
         private void CreateRelationships(ShipGirl shipGirl, CargoContext cargoContext)
         {
             Rarity rarity = cargoContext.Rarities.Find(shipGirl.Rarity);
@@ -269,13 +271,23 @@ namespace azurlane_wiki_app.Data.Downloaders
 
             if (rarity == null)
             {
-                rarity = new Rarity { Name = shipGirl.Rarity };
+                rarity = new Rarity
+                {
+                    Name = shipGirl.Rarity,
+                    FK_Icon = cargoContext.Icons.Find(shipGirl.Rarity)
+                };
+
                 cargoContext.Rarities.Add(rarity);
             }
             
             if (nationality == null)
             {
-                nationality = new Nationality { Name = shipGirl.Nationality };
+                nationality = new Nationality
+                {
+                    Name = shipGirl.Nationality,
+                    FK_Icon = cargoContext.Icons.Find(shipGirl.Nationality)
+                };
+
                 cargoContext.Nationalities.Add(nationality);
             }
 
@@ -296,8 +308,10 @@ namespace azurlane_wiki_app.Data.Downloaders
                 shipType = new ShipType
                 {
                     Name = shipGirl.Type,
-                    Abbreviation = Abbreviations[shipGirl.Type]
+                    Abbreviation = Abbreviations[shipGirl.Type],
+                    FK_Icon = cargoContext.Icons.Find(Abbreviations[shipGirl.Type])
                 };
+
                 cargoContext.ShipTypes.Add(shipType);
             }
 
@@ -312,8 +326,10 @@ namespace azurlane_wiki_app.Data.Downloaders
                     subtypeRetro = new SubtypeRetro
                     {
                         Name = shipGirl.SubtypeRetro,
-                        Abbreviation = Abbreviations[shipGirl.SubtypeRetro]
+                        Abbreviation = Abbreviations[shipGirl.SubtypeRetro],
+                        FK_Icon = cargoContext.Icons.Find(Abbreviations[shipGirl.SubtypeRetro])
                     };
+
                     cargoContext.SubtypeRetros.Add(subtypeRetro);
                 }
             }

@@ -137,9 +137,8 @@ namespace azurlane_wiki_app
             SkillDownloader skillDownloader = new SkillDownloader();
             WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
             IconDownloader iconDownloader = new IconDownloader();
-            Seeder seeder = new Seeder();
 
-            await seeder.DownloadIcons();
+            //await seeder.DownloadIcons();
 
             //await shipDownloader.Download();
             //await iconDownloader.Download();
@@ -148,12 +147,12 @@ namespace azurlane_wiki_app
             //await skillDownloader.Download("Martyr");
             //await wtgShipGirlDownloader.Download("363");
 
-            //using (CargoContext cargoContext = new CargoContext())
-            //{
-            //    var ship = cargoContext.ShipGirls.Find("001");
-            //    await skillDownloader.Download(ship, cargoContext);
-            //    InfoLabel.Content = ship.Skills.Count;
-            //}
+            using (CargoContext cargoContext = new CargoContext())
+            {
+                //    var ship = cargoContext.ShipGirls.Find("001");
+                //    await skillDownloader.Download(ship, cargoContext);
+                //InfoLabel.Content = cargoContext.Icons.Count();
+            }
         }
     }
 }

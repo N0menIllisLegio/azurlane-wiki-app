@@ -7,7 +7,6 @@ namespace azurlane_wiki_app.Data.Tables
     {
         [Key]
         public string Name { get; set; }
-        public string Icon { get; set; }
         public string Abbreviation { get; set; }
 
         [MaxLength(4000)]
@@ -21,6 +20,8 @@ namespace azurlane_wiki_app.Data.Tables
         }
 
         public virtual ICollection<ShipGirl> ShipGirls { get; set; }
+
+        public virtual Icon FK_Icon { get; set; }
 
         #endregion
     }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace azurlane_wiki_app.Data.Tables
 {
@@ -7,7 +8,6 @@ namespace azurlane_wiki_app.Data.Tables
     {
         [Key]
         public string Name { get; set; }
-        public string Icon { get; set; }
         [MaxLength(4000)]
         public string Description { get; set; }
 
@@ -19,6 +19,8 @@ namespace azurlane_wiki_app.Data.Tables
         }
 
         public virtual ICollection<ShipGirl> ShipGirls { get; set; }
+
+        public virtual Icon FK_Icon { get; set; }
 
         #endregion
     }

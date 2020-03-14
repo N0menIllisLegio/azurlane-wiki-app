@@ -21,6 +21,7 @@ namespace azurlane_wiki_app.Data.Downloaders
     abstract class DataDownloader : INotifyPropertyChanged
     {
         public static readonly string ImagesFolderPath = "./Images";
+
         protected const string WikiApiEndpoint = "https://azurlane.koumakan.jp/w/api.php";
         protected ActionBlock<string> downloadBlock;
 
@@ -85,8 +86,8 @@ namespace azurlane_wiki_app.Data.Downloaders
                 Directory.CreateDirectory(ImagesFolderPath);
             }
 
-            downloadBlock = ThreadsCount <= 0 ? 
-                new ActionBlock<string>(
+            downloadBlock = ThreadsCount <= 0 
+                ? new ActionBlock<string>(
                     image => DownloadImage(image).Wait())
                 : new ActionBlock<string>(
                     image => DownloadImage(image).Wait(),
@@ -213,28 +214,50 @@ namespace azurlane_wiki_app.Data.Downloaders
             string imageUrl;
             string imagePath = "";
 
-            try
+            if (!string.IsNullOrEmpty(imageName))
             {
-                imageUrl = await GetImageInfo(imageName);
+                try
+                {
+                    imageUrl = await GetImageInfo(imageName);
+                }
+                catch
+                {
+                    imageUrl = "";
+                }
             }
-            catch
+            else
             {
-                //TODO: Add error display
-
                 imageUrl = "";
             }
 
-            if (imageName != "" && imageUrl != "")
+            await DownloadImageByUrl(imageUrl, imageName);
+            OnPropertyChanged(nameof(CurrentImageCount));
+            Interlocked.Increment(ref _currentImageCount);
+
+            return imagePath;
+        }
+
+        /// <summary>
+        /// Download image by url
+        /// </summary>
+        /// <param name="imageUrl">Image URL</param>
+        /// <param name="imageName">Image file name with extension (image.png).</param>
+        /// <returns>Relative path to image</returns>
+        protected async Task<string> DownloadImageByUrl(string imageUrl, string imageName)
+        {
+            string imagePath = "";
+
+            if (!string.IsNullOrEmpty(imageUrl) && !string.IsNullOrEmpty(imageName))
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls |
                                                        SecurityProtocolType.Tls11 |
                                                        SecurityProtocolType.Tls12;
 
-                HttpWebRequest request = (HttpWebRequest) WebRequest.Create(imageUrl);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(imageUrl);
                 request.Timeout = 14400000;
                 request.KeepAlive = true;
 
-                using (HttpWebResponse response = (HttpWebResponse) await request.GetResponseAsync())
+                using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
                 {
                     try
                     {
@@ -254,7 +277,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                                         buffer = binaryReader.ReadBytes(1024);
                                     }
 
-                                    byte[] fileBuffer = new byte[(int) memoryStream.Length];
+                                    byte[] fileBuffer = new byte[(int)memoryStream.Length];
                                     memoryStream.Position = 0;
                                     await memoryStream.ReadAsync(fileBuffer, 0, fileBuffer.Length);
 
@@ -276,9 +299,6 @@ namespace azurlane_wiki_app.Data.Downloaders
                     }
                 }
             }
-
-            OnPropertyChanged(nameof(CurrentImageCount));
-            Interlocked.Increment(ref _currentImageCount);
 
             return imagePath;
         }
