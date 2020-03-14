@@ -133,6 +133,77 @@ namespace azurlane_wiki_app.Data.Downloaders
             Status = Statuses.DownloadComplete;
         }
 
+
+        /// <summary>
+        /// Download all Skills of ShipGirl and update them or save if they doesn't exist.
+        /// </summary>
+        /// <param name="shipGirl">ShipGirl which skills need update.</param>
+        /// <param name="cargoContext">DB context</param>
+        public async Task Download(ShipGirl shipGirl, CargoContext cargoContext)
+        {
+            Status = Statuses.InProgress;
+            List<SkillJsonWrapper> wrappedSkills;
+            
+            try
+            {
+                string responseJson = await GetData("ship_skills, ships", SkillFields,
+                    "ship_skills._pageName=ships._pageName", "ships.ShipID=\'" + shipGirl.ShipID + "\'");
+                wrappedSkills = JsonConvert.DeserializeObject<List<SkillJsonWrapper>>(responseJson);
+            }
+            catch (JsonException)
+            {
+                Status = Statuses.ErrorInDeserialization;
+                return;
+            }
+            catch
+            {
+                Status = Statuses.DownloadError;
+                return;
+            }
+
+            if (wrappedSkills.Count == 0)
+            {
+                Status = Statuses.EmptyResponse;
+                return;
+            }
+
+            TotalImageCount = wrappedSkills.Count;
+
+            foreach (Skill skill in shipGirl.Skills)
+            {
+                string imagePath = GetImageFolder(skill.Icon) + "/" + skill.Icon;
+
+                if (File.Exists(imagePath))
+                {
+                    File.Delete(imagePath);
+                }
+            }
+
+            cargoContext.Skills.RemoveRange(shipGirl.Skills);
+            await cargoContext.SaveChangesAsync();
+
+            foreach (SkillJsonWrapper wrappedSkill in wrappedSkills)
+            {
+                downloadBlock.Post(wrappedSkill.Skill.Icon);
+                wrappedSkill.Skill.FK_ShipGirl = shipGirl;
+
+                if (await cargoContext.Skills
+                        .CountAsync(e => e.Name == wrappedSkill.Skill.Name) == 0)
+                {
+                    cargoContext.Skills.Add(wrappedSkill.Skill);
+                    await cargoContext.SaveChangesAsync();
+                }
+                else
+                {
+                    await cargoContext.Update(wrappedSkill.Skill);
+                }
+            }
+
+            downloadBlock.Complete();
+            downloadBlock.Completion.Wait();
+            Status = Statuses.DownloadComplete;
+        }
+
         /// <summary>
         /// Get path to image folder that stores skills icons.
         /// </summary>

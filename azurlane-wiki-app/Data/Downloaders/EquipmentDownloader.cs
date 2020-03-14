@@ -58,6 +58,16 @@ namespace azurlane_wiki_app.Data.Downloaders
                     if (await cargoContext.ShipGirlsEquipment
                             .CountAsync(e => e.Name == wrpEquipment.Equipment.Name) == 0)
                     {
+                        Nationality nationality = cargoContext.Nationalities.Find(wrpEquipment.Equipment.Nationality);
+
+                        if (nationality == null)
+                        {
+                            nationality = new Nationality { Name = wrpEquipment.Equipment.Nationality };
+                            cargoContext.Nationalities.Add(nationality);
+                            cargoContext.SaveChanges();
+                        }
+
+                        wrpEquipment.Equipment.FK_Nationality = nationality;
                         cargoContext.ShipGirlsEquipment.Add(wrpEquipment.Equipment);
                     }
 
@@ -111,6 +121,17 @@ namespace azurlane_wiki_app.Data.Downloaders
             using (CargoContext cargoContext = new CargoContext())
             {
                 downloadBlock.Post(wrpEquipment.Equipment.Image);
+
+                Nationality nationality = cargoContext.Nationalities.Find(wrpEquipment.Equipment.Nationality);
+
+                if (nationality == null)
+                {
+                    nationality = new Nationality { Name = wrpEquipment.Equipment.Nationality };
+                    cargoContext.Nationalities.Add(nationality);
+                    cargoContext.SaveChanges();
+                }
+
+                wrpEquipment.Equipment.FK_Nationality = nationality;
 
                 if (await cargoContext.ShipGirlsEquipment
                         .CountAsync(e => e.Name == wrpEquipment.Equipment.Name) == 0)

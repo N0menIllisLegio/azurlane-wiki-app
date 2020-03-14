@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
 namespace azurlane_wiki_app.Data.Tables
@@ -16,21 +17,21 @@ namespace azurlane_wiki_app.Data.Tables
         [MaxLength(40)]
         public string ShipID { get; set; }
         [MaxLength(40)]
-        public string ShipGroup { get; set; }
-        [MaxLength(40)]
         public string Name { get; set; }
-        [MaxLength(10)]
-        public string Rarity { get; set; }
-        [MaxLength(20)]
-        public string Nationality { get; set; }
+        //[MaxLength(10)]
+        //public string Rarity { get; set; }
+        //[MaxLength(40)]
+        //public string ShipGroup { get; set; }
+        //[MaxLength(20)]
+        //public string Nationality { get; set; }
         [MaxLength(30)]
         public string ConstructTime { get; set; }
-        [MaxLength(40)]
-        public string Type { get; set; }
-        [MaxLength(20)]
-        public string SubtypeRetro { get; set; }
-        [MaxLength(20)]
-        public string Class { get; set; }
+        //[MaxLength(40)]
+        //public string Type { get; set; }
+        //[MaxLength(20)]
+        //public string SubtypeRetro { get; set; }
+        //[MaxLength(20)]
+        //public string Class { get; set; }
         [MaxLength(3)]
         public string Remodel { get; set; }
         public int? HealthInitial { get; set; }
@@ -157,7 +158,6 @@ namespace azurlane_wiki_app.Data.Tables
         [MaxLength(250)]
         public string ImageBannerKai { get; set; }
 
-
         #region Relationships
 
         public ShipGirl()
@@ -168,6 +168,36 @@ namespace azurlane_wiki_app.Data.Tables
 
         public virtual ICollection<ShipGirlWhereToGetShipGirl> WhereToGetShipGirl { get; set; }
         public virtual ICollection<Skill> Skills { get; set; }
+
+        [MaxLength(40)]
+        [ForeignKey("FK_Rarity")]
+        public string Rarity { get; set; }
+        public virtual Rarity FK_Rarity { get; set; }
+
+        [MaxLength(40)]
+        [ForeignKey("FK_ShipGroup")]
+        public string ShipGroup { get; set; }
+        public virtual ShipGroup FK_ShipGroup { get; set; }
+
+        [MaxLength(20)]
+        [ForeignKey("FK_Nationality")]
+        public string Nationality { get; set; }
+        public virtual Nationality FK_Nationality { get; set; }
+
+        [MaxLength(40)]
+        [ForeignKey("FK_ShipType")]
+        public string Type { get; set; }
+        public virtual ShipType FK_ShipType { get; set; }
+
+        [MaxLength(20)]
+        [ForeignKey("FK_SubtypeRetro")]
+        public string SubtypeRetro { get; set; }
+        public virtual SubtypeRetro FK_SubtypeRetro { get; set; }
+
+        [MaxLength(20)]
+        [ForeignKey("FK_ShipClass")]
+        public string Class { get; set; }
+        public virtual ShipClass FK_ShipClass { get; set; }
 
         #endregion
     }

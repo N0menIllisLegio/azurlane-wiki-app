@@ -208,7 +208,7 @@ namespace azurlane_wiki_app.Data.Downloaders
         /// </summary>
         /// <param name="imageName">Image name (example: 22Chibi.png)</param>
         /// <returns>Relative image path</returns>
-        public async Task<string> DownloadImage(string imageName)
+        protected async Task<string> DownloadImage(string imageName)
         {
             string imageUrl;
             string imagePath = "";

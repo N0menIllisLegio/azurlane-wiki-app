@@ -17,6 +17,14 @@ namespace azurlane_wiki_app
         public DbSet<WhereToGetShipGirl> WhereToGetShipGirls { get; set; }
         public DbSet<ShipGirlWhereToGetShipGirl> ShipGirlWhereToGetShipGirl { get; set; }
 
+        public DbSet<Icon> Icons { get; set; }
+        public DbSet<Rarity> Rarities { get; set; }
+        public DbSet<Nationality> Nationalities { get; set; }
+        public DbSet<ShipGroup> ShipGroups { get; set; }
+        public DbSet<ShipClass> ShipClasses { get; set; }
+        public DbSet<ShipType> ShipTypes { get; set; }
+        public DbSet<SubtypeRetro> SubtypeRetros { get; set; }
+
         public CargoContext() : base("CargoConnection") { }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -93,6 +101,8 @@ namespace azurlane_wiki_app
                 DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageKai) + "/" + oldShipGirl.ImageKai);
                 DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageShipyardIcon) + "/" + oldShipGirl.ImageShipyardIcon);
                 DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageShipyardIconKai) + "/" + oldShipGirl.ImageShipyardIconKai);
+
+                // TODO: Rarity, Nationality, Type, Subtype, ShipGroup, Class <- Now it's FK
                     
                 #region Fuck Ship Girls
 
@@ -123,7 +133,6 @@ namespace azurlane_wiki_app
                 oldShipGirl.ASWKai = newShipGirl.ASWKai;
                 oldShipGirl.ASWKai120 = newShipGirl.ASWKai120;
                 oldShipGirl.ASWMax = newShipGirl.ASWMax;
-                oldShipGirl.Class = newShipGirl.Class;
                 oldShipGirl.ConstructTime = newShipGirl.ConstructTime;
                 oldShipGirl.Consumption120 = newShipGirl.Consumption120;
                 oldShipGirl.ConsumptionInitial = newShipGirl.ConsumptionInitial;
@@ -172,30 +181,31 @@ namespace azurlane_wiki_app
                 oldShipGirl.LimitBreak3 = newShipGirl.LimitBreak3;
                 oldShipGirl.Luck = newShipGirl.Luck;
                 oldShipGirl.Name = newShipGirl.Name;
-                oldShipGirl.Nationality = newShipGirl.Nationality;
                 oldShipGirl.Oxygen120 = newShipGirl.Oxygen120;
                 oldShipGirl.OxygenInitial = newShipGirl.OxygenInitial;
                 oldShipGirl.OxygenKai = newShipGirl.OxygenKai;
                 oldShipGirl.OxygenKai120 = newShipGirl.OxygenKai120;
                 oldShipGirl.OxygenMax = newShipGirl.OxygenMax;
-                oldShipGirl.Rarity = newShipGirl.Rarity;
                 oldShipGirl.Reload120 = newShipGirl.Reload120;
                 oldShipGirl.ReloadInitial = newShipGirl.ReloadInitial;
                 oldShipGirl.ReloadKai = newShipGirl.ReloadKai;
                 oldShipGirl.ReloadKai120 = newShipGirl.ReloadKai120;
                 oldShipGirl.ReloadMax = newShipGirl.ReloadMax;
                 oldShipGirl.Remodel = newShipGirl.Remodel;
-                oldShipGirl.ShipGroup = newShipGirl.ShipGroup;
-                // oldShipGirl.ShipID = newShipGirl.ShipID;
                 oldShipGirl.Speed = newShipGirl.Speed;
                 oldShipGirl.SpeedKai = newShipGirl.SpeedKai;
-                oldShipGirl.SubtypeRetro = newShipGirl.SubtypeRetro;
                 oldShipGirl.Torp120 = newShipGirl.Torp120;
                 oldShipGirl.TorpInitial = newShipGirl.TorpInitial;
                 oldShipGirl.TorpKai = newShipGirl.TorpKai;
                 oldShipGirl.TorpKai120 = newShipGirl.TorpKai120;
                 oldShipGirl.TorpMax = newShipGirl.TorpMax;
-                oldShipGirl.Type = newShipGirl.Type;
+
+                oldShipGirl.FK_Nationality = newShipGirl.FK_Nationality;
+                oldShipGirl.FK_Rarity = newShipGirl.FK_Rarity;
+                oldShipGirl.FK_ShipGroup = newShipGirl.FK_ShipGroup;
+                oldShipGirl.FK_SubtypeRetro = newShipGirl.FK_SubtypeRetro;
+                oldShipGirl.FK_ShipType = newShipGirl.FK_ShipType;
+                oldShipGirl.FK_ShipClass = newShipGirl.FK_ShipClass;
 
                 #endregion
 
@@ -270,7 +280,6 @@ namespace azurlane_wiki_app
                 oldEquipment.Luck = newEquipment.Luck;
                 oldEquipment.LuckMax = newEquipment.LuckMax;
                 oldEquipment.Name = newEquipment.Name;
-                oldEquipment.Nationality = newEquipment.Nationality;
                 oldEquipment.Notes = newEquipment.Notes;
                 oldEquipment.Number = newEquipment.Number;
                 oldEquipment.Oxygen = newEquipment.Oxygen;
@@ -298,6 +307,8 @@ namespace azurlane_wiki_app
                 oldEquipment.Type = newEquipment.Type;
                 oldEquipment.VolleyTime = newEquipment.VolleyTime;
                 oldEquipment.WepRange = newEquipment.WepRange;
+
+                oldEquipment.FK_Nationality = newEquipment.FK_Nationality;
 
                 #endregion
 

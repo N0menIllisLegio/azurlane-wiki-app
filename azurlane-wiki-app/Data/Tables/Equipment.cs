@@ -24,8 +24,6 @@ namespace azurlane_wiki_app.Data.Tables
         public string Image { get; set; }
         [MaxLength(50)]
         public string Type { get; set; }
-        [MaxLength(50)]
-        public string Nationality { get; set; }
         [MaxLength(5)]
         public string Tech { get; set; }
 
@@ -139,5 +137,15 @@ namespace azurlane_wiki_app.Data.Tables
         public string DropLocation { get; set; }
         [MaxLength(4000)]
         public string Notes { get; set; }
+
+        #region Relationships
+
+        //TODO: create relationship!!!
+        [MaxLength(50)]
+        [ForeignKey("FK_Nationality")]
+        public string Nationality { get; set; }
+        public virtual Nationality FK_Nationality { get; set; }
+
+        #endregion
     }
 }

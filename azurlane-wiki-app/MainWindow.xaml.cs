@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using azurlane_wiki_app.Data;
 
 namespace azurlane_wiki_app
 {
@@ -135,11 +136,24 @@ namespace azurlane_wiki_app
             EquipmentDownloader equipmentDownloader = new EquipmentDownloader(2);
             SkillDownloader skillDownloader = new SkillDownloader();
             WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
+            IconDownloader iconDownloader = new IconDownloader();
+            Seeder seeder = new Seeder();
 
+            await seeder.DownloadIcons();
+
+            //await shipDownloader.Download();
+            //await iconDownloader.Download();
             //await shipDownloader.Download("001");
             //await equipmentDownloader.Download("Z Flag");
             //await skillDownloader.Download("Martyr");
-            await wtgShipGirlDownloader.Download("363");
+            //await wtgShipGirlDownloader.Download("363");
+
+            //using (CargoContext cargoContext = new CargoContext())
+            //{
+            //    var ship = cargoContext.ShipGirls.Find("001");
+            //    await skillDownloader.Download(ship, cargoContext);
+            //    InfoLabel.Content = ship.Skills.Count;
+            //}
         }
     }
 }

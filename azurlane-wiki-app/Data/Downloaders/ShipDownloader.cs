@@ -12,6 +12,26 @@ namespace azurlane_wiki_app.Data.Downloaders
         private readonly string KaiImagesFolderPath = ImagesFolderPath + "/Ships/KaiImages";
         private readonly string NonKaiImagesFolderPath = ImagesFolderPath + "/Ships/Images";
 
+        /// <summary>
+        /// Can't find where i can get them 
+        /// </summary>
+        private Dictionary<string, string> Abbreviations = new Dictionary<string, string>
+        {
+            ["Destroyer"] = "DD",
+            ["Light Cruiser"] = "CL",
+            ["Heavy Cruiser"] = "CA",
+            ["Aircraft Carrier"] = "CV",
+            ["Light Aircraft Carrier"] = "CVL",
+            ["Battleship"] = "BB",
+            ["Submarine"] = "SS",
+            ["Large Cruiser"] = "DD",
+            ["Repair Ship"] = "AR",
+            ["Battlecruiser"] = "BC",
+            ["Monitor"] = "BM",
+            ["Submarine Carrier"] = "SSV",
+            ["Aviation Battleship"] = "BBV"
+        };
+
         private const string ShipFields = "ShipGroup,ShipID,Name,Rarity,Nationality,ConstructTime,Type," +
                                           "SubtypeRetro,Class,Remodel,Image,ImageShipyardIcon,ImageChibi,ImageIcon," +
                                           "ImageBanner,ImageKai,ImageShipyardIconKai,ImageChibiKai," +
@@ -71,7 +91,6 @@ namespace azurlane_wiki_app.Data.Downloaders
                 foreach (ShipGirlJsonWrapper wrappedGirl in wrappedGirls)
                 {
                     // Add images in queue for download
-
                     downloadBlock.Post(wrappedGirl.ShipGirl.Image);
                     downloadBlock.Post(wrappedGirl.ShipGirl.ImageBanner);
                     downloadBlock.Post(wrappedGirl.ShipGirl.ImageChibi);
@@ -82,14 +101,19 @@ namespace azurlane_wiki_app.Data.Downloaders
                     downloadBlock.Post(wrappedGirl.ShipGirl.ImageIconKai);
                     downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIcon);
                     downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIconKai);
+                }
 
+                downloadBlock.Complete();
+
+                foreach (ShipGirlJsonWrapper wrappedGirl in wrappedGirls)
+                {
                     if (await cargoContext.ShipGirls.FindAsync(wrappedGirl.ShipGirl.ShipID) == null)
                     {
+                        CreateRelationships(wrappedGirl.ShipGirl, cargoContext);
                         cargoContext.ShipGirls.Add(wrappedGirl.ShipGirl);
                     }
                 }
 
-                downloadBlock.Complete();
                 await cargoContext.SaveChangesAsync();
             }
 
@@ -145,6 +169,8 @@ namespace azurlane_wiki_app.Data.Downloaders
                 downloadBlock.Post(wrappedGirl.ShipGirl.ImageIconKai);
                 downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIcon);
                 downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIconKai);
+
+                CreateRelationships(wrappedGirl.ShipGirl, cargoContext);
 
                 if (await cargoContext.ShipGirls.FindAsync(wrappedGirl.ShipGirl.ShipID) == null)
                 {
@@ -230,6 +256,76 @@ namespace azurlane_wiki_app.Data.Downloaders
             }
 
             return folderName;
+        }
+
+        private void CreateRelationships(ShipGirl shipGirl, CargoContext cargoContext)
+        {
+            Rarity rarity = cargoContext.Rarities.Find(shipGirl.Rarity);
+            Nationality nationality = cargoContext.Nationalities.Find(shipGirl.Nationality);
+            ShipClass shipClass = cargoContext.ShipClasses.Find(shipGirl.Class);
+            ShipGroup shipGroup = cargoContext.ShipGroups.Find(shipGirl.ShipGroup);
+            ShipType shipType = cargoContext.ShipTypes.Find(shipGirl.Type);
+            SubtypeRetro subtypeRetro = cargoContext.SubtypeRetros.Find(shipGirl.SubtypeRetro);
+
+            if (rarity == null)
+            {
+                rarity = new Rarity { Name = shipGirl.Rarity };
+                cargoContext.Rarities.Add(rarity);
+            }
+            
+            if (nationality == null)
+            {
+                nationality = new Nationality { Name = shipGirl.Nationality };
+                cargoContext.Nationalities.Add(nationality);
+            }
+
+            if (shipClass == null)
+            {
+                shipClass = new ShipClass { Name = shipGirl.Class };
+                cargoContext.ShipClasses.Add(shipClass);
+            }
+
+            if (shipGroup == null)
+            {
+                shipGroup = new ShipGroup { Name = shipGirl.ShipGroup };
+                cargoContext.ShipGroups.Add(shipGroup);
+            }
+
+            if (shipType == null)
+            {
+                shipType = new ShipType
+                {
+                    Name = shipGirl.Type,
+                    Abbreviation = Abbreviations[shipGirl.Type]
+                };
+                cargoContext.ShipTypes.Add(shipType);
+            }
+
+            if (subtypeRetro == null)
+            {
+                if (shipGirl.SubtypeRetro.Trim() == "")
+                {
+                    shipGirl.SubtypeRetro = null;
+                }
+                else
+                {
+                    subtypeRetro = new SubtypeRetro
+                    {
+                        Name = shipGirl.SubtypeRetro,
+                        Abbreviation = Abbreviations[shipGirl.SubtypeRetro]
+                    };
+                    cargoContext.SubtypeRetros.Add(subtypeRetro);
+                }
+            }
+
+            shipGirl.FK_Rarity = rarity;
+            shipGirl.FK_Nationality = nationality;
+            shipGirl.FK_ShipClass = shipClass;
+            shipGirl.FK_ShipGroup = shipGroup;
+            shipGirl.FK_ShipType = shipType;
+            shipGirl.FK_SubtypeRetro = subtypeRetro;
+
+            cargoContext.SaveChanges();
         }
     }
 }

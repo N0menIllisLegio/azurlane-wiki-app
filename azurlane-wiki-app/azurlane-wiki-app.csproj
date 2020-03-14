@@ -89,8 +89,14 @@
     </ApplicationDefinition>
     <Compile Include="Data\CargoContext.cs" />
     <Compile Include="Data\Downloaders\DataDownloader.cs" />
+    <Compile Include="Data\Downloaders\IconDownloader.cs" />
+    <Compile Include="Data\Seeder.cs" />
     <Compile Include="Data\Tables\Equipment.cs" />
     <Compile Include="Data\Downloaders\EquipmentDownloader.cs" />
+    <Compile Include="Data\Tables\Icon.cs" />
+    <Compile Include="Data\Tables\Nationality.cs" />
+    <Compile Include="Data\Tables\Rarity.cs" />
+    <Compile Include="Data\Tables\ShipClass.cs" />
     <Compile Include="Data\Tables\ShipGirl.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -102,6 +108,9 @@
     </Compile>
     <Compile Include="Data\Downloaders\ShipDownloader.cs" />
     <Compile Include="Data\Tables\ShipGirlWhereToGetShipGirl.cs" />
+    <Compile Include="Data\Tables\ShipGroup.cs" />
+    <Compile Include="Data\Tables\ShipType.cs" />
+    <Compile Include="Data\Tables\SubtypeRetro.cs" />
     <Compile Include="Data\Tables\WhereToGetShipGirl.cs" />
     <Compile Include="Data\Tables\Skill.cs" />
     <Compile Include="Data\Downloaders\SkillDownloader.cs" />
