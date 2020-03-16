@@ -8,6 +8,10 @@ namespace azurlane_wiki_app.Data.Tables
         [Key]
         public string Name { get; set; }
 
+        public int? ScrapOil { get; set; }
+        public int? ScrapCoins { get; set; }
+        public int? ScrapMedals { get; set; }
+
         #region Relationships
 
         public Rarity()

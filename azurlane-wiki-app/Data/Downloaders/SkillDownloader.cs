@@ -10,7 +10,7 @@ namespace azurlane_wiki_app.Data.Downloaders
 {
     class SkillDownloader : DataDownloader
     {
-        private readonly string SkillImagesFolderPath = ImagesFolderPath + "/SkillsIcons";
+        private static readonly string SkillImagesFolderPath = ImagesFolderPath + "/SkillsIcons";
         private const string SkillFields = "ships.ShipID,ship_skills.Num,ship_skills.Name,ship_skills.Detail," +
                                            "ship_skills.Remodel,ship_skills.Type,ship_skills.Icon";
 
@@ -54,28 +54,33 @@ namespace azurlane_wiki_app.Data.Downloaders
                 foreach (SkillJsonWrapper wrappedSkill in wrappedSkills)
                 {
                     downloadBlock.Post(wrappedSkill.Skill.Icon);
+                }
 
+                downloadBlock.Complete();
+
+                foreach (SkillJsonWrapper wrappedSkill in wrappedSkills)
+                {
                     if (await cargoContext.Skills
                             .CountAsync(e => e.Name == wrappedSkill.Skill.Name) == 0)
                     {
                         wrappedSkill.Skill.FK_ShipGirl
                             = await cargoContext.ShipGirls.FindAsync(wrappedSkill.Skill.ShipID);
+                        SavePaths(wrappedSkill.Skill);
                         cargoContext.Skills.Add(wrappedSkill.Skill);
                     }
                 }
 
-                downloadBlock.Complete();
                 await cargoContext.SaveChangesAsync();
             }
 
-            downloadBlock.Completion.Wait();
+            //downloadBlock.Completion.Wait();
             Status = Statuses.DownloadComplete;
         }
 
         /// <summary>
         /// Download one Skill by name and update it or save if it doesn't exist.
         /// </summary>
-        /// <param name="id">Name of skill.</param>
+        /// <param name="id">Name of skill.</param>s
         public override async Task Download(string id)
         {
             Status = Statuses.InProgress;
@@ -111,9 +116,11 @@ namespace azurlane_wiki_app.Data.Downloaders
             using (CargoContext cargoContext = new CargoContext())
             {
                 downloadBlock.Post(wrappedSkill.Skill.Icon);
+                downloadBlock.Complete();
 
                 wrappedSkill.Skill.FK_ShipGirl
                     = await cargoContext.ShipGirls.FindAsync(wrappedSkill.Skill.ShipID);
+                SavePaths(wrappedSkill.Skill);
 
                 if (await cargoContext.Skills
                         .CountAsync(e => e.Name == wrappedSkill.Skill.Name) == 0)
@@ -125,11 +132,9 @@ namespace azurlane_wiki_app.Data.Downloaders
                 {
                     await cargoContext.Update(wrappedSkill.Skill);
                 }
-                
-                downloadBlock.Complete();
             }
 
-            downloadBlock.Completion.Wait();
+            //downloadBlock.Completion.Wait();
             Status = Statuses.DownloadComplete;
         }
 
@@ -185,7 +190,14 @@ namespace azurlane_wiki_app.Data.Downloaders
             foreach (SkillJsonWrapper wrappedSkill in wrappedSkills)
             {
                 downloadBlock.Post(wrappedSkill.Skill.Icon);
+            }
+
+            downloadBlock.Complete();
+
+            foreach (SkillJsonWrapper wrappedSkill in wrappedSkills)
+            {
                 wrappedSkill.Skill.FK_ShipGirl = shipGirl;
+                SavePaths(wrappedSkill.Skill);
 
                 if (await cargoContext.Skills
                         .CountAsync(e => e.Name == wrappedSkill.Skill.Name) == 0)
@@ -199,7 +211,6 @@ namespace azurlane_wiki_app.Data.Downloaders
                 }
             }
 
-            downloadBlock.Complete();
             downloadBlock.Completion.Wait();
             Status = Statuses.DownloadComplete;
         }
@@ -210,5 +221,14 @@ namespace azurlane_wiki_app.Data.Downloaders
         /// <param name="imageName">Name of image for saving</param>
         /// <returns>Path</returns>
         public override string GetImageFolder(string imageName) => SkillImagesFolderPath;
+
+        /// <summary>
+        /// Change Skill icon fields from image name to relative path to icon
+        /// </summary>
+        /// <param name="skill">Skill for changing</param>
+        private void SavePaths(Skill skill)
+        {
+            skill.Icon = GetImageFolder(skill.Icon) + "/" + skill.Icon;
+        }
     }
 }

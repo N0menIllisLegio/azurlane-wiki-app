@@ -11,7 +11,7 @@ namespace azurlane_wiki_app.Data.Downloaders
 {
     class IconDownloader : DataDownloader
     {
-        private readonly string IconsFolderPath = ImagesFolderPath + "/Icons";
+        private static readonly string IconsFolderPath = ImagesFolderPath + "/Icons";
 
         private TransformBlock<string, string> urlGetterBlock;
 
@@ -132,6 +132,11 @@ namespace azurlane_wiki_app.Data.Downloaders
             Status = Statuses.DownloadComplete;
         }
 
+        /// <summary>
+        /// Get path to image folder that stores icons.
+        /// </summary>
+        /// <param name="imageName">Name of icon for saving</param>
+        /// <returns>Path</returns>
         public override string GetImageFolder(string imageName) => IconsFolderPath;
 
         /// <summary>

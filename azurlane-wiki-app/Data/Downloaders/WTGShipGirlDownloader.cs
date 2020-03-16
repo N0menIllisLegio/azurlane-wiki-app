@@ -411,8 +411,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                                 }
 
                                 //  create connection
-                                await cargoContext.CreateRelationshipGirlDrop(whereToGetShipGirl, shipGirl,
-                                    dictionary[key]);
+                                await CreateRelationshipGirlDrop(whereToGetShipGirl, shipGirl, dictionary[key], cargoContext);
                             }
                         }
                     }
@@ -490,8 +489,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                             }
 
                             //  create connection
-                            await cargoContext.CreateRelationshipGirlDrop(whereToGetShipGirl, shipGirl,
-                                dictionary[key]);
+                            await CreateRelationshipGirlDrop(whereToGetShipGirl, shipGirl, dictionary[key], cargoContext);
                         }
                     }
                 }
@@ -506,5 +504,22 @@ namespace azurlane_wiki_app.Data.Downloaders
         /// <param name="imageName">Name of image for saving</param>
         /// <returns>Path</returns>
         public override string GetImageFolder(string imageName) => ImagesFolderPath;
+
+        public async Task CreateRelationshipGirlDrop(WhereToGetShipGirl wtg, ShipGirl shipGirl, string note, CargoContext cargoContext)
+        {
+            ShipGirlWhereToGetShipGirl mtm = new ShipGirlWhereToGetShipGirl
+            {
+                FK_ShipGirl = shipGirl,
+                FK_WhereToGetShipGirl = wtg,
+                Note = note
+            };
+
+            if (cargoContext.ShipGirlWhereToGetShipGirl.Count(e => e.FK_ShipGirl.ShipID == mtm.FK_ShipGirl.ShipID &&
+                                                      e.FK_WhereToGetShipGirl.Name == mtm.FK_WhereToGetShipGirl.Name) == 0)
+            {
+                cargoContext.ShipGirlWhereToGetShipGirl.Add(mtm);
+                await cargoContext.SaveChangesAsync();
+            }
+        }
     }
 }

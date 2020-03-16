@@ -25,6 +25,7 @@ namespace azurlane_wiki_app.Data.Downloaders
         protected const string WikiApiEndpoint = "https://azurlane.koumakan.jp/w/api.php";
         protected ActionBlock<string> downloadBlock;
 
+        private Object locker = new Object();
         private const string ImageInfoApiEndpoint =
             "https://azurlane.koumakan.jp/w/api.php?action=query&format=json&list=allimages&ailimit=1&aifrom=";
 
@@ -231,8 +232,11 @@ namespace azurlane_wiki_app.Data.Downloaders
             }
 
             await DownloadImageByUrl(imageUrl, imageName);
-            OnPropertyChanged(nameof(CurrentImageCount));
-            Interlocked.Increment(ref _currentImageCount);
+
+            lock (locker)
+            {
+                CurrentImageCount++;
+            }
 
             return imagePath;
         }

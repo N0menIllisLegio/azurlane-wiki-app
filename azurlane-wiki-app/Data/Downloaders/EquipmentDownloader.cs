@@ -10,7 +10,7 @@ namespace azurlane_wiki_app.Data.Downloaders
 {
     class EquipmentDownloader : DataDownloader
     {
-        private readonly string EquipmentImagesFolderPath = ImagesFolderPath + "/Equipment";
+        private static readonly string EquipmentImagesFolderPath = ImagesFolderPath + "/Equipment";
         private const string EquipmentFields = "Name,Image,Type,Stars,Nationality,Tech,Health,HealthMax,Torpedo,TorpMax,Firepower,FPMax," +
                                                "Aviation,AvMax,Evasion,EvasionMax,PlaneHP,PlaneHPMax,Reload,ReloadMax,ASW,ASWMax,Oxygen," +
                                                "OxygenMax,AA,AAMax,Luck,LuckMax,Acc,AccMax,Spd,SpdMax,Damage,DamageMax,RoF,RoFMax,Number," +
@@ -18,7 +18,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                                                "AAGun2,Bombs1,Bombs2,DD,DDNote,CL,CLNote,CA,CANote,CB,CBNote,BM,BMNote,BB,BBNote,BC,BCNote," +
                                                "BBV,BBVNote,CV,CVNote,CVL,CVLNote,AR,ARNote,SS,SSNote,SSV,SSVNote,DropLocation,Notes";
 
-        public EquipmentDownloader(int ThreadsCount = 0) : base(ThreadsCount)
+        public EquipmentDownloader(int threadsCount = 0) : base(threadsCount)
         {
             if (!Directory.Exists(EquipmentImagesFolderPath))
             {
@@ -55,6 +55,13 @@ namespace azurlane_wiki_app.Data.Downloaders
             {
                 foreach (EquipmentJsonWrapper wrpEquipment in wrappedEquipment)
                 {
+                    downloadBlock.Post(wrpEquipment.Equipment.Image);
+                }
+
+                downloadBlock.Complete();
+
+                foreach (EquipmentJsonWrapper wrpEquipment in wrappedEquipment)
+                {
                     if (await cargoContext.ShipGirlsEquipment
                             .CountAsync(e => e.Name == wrpEquipment.Equipment.Name) == 0)
                     {
@@ -62,24 +69,27 @@ namespace azurlane_wiki_app.Data.Downloaders
 
                         if (nationality == null)
                         {
-                            nationality = new Nationality { Name = wrpEquipment.Equipment.Nationality };
+                            nationality = new Nationality
+                            {
+                                Name = wrpEquipment.Equipment.Nationality,
+                                FK_Icon = cargoContext.Icons.Find(wrpEquipment.Equipment.Nationality)
+                            };
+
                             cargoContext.Nationalities.Add(nationality);
                             cargoContext.SaveChanges();
                         }
 
                         wrpEquipment.Equipment.FK_Nationality = nationality;
+                        SavePaths(wrpEquipment.Equipment);
                         cargoContext.ShipGirlsEquipment.Add(wrpEquipment.Equipment);
                     }
-
-                    downloadBlock.Post(wrpEquipment.Equipment.Image);
                 }
 
-                downloadBlock.Complete();
                 await cargoContext.SaveChangesAsync();
             }
 
-            downloadBlock.Completion.Wait();
-
+            //downloadBlock.Completion.Wait();
+            // TODO: downloadBlock.Completion.ContinueWith(e => { Status = Statuses.DownloadComplete; });
             Status = Statuses.DownloadComplete;
         }
 
@@ -121,17 +131,24 @@ namespace azurlane_wiki_app.Data.Downloaders
             using (CargoContext cargoContext = new CargoContext())
             {
                 downloadBlock.Post(wrpEquipment.Equipment.Image);
+                downloadBlock.Complete();
 
                 Nationality nationality = cargoContext.Nationalities.Find(wrpEquipment.Equipment.Nationality);
 
                 if (nationality == null)
                 {
-                    nationality = new Nationality { Name = wrpEquipment.Equipment.Nationality };
+                    nationality = new Nationality
+                    {
+                        Name = wrpEquipment.Equipment.Nationality,
+                        FK_Icon = cargoContext.Icons.Find(wrpEquipment.Equipment.Nationality)
+                    };
+
                     cargoContext.Nationalities.Add(nationality);
                     cargoContext.SaveChanges();
                 }
 
                 wrpEquipment.Equipment.FK_Nationality = nationality;
+                SavePaths(wrpEquipment.Equipment);
 
                 if (await cargoContext.ShipGirlsEquipment
                         .CountAsync(e => e.Name == wrpEquipment.Equipment.Name) == 0)
@@ -143,11 +160,9 @@ namespace azurlane_wiki_app.Data.Downloaders
                 {
                     await cargoContext.Update(wrpEquipment.Equipment);
                 }
-
-                downloadBlock.Complete();
             }
 
-            downloadBlock.Completion.Wait();
+            //downloadBlock.Completion.Wait();
             Status = Statuses.DownloadComplete;
         }
 
@@ -157,5 +172,14 @@ namespace azurlane_wiki_app.Data.Downloaders
         /// <param name="imageName">Name of image for saving</param>
         /// <returns>Path</returns>
         public override string GetImageFolder(string imageName) => EquipmentImagesFolderPath;
+
+        /// <summary>
+        /// Change Equipment image fields from image name to relative path to image
+        /// </summary>
+        /// <param name="equipment">Equipment for changing</param>
+        private void SavePaths(Equipment equipment)
+        {
+            equipment.Image = GetImageFolder(equipment.Image) + "/" + equipment.Image;
+        }
     }
 }

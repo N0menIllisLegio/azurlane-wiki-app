@@ -16,7 +16,6 @@ namespace azurlane_wiki_app
         public DbSet<Skill> Skills { get; set; }
         public DbSet<WhereToGetShipGirl> WhereToGetShipGirls { get; set; }
         public DbSet<ShipGirlWhereToGetShipGirl> ShipGirlWhereToGetShipGirl { get; set; }
-
         public DbSet<Icon> Icons { get; set; }
         public DbSet<Rarity> Rarities { get; set; }
         public DbSet<Nationality> Nationalities { get; set; }
@@ -32,23 +31,6 @@ namespace azurlane_wiki_app
             Database.SetInitializer(new SqliteCreateDatabaseIfNotExists<CargoContext>(modelBuilder));
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
             modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
-        }
-
-        public async Task CreateRelationshipGirlDrop(WhereToGetShipGirl wtg, ShipGirl shipGirl, string note)
-        {
-            ShipGirlWhereToGetShipGirl mtm = new ShipGirlWhereToGetShipGirl
-            {
-                FK_ShipGirl = shipGirl,
-                FK_WhereToGetShipGirl = wtg,
-                Note = note
-            };
-
-            if (ShipGirlWhereToGetShipGirl.Count(e => e.FK_ShipGirl.ShipID == mtm.FK_ShipGirl.ShipID && 
-                                                      e.FK_WhereToGetShipGirl.Name == mtm.FK_WhereToGetShipGirl.Name) == 0)
-            {
-                ShipGirlWhereToGetShipGirl.Add(mtm);
-                await SaveChangesAsync();
-            }
         }
 
         /// <summary>
@@ -71,6 +53,10 @@ namespace azurlane_wiki_app
             Directory.Delete(DataDownloader.ImagesFolderPath, true);
         }
 
+        /// <summary>
+        /// Removes file on path if exist
+        /// </summary>
+        /// <param name="path">Path to file</param>
         private void DeleteImage(string path)
         {
             if (File.Exists(path))
@@ -101,9 +87,7 @@ namespace azurlane_wiki_app
                 DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageKai) + "/" + oldShipGirl.ImageKai);
                 DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageShipyardIcon) + "/" + oldShipGirl.ImageShipyardIcon);
                 DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageShipyardIconKai) + "/" + oldShipGirl.ImageShipyardIconKai);
-
-                // TODO: Rarity, Nationality, Type, Subtype, ShipGroup, Class <- Now it's FK
-                    
+                 
                 #region Fuck Ship Girls
 
                 oldShipGirl.AA120 = newShipGirl.AA120;
