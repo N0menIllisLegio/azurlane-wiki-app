@@ -20,7 +20,10 @@ namespace azurlane_wiki_app
 
             // StatusGrid.Visibility = Visibility.Hidden;
             CargoContext cargoContext = new CargoContext();
-            Main.Content = new ShipGirlPage(cargoContext.ShipGirls.FirstOrDefault());
+
+            //Button_Click(this, new RoutedEventArgs());
+
+            Main.Content = new ShipGirlPage(cargoContext.ShipGirls.Find("224"));
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -30,7 +33,6 @@ namespace azurlane_wiki_app
             EquipmentDownloader equipmentDownloader = new EquipmentDownloader(2);
             SkillDownloader skillDownloader = new SkillDownloader();
             WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
-
 
             //SkillCurrentCount.DataContext = SkillDownloadProgress.DataContext 
             //    = SkillTotalCount.DataContext = skillDownloader;
@@ -45,40 +47,21 @@ namespace azurlane_wiki_app
 
             //await Task.Run(() => iconDownloader.Download());
 
-            Task[] tasks = new Task[2];
+            //Task[] tasks = new Task[2];
 
-            tasks[0] = Task.Run(() => shipDownloader.Download());
-            tasks[1] = Task.Run(() => equipmentDownloader.Download());
+            //tasks[0] = Task.Run(() => shipDownloader.Download());
+            //tasks[1] = Task.Run(() => equipmentDownloader.Download());
 
-            await Task.WhenAll(tasks);
+            //await Task.WhenAll(tasks);
 
-            tasks[0] = Task.Run(() => skillDownloader.Download());
-            tasks[1] = Task.Run(() => wtgShipGirlDownloader.Download());
+            //tasks[0] = Task.Run(() => skillDownloader.Download());
+            //tasks[1] = Task.Run(() => wtgShipGirlDownloader.Download());
 
-            await Task.WhenAll(tasks);
+            //await Task.WhenAll(tasks);
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            //using (CargoContext cargoContext = new CargoContext())
-            //{
-            //    int randomNum = random.Next(1, 350);
-            //    ShipGirl shipGirl = await cargoContext.ShipGirls.FindAsync("001");//randomNum.ToString());
-
-            //    if (shipGirl != null)
-            //    {
-            //        InfoLabel.Content = "Girl Name: " + shipGirl.Name
-            //                                         + "\n" +
-            //                                         "Girl skill: " + (shipGirl.Skills.FirstOrDefault()?.Name ?? "Suka") 
-            //                                         + "\n" + 
-            //                                         "Girl Drop Location:\n" 
-            //                                         + (shipGirl.WhereToGetShipGirl.FirstOrDefault()?.FK_WhereToGetShipGirl.Name ?? "Suka");
-            //    }
-            //    else
-            //    {
-            //        InfoLabel.Content = "Nothing to display.\nNumber: " + randomNum;
-            //    }
-            //}
         }
 
         private void ActionEvent(object sender, RoutedEventArgs e)
@@ -100,9 +83,9 @@ namespace azurlane_wiki_app
 
             using (CargoContext cargoContext = new CargoContext())
             {
-                //    var ship = cargoContext.ShipGirls.Find("001");
-                //    await skillDownloader.Download(ship, cargoContext);
-                //InfoLabel.Content = cargoContext.Icons.Count();
+                //  var ship = cargoContext.ShipGirls.Find("001");
+                //  await skillDownloader.Download(ship, cargoContext);
+                //  InfoLabel.Content = cargoContext.Icons.Count();
             }
         }
     }

@@ -103,23 +103,17 @@ namespace azurlane_wiki_app.Data.Tables
         public int? AmmoKai120 { get; set; }
 
         [MaxLength(50)]
-        public string Eq1Type { get; set; }
-        [MaxLength(50)]
         public string Eq1EffInit { get; set; }
         [MaxLength(50)]
         public string Eq1EffInitMax { get; set; }
         [MaxLength(50)]
         public string Eq1EffInitKai { get; set; }
         [MaxLength(50)]
-        public string Eq2Type { get; set; }
-        [MaxLength(50)]
         public string Eq2EffInit { get; set; }
         [MaxLength(50)]
         public string Eq2EffInitMax { get; set; }
         [MaxLength(50)]
         public string Eq2EffInitKai { get; set; }
-        [MaxLength(50)]
-        public string Eq3Type { get; set; }
         [MaxLength(50)]
         public string Eq3EffInit { get; set; }
         [MaxLength(50)]
@@ -198,6 +192,20 @@ namespace azurlane_wiki_app.Data.Tables
         [ForeignKey("FK_ShipClass")]
         public string Class { get; set; }
         public virtual ShipClass FK_ShipClass { get; set; }
+
+
+
+        [ForeignKey("FK_Eq1Type")]
+        public string Eq1Type { get; set; }
+        public virtual EquipmentType FK_Eq1Type { get; set; }
+
+        [ForeignKey("FK_Eq2Type")]
+        public string Eq2Type { get; set; }
+        public virtual EquipmentType FK_Eq2Type { get; set; }
+
+        [ForeignKey("FK_Eq3Type")]
+        public string Eq3Type { get; set; }
+        public virtual EquipmentType FK_Eq3Type { get; set; }
 
         #endregion
     }

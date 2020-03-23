@@ -22,12 +22,9 @@ namespace azurlane_wiki_app.Data.Tables
 
         [MaxLength(250)]
         public string Image { get; set; }
-        [MaxLength(50)]
-        public string Type { get; set; }
-        [MaxLength(5)]
-        public string Tech { get; set; }
 
         public int? Stars { get; set; }
+
         public int? Health { get; set; }
         public int? HealthMax { get; set; }
         public int? Torpedo { get; set; }
@@ -145,6 +142,14 @@ namespace azurlane_wiki_app.Data.Tables
         [ForeignKey("FK_Nationality")]
         public string Nationality { get; set; }
         public virtual Nationality FK_Nationality { get; set; }
+
+        [ForeignKey(("FK_Type"))]
+        public string Type { get; set; }
+        public virtual EquipmentType FK_Type { get; set; }
+
+        [ForeignKey("FK_Tech")]
+        public string Tech { get; set; }
+        public virtual EquipmentTech FK_Tech { get; set; }
 
         #endregion
     }

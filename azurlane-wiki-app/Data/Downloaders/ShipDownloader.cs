@@ -1,4 +1,5 @@
-﻿using azurlane_wiki_app.Data.Tables;
+﻿using System;
+using azurlane_wiki_app.Data.Tables;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -286,6 +287,10 @@ namespace azurlane_wiki_app.Data.Downloaders
             ShipType shipType = cargoContext.ShipTypes.Find(shipGirl.Type);
             SubtypeRetro subtypeRetro = cargoContext.SubtypeRetros.Find(shipGirl.SubtypeRetro);
 
+            EquipmentType eq1Type = cargoContext.EquipmentTypes.Find(shipGirl.Eq1Type);
+            EquipmentType eq2Type = cargoContext.EquipmentTypes.Find(shipGirl.Eq2Type);
+            EquipmentType eq3Type = cargoContext.EquipmentTypes.Find(shipGirl.Eq3Type);
+
             if (rarity == null)
             {
                 (int? Coins, int? Oil, int? Medals) = ScrapValues[shipGirl.Rarity];
@@ -356,12 +361,55 @@ namespace azurlane_wiki_app.Data.Downloaders
                 }
             }
 
+            if (eq1Type == null && !string.IsNullOrEmpty(shipGirl.Eq1Type))
+            {
+                eq1Type = new EquipmentType {Name = shipGirl.Eq1Type};
+                cargoContext.EquipmentTypes.Add(eq1Type);
+            }
+
+            if (eq2Type == null && !string.IsNullOrEmpty(shipGirl.Eq1Type))
+            {
+                if (shipGirl.Eq2Type == shipGirl.Eq1Type)
+                {
+                    eq2Type = eq1Type;
+                }
+                else
+                {
+                    eq2Type = new EquipmentType { Name = shipGirl.Eq2Type };
+                    cargoContext.EquipmentTypes.Add(eq2Type);
+                }
+            }
+
+            if (eq3Type == null && !string.IsNullOrEmpty(shipGirl.Eq1Type))
+            {
+                if (shipGirl.Eq3Type == shipGirl.Eq1Type)
+                {
+                    eq3Type = eq1Type;
+                }
+                else
+                {
+                    if (shipGirl.Eq3Type == shipGirl.Eq2Type)
+                    {
+                        eq3Type = eq2Type;
+                    }
+                    else
+                    {
+                        eq3Type = new EquipmentType { Name = shipGirl.Eq3Type };
+                        cargoContext.EquipmentTypes.Add(eq3Type);
+                    }
+                }
+            }
+
             shipGirl.FK_Rarity = rarity;
             shipGirl.FK_Nationality = nationality;
             shipGirl.FK_ShipClass = shipClass;
             shipGirl.FK_ShipGroup = shipGroup;
             shipGirl.FK_ShipType = shipType;
             shipGirl.FK_SubtypeRetro = subtypeRetro;
+
+            shipGirl.FK_Eq1Type = eq1Type;
+            shipGirl.FK_Eq2Type = eq2Type;
+            shipGirl.FK_Eq3Type = eq3Type;
 
             cargoContext.SaveChanges();
         }

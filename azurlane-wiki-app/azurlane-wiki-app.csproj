@@ -93,16 +93,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ColorConverter.cs" />
     <Compile Include="Data\CargoContext.cs" />
     <Compile Include="Data\Downloaders\DataDownloader.cs" />
     <Compile Include="Data\Downloaders\IconDownloader.cs" />
     <Compile Include="Data\Tables\Equipment.cs" />
     <Compile Include="Data\Downloaders\EquipmentDownloader.cs" />
+    <Compile Include="Data\Tables\EquipmentTech.cs" />
+    <Compile Include="Data\Tables\EquipmentType.cs" />
     <Compile Include="Data\Tables\Icon.cs" />
     <Compile Include="Data\Tables\Nationality.cs" />
     <Compile Include="Data\Tables\Rarity.cs" />
     <Compile Include="Data\Tables\ShipClass.cs" />
     <Compile Include="Data\Tables\ShipGirl.cs" />
+    <Compile Include="DynamicBindingListView.cs" />
     <Compile Include="ShipGirlPage.xaml.cs">
       <DependentUpon>ShipGirlPage.xaml</DependentUpon>
     </Compile>
@@ -127,6 +131,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ResourcesDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ShipGirlPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

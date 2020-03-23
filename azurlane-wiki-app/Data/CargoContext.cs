@@ -23,6 +23,8 @@ namespace azurlane_wiki_app
         public DbSet<ShipClass> ShipClasses { get; set; }
         public DbSet<ShipType> ShipTypes { get; set; }
         public DbSet<SubtypeRetro> SubtypeRetros { get; set; }
+        public DbSet<EquipmentTech> EquipmentTeches { get; set; }
+        public DbSet<EquipmentType> EquipmentTypes { get; set; }
 
         public CargoContext() : base("CargoConnection") { }
 
@@ -126,15 +128,12 @@ namespace azurlane_wiki_app
                 oldShipGirl.Eq1EffInit = newShipGirl.Eq1EffInit;
                 oldShipGirl.Eq1EffInitKai = newShipGirl.Eq1EffInitKai;
                 oldShipGirl.Eq1EffInitMax = newShipGirl.Eq1EffInitMax;
-                oldShipGirl.Eq1Type = newShipGirl.Eq1Type;
                 oldShipGirl.Eq2EffInit = newShipGirl.Eq2EffInit;
                 oldShipGirl.Eq2EffInitKai = newShipGirl.Eq2EffInitKai;
                 oldShipGirl.Eq2EffInitMax = newShipGirl.Eq2EffInitMax;
-                oldShipGirl.Eq2Type = newShipGirl.Eq2Type;
                 oldShipGirl.Eq3EffInit = newShipGirl.Eq3EffInit;
                 oldShipGirl.Eq3EffInitKai = newShipGirl.Eq3EffInitKai;
                 oldShipGirl.Eq3EffInitMax = newShipGirl.Eq3EffInitMax;
-                oldShipGirl.Eq3Type = newShipGirl.Eq3Type;
                 oldShipGirl.Evade120 = newShipGirl.Evade120;
                 oldShipGirl.EvadeInitial = newShipGirl.EvadeInitial;
                 oldShipGirl.EvadeKai = newShipGirl.EvadeKai;
@@ -190,6 +189,10 @@ namespace azurlane_wiki_app
                 oldShipGirl.FK_SubtypeRetro = newShipGirl.FK_SubtypeRetro;
                 oldShipGirl.FK_ShipType = newShipGirl.FK_ShipType;
                 oldShipGirl.FK_ShipClass = newShipGirl.FK_ShipClass;
+
+                oldShipGirl.FK_Eq1Type = newShipGirl.FK_Eq1Type;
+                oldShipGirl.FK_Eq2Type = newShipGirl.FK_Eq2Type;
+                oldShipGirl.FK_Eq3Type = newShipGirl.FK_Eq3Type;
 
                 #endregion
 
@@ -285,14 +288,14 @@ namespace azurlane_wiki_app
                 oldEquipment.SSV = newEquipment.SSV;
                 oldEquipment.SSVNote = newEquipment.SSVNote;
                 oldEquipment.Stars = newEquipment.Stars;
-                oldEquipment.Tech = newEquipment.Tech;
                 oldEquipment.Torpedo = newEquipment.Torpedo;
                 oldEquipment.TorpMax = newEquipment.TorpMax;
-                oldEquipment.Type = newEquipment.Type;
                 oldEquipment.VolleyTime = newEquipment.VolleyTime;
                 oldEquipment.WepRange = newEquipment.WepRange;
 
                 oldEquipment.FK_Nationality = newEquipment.FK_Nationality;
+                oldEquipment.FK_Tech = newEquipment.FK_Tech;
+                oldEquipment.FK_Type = newEquipment.FK_Type;
 
                 #endregion
 

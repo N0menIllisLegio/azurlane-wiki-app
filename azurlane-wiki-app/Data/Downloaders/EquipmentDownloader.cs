@@ -18,6 +18,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                                                "AAGun2,Bombs1,Bombs2,DD,DDNote,CL,CLNote,CA,CANote,CB,CBNote,BM,BMNote,BB,BBNote,BC,BCNote," +
                                                "BBV,BBVNote,CV,CVNote,CVL,CVLNote,AR,ARNote,SS,SSNote,SSV,SSVNote,DropLocation,Notes";
 
+
         public EquipmentDownloader(int threadsCount = 0) : base(threadsCount)
         {
             if (!Directory.Exists(EquipmentImagesFolderPath))
@@ -80,6 +81,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                         }
 
                         wrpEquipment.Equipment.FK_Nationality = nationality;
+                        CreateRelationships(wrpEquipment.Equipment, cargoContext);
                         SavePaths(wrpEquipment.Equipment);
                         cargoContext.ShipGirlsEquipment.Add(wrpEquipment.Equipment);
                     }
@@ -148,6 +150,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                 }
 
                 wrpEquipment.Equipment.FK_Nationality = nationality;
+                CreateRelationships(wrpEquipment.Equipment, cargoContext);
                 SavePaths(wrpEquipment.Equipment);
 
                 if (await cargoContext.ShipGirlsEquipment
@@ -180,6 +183,35 @@ namespace azurlane_wiki_app.Data.Downloaders
         private void SavePaths(Equipment equipment)
         {
             equipment.Image = GetImageFolder(equipment.Image) + "/" + equipment.Image;
+        }
+
+        /// <summary>
+        /// Create relationships depending on values of Equipment.{ Tech, Type, Stars }.
+        /// If { Tech, Type, Stars } doesn't exists, creates it.
+        /// </summary>
+        /// <param name="equipment">Piece of equipment</param>
+        /// <param name="cargoContext">CargoContext</param>
+        private void CreateRelationships(Equipment equipment, CargoContext cargoContext)
+        {
+            EquipmentTech equipmentTech = cargoContext.EquipmentTeches.Find(equipment.Tech);
+            EquipmentType equipmentType = cargoContext.EquipmentTypes.Find(equipment.Type);
+
+            if (equipmentType == null)
+            {
+                equipmentType = new EquipmentType {Name = equipment.Type};
+                cargoContext.EquipmentTypes.Add(equipmentType);
+            }
+
+            if (equipmentTech == null)
+            {
+                equipmentTech = new EquipmentTech {Name = equipment.Tech};
+                cargoContext.EquipmentTeches.Add(equipmentTech);
+            }
+
+            equipment.FK_Tech = equipmentTech;
+            equipment.FK_Type = equipmentType;
+
+            cargoContext.SaveChanges();
         }
     }
 }

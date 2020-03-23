@@ -36,10 +36,12 @@ namespace azurlane_wiki_app.Data.Downloaders
                     {
                         using (CargoContext cargoContext = new CargoContext())
                         {
+                            string name = iconUrl.Split('/').Last();
+
                             Icon icon = new Icon
                             {
                                 Name = iconName.Replace("Template:", ""),
-                                FileName = iconUrl.Split('/').Last()
+                                FileName = GetImageFolder(name) + "/" + name
                             };
 
                             if (await cargoContext.Icons.FindAsync(icon.Name) == null)
@@ -118,7 +120,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                     Icon icon = new Icon
                     {
                         Name = id,
-                        FileName = (await DownloadImageByUrl(url, id + ".png")).Split('/').Last()
+                        FileName = await DownloadImageByUrl(url, id + ".png")
                     };
 
                     if (await cargoContext.Icons.FindAsync(icon.Name) == null)

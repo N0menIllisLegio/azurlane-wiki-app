@@ -41,12 +41,19 @@ namespace azurlane_wiki_app.Data.Downloaders
             [JsonProperty("Event")]
             public string Event { get; set; }
 
+            [JsonProperty("LightNote")]
             public string LightNote { get; set; }
+            [JsonProperty("HeavyNote")]
             public string HeavyNote { get; set; }
+            [JsonProperty("AviationNote")]
             public string AviationNote { get; set; }
+            [JsonProperty("LimitedNote")]
             public string LimitedNote { get; set; }
+            [JsonProperty("ExchangeNote")]
             public string ExchangeNote { get; set; }
+            [JsonProperty("CollectionNote")]
             public string CollectionNote { get; set; }
+            [JsonProperty("EventNote")]
             public string EventNote { get; set; }
 
             // Drop
@@ -324,16 +331,24 @@ namespace azurlane_wiki_app.Data.Downloaders
 
                 foreach (var property in properties)
                 {
-                    if (property.Value.ToString().Equals("t"))
+                    if (!property.Name.Equals("ID"))
                     {
                         string searchField = property.Name.Replace("node", "");
 
-                        var notes = properties.Where(p => p.Name.Contains(searchField) 
-                                                                && (p.Name.Contains("note") || p.Name.Contains("Note")));
+                        var notes = properties.Where(p => p.Name.Contains(searchField)
+                                                          && (p.Name.Contains("note") || p.Name.Contains("Note")));
 
                         string note = notes.ElementAt(0)?.Value.ToString();
 
-                        dictionary.Add(property.Attribute, note ?? "");
+                        // if its field value equals t(true) (means its node property) 
+                        // or its note is not empty (check Akagi, she drops on 3-4, but there are no t on 3-4, only note)
+                        // also dictionary should not contain it already
+                        // and it should be clearly node (or construction) NOT note!
+                        if ((property.Value.ToString().Equals("t") || !string.IsNullOrEmpty(note)) 
+                            && !dictionary.ContainsKey(property.Attribute) && !property.Attribute.ToLower().Contains("note"))
+                        {
+                            dictionary.Add(property.Attribute, note ?? "");
+                        }
                     }
                 }
 
@@ -343,7 +358,7 @@ namespace azurlane_wiki_app.Data.Downloaders
 
         #endregion
 
-        // if adding new locations don't forget to expand schema
+        // if adding new locations don't forget to expand schema and also add to drop class in viewmodel of shipgirlpage.xaml
         string DropFields = "ID,Light,Heavy,Aviation,Limited,Exchange,Collection,Event,1-1,1-2,1-3,1-4,2-1,2-2,2-3," +
                             "2-4,3-1,3-2,3-3,3-5,3-4,4-1,4-2,4-3,4-4,4-5,5-1,5-2,5-3,5-4,5-5,6-1,6-2,6-3,6-4,6-5,7-1," +
                             "7-2,7-3,7-4,7-5,8-1,8-2,8-3,8-4,8-5,9-1,9-2,9-3,9-4,9-5,10-1,10-2,10-3,10-4,10-5,11-1," +
