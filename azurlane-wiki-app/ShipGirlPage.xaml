@@ -17,348 +17,451 @@
       FontFamily="{wpf:MaterialDesignFont}">
     <Page.Resources>
         <ControlTemplate x:Key="StatTableTemplate">
-            <Border BorderThickness="1 1 1 1" VerticalAlignment="Center" HorizontalAlignment="Center"
-                    BorderBrush="{DynamicResource MaterialDesignDivider}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition SharedSizeGroup="SameSize" />
-                        <ColumnDefinition SharedSizeGroup="SameSize" />
-                        <ColumnDefinition SharedSizeGroup="SameSize" />
-                        <ColumnDefinition SharedSizeGroup="SameSize" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition SharedSizeGroup="SameSize" />
-                        <RowDefinition SharedSizeGroup="SameSize" />
-                        <RowDefinition SharedSizeGroup="SameSize" />
-                        <RowDefinition SharedSizeGroup="SameSize" />
-                    </Grid.RowDefinitions>
+            <StackPanel>
+                <!--Table Header-->
+                <TextBlock
+                    Margin="0 0 0 25"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Style="{DynamicResource MaterialDesignHeadline2TextBlock}"
+                    Text="{Binding StatTableTitle}" />
 
-                    <!--Table Header-->
-                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"
-                               HorizontalAlignment="Center" VerticalAlignment="Center"
-                               Text="{Binding StatTableTitle}" />
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Grid Background="White">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="SameSize" />
+                            <ColumnDefinition SharedSizeGroup="SameSize" />
+                            <ColumnDefinition SharedSizeGroup="SameSize" />
+                            <ColumnDefinition SharedSizeGroup="SameSize" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition SharedSizeGroup="SameSize" />
+                            <RowDefinition SharedSizeGroup="SameSize" />
+                            <RowDefinition SharedSizeGroup="SameSize" />
+                            <RowDefinition SharedSizeGroup="SameSize" />
+                        </Grid.RowDefinitions>
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="FontWeight" Value="Light" />
+                                <Setter Property="Margin" Value="0 5 0 0" />
+                            </Style>
 
-                    <!--First Row-->
-                    <Border Grid.Row="1" Grid.Column="0">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding HealthStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding HealthStatValue}" />
-                        </StackPanel>
-                    </Border>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="Padding" Value="5" />
+                                <Setter Property="BorderThickness" Value="0 0 1 1" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignDivider}" />
 
-                    <Border Grid.Row="1" Grid.Column="1">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding ArmorStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding ArmorStatValue}" />
-                        </StackPanel>
-                    </Border>
+                                <EventSetter Event="MouseEnter" Handler="StatTable_OnEnter" />
+                                <EventSetter Event="MouseLeave" Handler="StatTable_OnLeave" />
 
-                    <Border Grid.Row="1" Grid.Column="2">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding ReloadStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding ReloadStatValue}" />
-                        </StackPanel>
-                    </Border>
+                                <Style.Triggers>
+                                    <Trigger Property="Grid.Row" Value="0">
+                                        <Setter Property="BorderThickness" Value="0 1 1 1" />
+                                    </Trigger>
 
-                    <Border Grid.Row="1" Grid.Column="3">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding LuckStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding LuckStatValue}" />
-                        </StackPanel>
-                    </Border>
+                                    <Trigger Property="Grid.Column" Value="0">
+                                        <Setter Property="BorderThickness" Value="1 0 1 1" />
+                                    </Trigger>
 
-                    <!--Second Row-->
-                    <Border Grid.Row="2" Grid.Column="0">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding FireStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding FireStatValue}" />
-                        </StackPanel>
-                    </Border>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="Grid.Row" Value="0" />
+                                            <Condition Property="Grid.Column" Value="0" />
+                                        </MultiTrigger.Conditions>
 
-                    <Border Grid.Row="2" Grid.Column="1">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding TorpStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding TorpStatValue}" />
-                        </StackPanel>
-                    </Border>
+                                        <MultiTrigger.Setters>
+                                            <Setter Property="BorderThickness" Value="1 1 1 1" />
+                                        </MultiTrigger.Setters>
+                                    </MultiTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Resources>
 
-                    <Border Grid.Row="2" Grid.Column="2">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding EvadeStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding EvadeStatValue}" />
-                        </StackPanel>
-                    </Border>
+                        <!--First Row-->
+                        <Border Grid.Row="0" Grid.Column="0" ToolTip="Health" Background="{Binding BC_00}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding HealthStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding HealthStatValue}" />
+                            </StackPanel>
+                        </Border>
 
-                    <Border Grid.Row="2" Grid.Column="3">
-                        <StackPanel>
-                            <TextBlock HorizontalAlignment="Center" Text="Spd" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding SpeedStatValue}" />
-                        </StackPanel>
-                    </Border>
+                        <Border Grid.Row="0" Grid.Column="1" ToolTip="Armor" Background="{Binding BC_01}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding ArmorStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding ArmorStatValue}" />
+                            </StackPanel>
+                        </Border>
 
-                    <!--Third Row-->
-                    <Border Grid.Row="3" Grid.Column="0">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding AAStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding AAStatValue}" />
-                        </StackPanel>
-                    </Border>
+                        <Border Grid.Row="0" Grid.Column="2" ToolTip="Reload" Background="{Binding BC_02}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding ReloadStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding ReloadStatValue}" />
+                            </StackPanel>
+                        </Border>
 
-                    <Border Grid.Row="3" Grid.Column="1">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding AirStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding AirStatValue}" />
-                        </StackPanel>
-                    </Border>
+                        <Border Grid.Row="0" Grid.Column="3" ToolTip="Luck" Background="{Binding BC_03}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding LuckStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding LuckStatValue}" />
+                            </StackPanel>
+                        </Border>
 
-                    <Border Grid.Row="3" Grid.Column="2">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding ConsumptionStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding ConsumptionStatValue}" />
-                        </StackPanel>
-                    </Border>
 
-                    <Border Grid.Row="3" Grid.Column="3">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding AccStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding AccStatValue}" />
-                        </StackPanel>
-                    </Border>
+                        <!--Second Row-->
+                        <Border Grid.Row="1" Grid.Column="0" ToolTip="Firepower" Background="{Binding BC_10}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding FireStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding FireStatValue}" />
+                            </StackPanel>
+                        </Border>
 
-                    <!--Forth Row-->
-                    <Border Grid.Row="4" Grid.Column="0">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding ASWStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding ASWStatValue}" />
-                        </StackPanel>
-                    </Border>
+                        <Border Grid.Row="1" Grid.Column="1" ToolTip="Torpedo" Background="{Binding BC_11}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding TorpStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding TorpStatValue}" />
+                            </StackPanel>
+                        </Border>
 
-                    <Border Grid.Row="4" Grid.Column="1">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding OxygenStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding OxygenStatValue}" />
-                        </StackPanel>
-                    </Border>
+                        <Border Grid.Row="1" Grid.Column="2" ToolTip="Evasion"  Background="{Binding BC_12}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding EvadeStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding EvadeStatValue}" />
+                            </StackPanel>
+                        </Border>
 
-                    <Border Grid.Row="4" Grid.Column="2">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding AmmoStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding AmmoStatValue}" />
-                        </StackPanel>
-                    </Border>
+                        <Border Grid.Row="1" Grid.Column="3" ToolTip="Speed" Background="{Binding BC_13}">
+                            <StackPanel>
+                                <TextBlock HorizontalAlignment="Center" Text="Spd" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding SpeedStatValue}" />
+                            </StackPanel>
+                        </Border>
 
-                    <Border Grid.Row="4" Grid.Column="3">
-                        <StackPanel>
-                            <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}" Width="{Binding Width}" Source="{Binding HuntingRangeStatIcon}" />
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding HuntingRangeStatValue}" />
-                        </StackPanel>
-                    </Border>
-                </Grid>
-            </Border>
+                        <!--Third Row-->
+                        <Border Grid.Row="2" Grid.Column="0" ToolTip="Anti-Air" Background="{Binding BC_20}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding AAStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding AAStatValue}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.Column="1" ToolTip="Aviation" Background="{Binding BC_21}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding AirStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding AirStatValue}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.Column="2" ToolTip="Oil Consumption"  Background="{Binding BC_22}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding ConsumptionStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding ConsumptionStatValue}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.Column="3" ToolTip="Accuracy" Background="{Binding BC_23}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding AccStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding AccStatValue}" />
+                            </StackPanel>
+                        </Border>
+
+                        <!--Forth Row-->
+                        <Border Grid.Row="3" Grid.Column="0" ToolTip="Anti-Submarine warfare" Background="{Binding BC_30}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding ASWStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding ASWStatValue}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="3" Grid.Column="1" ToolTip="Oxygen" Background="{Binding BC_31}">  
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding OxygenStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding OxygenStatValue}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="3" Grid.Column="2" ToolTip="Ammunition" Background="{Binding BC_32}">
+                            <StackPanel>
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding AmmoStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding AmmoStatValue}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="3" Grid.Column="3" Background="{DynamicResource MaterialDesignDivider}">
+                            <StackPanel Visibility="Collapsed">
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                       Width="{Binding Width}" Source="{Binding HuntingRangeStatIcon}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding HuntingRangeStatValue}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+            </StackPanel>
         </ControlTemplate>
     </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60" />
+            <RowDefinition Height="70" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <materialDesign:Card>
-        <Grid Name="Header" >
+
+        <Grid Name="Header" Panel.ZIndex="1">
             <Grid.Background>
-                <SolidColorBrush  Color="{DynamicResource Primary500}"/>
+                <SolidColorBrush Color="{DynamicResource Primary500}" />
             </Grid.Background>
-            <!--<Grid.Effect>
-                <DropShadowEffect Color="Black" Direction="320"  ShadowDepth="4" Opacity="0.5"/>
-            </Grid.Effect>-->
+            <Grid.Effect>
+                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="4" Opacity="0.5" />
+            </Grid.Effect>
 
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Name="BackButtonColumn" Width="Auto" />
                 <ColumnDefinition Name="IconColumn" Width="Auto" />
                 <ColumnDefinition Name="TitleColumn" Width="*" />
                 <ColumnDefinition Name="RetrofitSliderColumn" Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Image RenderOptions.BitmapScalingMode="HighQuality" 
-                   Name="ImageIcon" Grid.Column="0" Source="{Binding ShipGirlIcon}" />
-            <TextBlock Grid.Column="1" Text="{Binding ShipName}" VerticalAlignment="Center"
-                       Style="{StaticResource MaterialDesignHeadline4TextBlock}" >
+            <materialDesign:PackIcon Kind="ChevronLeft" Height="40" Width="40"
+                                     VerticalAlignment="Center" Margin="5">
+                <materialDesign:PackIcon.Foreground>
+                    <SolidColorBrush Color="{DynamicResource Primary500Foreground}" />
+                </materialDesign:PackIcon.Foreground>
+            </materialDesign:PackIcon>
+
+
+            <Border Padding="1" Margin="3"
+                    Grid.Column="1">
+
+                <Border.Background>
+                    <MultiBinding Converter="{StaticResource ColorConverter}" ConverterParameter="Rarity">
+                        <Binding Path="Rarity" />
+                    </MultiBinding>
+                </Border.Background>
+
+                <Image RenderOptions.BitmapScalingMode="HighQuality"
+                       Name="ImageIcon" Source="{Binding ShipGirlIcon}" />
+            </Border>
+
+            <TextBlock Grid.Column="2" Text="{Binding ShipName}" VerticalAlignment="Center"
+                       Margin="40 0 0 0"
+                       Style="{StaticResource MaterialDesignHeadline3TextBlock}">
                 <TextBlock.Foreground>
-                    <SolidColorBrush  Color="{DynamicResource Primary500Foreground}"/>
+                    <SolidColorBrush Color="{DynamicResource Primary500Foreground}" />
                 </TextBlock.Foreground>
             </TextBlock>
-            <ToggleButton Grid.Column="2"
-                          Style="{StaticResource MaterialDesignSwitchToggleButton}">
-                <materialDesign:ToggleButtonAssist.SwitchTrackOnBackground>
-                    <SolidColorBrush Color="Green" />
-                </materialDesign:ToggleButtonAssist.SwitchTrackOnBackground>
-                <materialDesign:ToggleButtonAssist.SwitchTrackOffBackground>
-                    <SolidColorBrush Color="Red" />
-                </materialDesign:ToggleButtonAssist.SwitchTrackOffBackground>
-            </ToggleButton>
+
+            <materialDesign:Chip Grid.Column="3" Margin="0 0 20 0" Visibility="{Binding RetrofitVisibility}">
+                <materialDesign:Chip.Background>
+                    <SolidColorBrush Color="{DynamicResource Primary500Foreground}" />
+                </materialDesign:Chip.Background>
+
+                <StackPanel Orientation="Horizontal">
+                    <ToggleButton
+                        VerticalAlignment="Center"
+                        Margin="5"
+                        Style="{StaticResource MaterialDesignSwitchToggleButton}">
+                        <materialDesign:ToggleButtonAssist.SwitchTrackOnBackground>
+                            <SolidColorBrush Color="Green" />
+                        </materialDesign:ToggleButtonAssist.SwitchTrackOnBackground>
+                        <materialDesign:ToggleButtonAssist.SwitchTrackOffBackground>
+                            <SolidColorBrush Color="Red" />
+                        </materialDesign:ToggleButtonAssist.SwitchTrackOffBackground>
+                    </ToggleButton>
+
+                    <TextBlock Text="Retrofit" Margin="5 0 5 1" FontWeight="Normal"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </StackPanel>
+            </materialDesign:Chip>
         </Grid>
-</materialDesign:Card>
+
         <ScrollViewer Grid.Row="1" Name="ScrollViewer">
             <StackPanel>
 
                 <Grid Name="GenInfo">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Name="ImageColumn" Width="Auto"/>
-                        <ColumnDefinition Name="GeneralInfoColumn" Width="*"/>
+                        <ColumnDefinition Name="ImageColumn" Width="1.3*" />
+                        <ColumnDefinition Name="GeneralInfoColumn" Width="*" />
                     </Grid.ColumnDefinitions>
-                    <materialDesign:Card Grid.Column="0"
+
+                    <materialDesign:Card Grid.Column="0" VerticalAlignment="Center"
                                          Margin="10 10 5 10">
                         <materialDesign:Card.Background>
                             <MultiBinding Converter="{StaticResource ColorConverter}" ConverterParameter="Rarity">
-                                <Binding Path="Rarity"/>
+                                <Binding Path="Rarity" />
                             </MultiBinding>
                         </materialDesign:Card.Background>
 
-                        <Image RenderOptions.BitmapScalingMode="HighQuality" Width="600" Height="600"
-                           Source="{Binding MainImage}"  />
+                        <Image RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform"
+                               Source="{Binding MainImage}" />
                     </materialDesign:Card>
 
 
-                        <StackPanel Grid.Column="1">
+                    <StackPanel Grid.Column="1">
 
-                            <Image Name="ChibiImage"
-                                RenderOptions.BitmapScalingMode="HighQuality" 
-                                   Height="150" Width="116"
-                                   Source="{Binding ChibiImage}" >
-                                <Image.Effect>
-                                    <DropShadowEffect Color="Black" Direction="320"  ShadowDepth="4" Opacity="0.5"/>
-                                </Image.Effect>
-                            </Image>
+                        <Image Name="ChibiImage"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               Height="150" Width="116"
+                               Source="{Binding ChibiImage}">
+                            <Image.Effect>
+                                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="4" Opacity="0.5" />
+                            </Image.Effect>
+                        </Image>
 
-                            <materialDesign:Card Name="GenInfoCard"
-                                                 Margin="5 0 10 0">
-                                <materialDesign:Card.Background>
-                                    <SolidColorBrush  Color="{DynamicResource Primary50}"/>
-                                </materialDesign:Card.Background>
+                        <materialDesign:Card Name="GenInfoCard"
+                                             Margin="5 0 10 0">
+                            <materialDesign:Card.Background>
+                                <SolidColorBrush Color="{DynamicResource Primary50}" />
+                            </materialDesign:Card.Background>
                             <StackPanel>
-                                    <ItemsControl
-                                        ItemsSource="{Binding GeneralInfoList}"
-                                        VerticalAlignment="Center" x:Name="GeneralInfo">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Padding="8" BorderThickness="0 0 0 1"
-                                                        BorderBrush="{DynamicResource MaterialDesignDivider}">
-                                                    <Border.Background>
-                                                        <MultiBinding Converter="{StaticResource ColorConverter}">
-                                                            <Binding Path="Name"/>
-                                                            <Binding Path="Description"/>
-                                                        </MultiBinding>
-                                                    </Border.Background>
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="*"/>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                        </Grid.ColumnDefinitions>
-                                                        
-                                                        <StackPanel Margin="8 0 0 0" VerticalAlignment="Center">
-                                                            <TextBlock FontWeight="Bold" Text="{Binding Name}" Margin="0 0 0 2" />
-                                                            <TextBlock Padding="5 0 0 0" Text="{Binding Description}" 
-                                                                       FontStyle="Italic" FontWeight="Light"/>
-                                                        </StackPanel>
+                                <ItemsControl
+                                    ItemsSource="{Binding GeneralInfoList}"
+                                    VerticalAlignment="Center" x:Name="GeneralInfo">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Padding="8" BorderThickness="0 0 0 1"
+                                                    BorderBrush="{DynamicResource MaterialDesignDivider}">
+                                                <Border.Background>
+                                                    <MultiBinding Converter="{StaticResource ColorConverter}">
+                                                        <Binding Path="Name" />
+                                                        <Binding Path="Description" />
+                                                    </MultiBinding>
+                                                </Border.Background>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
 
-                                                        <Image Grid.Column="1" Width="{Binding IconWidth}" 
-                                                               VerticalAlignment="Center"
-                                                               RenderOptions.BitmapScalingMode="HighQuality" 
-                                                               Height="{Binding IconHeight}" Source="{Binding Icon}"/>
-                                                    </Grid>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
+                                                    <StackPanel Margin="8 0 0 0" VerticalAlignment="Center">
+                                                        <TextBlock FontWeight="Bold" Text="{Binding Name}"
+                                                                   Margin="0 0 0 2" />
+                                                        <TextBlock Padding="5 0 0 0" Text="{Binding Description}"
+                                                                   FontStyle="Italic" FontWeight="Light" />
+                                                    </StackPanel>
 
-                                    <Border Padding="8" BorderThickness="0 0 0 1"
-                                            BorderBrush="{DynamicResource MaterialDesignDivider}">
-                                        <Border.Background>
-                                            <MultiBinding Converter="{StaticResource ColorConverter}" 
-                                                          ConverterParameter="Classification">
-                                                    <Binding Path="ShipGirlType"/>
-                                            </MultiBinding>
-                                        </Border.Background>
+                                                    <Image Grid.Column="1" Width="{Binding IconWidth}"
+                                                           VerticalAlignment="Center"
+                                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                                           Height="{Binding IconHeight}" Source="{Binding Icon}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <Border Padding="8" BorderThickness="0 0 0 1"
+                                        BorderBrush="{DynamicResource MaterialDesignDivider}">
+                                    <Border.Background>
+                                        <MultiBinding Converter="{StaticResource ColorConverter}"
+                                                      ConverterParameter="Classification">
+                                            <Binding Path="ShipGirlType" />
+                                        </MultiBinding>
+                                    </Border.Background>
 
                                     <StackPanel Margin="8 0 0 0">
-                                            <TextBlock FontWeight="Bold" Text="Classification" Margin="0 0 0 2"/>
+                                        <TextBlock FontWeight="Bold" Text="Classification" Margin="0 0 0 2" />
 
-                                            <StackPanel Orientation="Horizontal">
-                                                <Image Margin="5 0 0 0" Width="30" Height="18" Source="{Binding ShipGirlTypeIcon}"
-                                                       RenderOptions.BitmapScalingMode="HighQuality"/>
-                                                <TextBlock Padding="5 0 5 0" Text="{Binding ShipGirlType}" FontStyle="Italic" FontWeight="Light"/>
-                                                <materialDesign:PackIcon Kind="ChevronTripleRight" 
-                                                                         Visibility="{Binding ClassificationChevron}"/>
-                                                <Image Margin="5 0 0 0"  Width="30" Height="18" Source="{Binding ShipGirlSubtypeIcon}"
-                                                       RenderOptions.BitmapScalingMode="HighQuality"/>
-                                                <TextBlock  Padding="5 0 0 0" Text="{Binding ShipGirlSubtype}" FontStyle="Italic" FontWeight="Light"/>
-                                            </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Margin="5 0 0 0" Width="30" Height="18"
+                                                   Source="{Binding ShipGirlTypeIcon}"
+                                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <TextBlock Padding="5 0 5 0" Text="{Binding ShipGirlType}"
+                                                       FontStyle="Italic" FontWeight="Light" />
+                                            <materialDesign:PackIcon Kind="ChevronTripleRight"
+                                                                     Visibility="{Binding ClassificationChevron}" />
+                                            <Image Margin="5 0 0 0" Width="30" Height="18"
+                                                   Source="{Binding ShipGirlSubtypeIcon}"
+                                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <TextBlock Padding="5 0 0 0" Text="{Binding ShipGirlSubtype}"
+                                                       FontStyle="Italic" FontWeight="Light" />
                                         </StackPanel>
-                                    </Border>
-                                    
-                                    <Border Padding="8" BorderThickness="0 0 0 1"
-                                            BorderBrush="{DynamicResource MaterialDesignDivider}">
+                                    </StackPanel>
+                                </Border>
 
-                                        <StackPanel Margin="8 0 0 0">
-                                            <TextBlock FontWeight="Bold" Text="Scrap Value" Margin="0 0 0 2"/>
-                                            
-                                            <StackPanel Orientation="Horizontal">
+                                <Border Padding="8" BorderThickness="0 0 0 1"
+                                        BorderBrush="{DynamicResource MaterialDesignDivider}">
 
-                                                <Image Margin="5 0 0 0"  Width="25" Height="25" Source="{Binding CoinIcon}"
-                                                       RenderOptions.BitmapScalingMode="HighQuality"/>
-                                                <TextBlock Padding="5 0 0 0" Text="{Binding ScrapCoinsValue}" 
-                                                           VerticalAlignment="Center"
-                                                           FontStyle="Italic" FontWeight="Light"/>
-                                                <Image Margin="5 0 0 0"  Width="25" Height="25" Source="{Binding OilIcon}"
-                                                       RenderOptions.BitmapScalingMode="HighQuality"/>
-                                                <TextBlock Padding="5 0 0 0" Text="{Binding ScrapOilValue}" 
-                                                           VerticalAlignment="Center"
-                                                           FontStyle="Italic" FontWeight="Light"/>
-                                                <Image Margin="5 0 0 0"  Width="18" Height="24" Source="{Binding MedalIcon}"
-                                                       RenderOptions.BitmapScalingMode="HighQuality"/>
-                                                <TextBlock Padding="5 0 0 0" Text="{Binding ScrapMedalsValue}" 
-                                                           VerticalAlignment="Center"
-                                                           FontStyle="Italic" FontWeight="Light"/>
+                                    <StackPanel Margin="8 0 0 0">
+                                        <TextBlock FontWeight="Bold" Text="Scrap Value" Margin="0 0 0 2" />
 
-                                            </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+
+                                            <Image Margin="5 0 0 0" Width="25" Height="25" Source="{Binding CoinIcon}"
+                                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <TextBlock Padding="5 0 0 0" Text="{Binding ScrapCoinsValue}"
+                                                       VerticalAlignment="Center"
+                                                       FontStyle="Italic" FontWeight="Light" />
+                                            <Image Margin="5 0 0 0" Width="25" Height="25" Source="{Binding OilIcon}"
+                                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <TextBlock Padding="5 0 0 0" Text="{Binding ScrapOilValue}"
+                                                       VerticalAlignment="Center"
+                                                       FontStyle="Italic" FontWeight="Light" />
+                                            <Image Margin="5 0 0 0" Width="18" Height="24" Source="{Binding MedalIcon}"
+                                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <TextBlock Padding="5 0 0 0" Text="{Binding ScrapMedalsValue}"
+                                                       VerticalAlignment="Center"
+                                                       FontStyle="Italic" FontWeight="Light" />
+
                                         </StackPanel>
-                                    </Border>
-                                </StackPanel>
-                            </materialDesign:Card>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </materialDesign:Card>
 
-                            <materialDesign:Card Name="BannerCard"
-                                HorizontalAlignment="Center"
-                                                 Margin="5 10 10 0">
-                                <materialDesign:Card.Background>
-                                    <MultiBinding Converter="{StaticResource ColorConverter}" ConverterParameter="Rarity">
-                                        <Binding Path="Rarity"/>
-                                    </MultiBinding>
-                                </materialDesign:Card.Background>
+                        <materialDesign:Card Name="BannerCard"
+                                             HorizontalAlignment="Center"
+                                             Margin="5 10 10 0">
+                            <materialDesign:Card.Background>
+                                <MultiBinding Converter="{StaticResource ColorConverter}" ConverterParameter="Rarity">
+                                    <Binding Path="Rarity" />
+                                </MultiBinding>
+                            </materialDesign:Card.Background>
 
-                                <Image Width="360" Height="80" RenderOptions.BitmapScalingMode="HighQuality" 
-                                       Source="{Binding BannerImage}" />
-                            </materialDesign:Card>
-                        </StackPanel>
-                    
+                            <Image Width="360" Height="80" RenderOptions.BitmapScalingMode="HighQuality"
+                                   Source="{Binding BannerImage}" />
+                        </materialDesign:Card>
+                    </StackPanel>
+
                 </Grid>
 
                 <materialDesign:Card
-                    Background="{DynamicResource MaterialDesignBackground}"
                     Margin="10 10 10 10">
-                    <StackPanel>
-                        <Expander Header="Stats"
-                            HorizontalAlignment="Stretch">
-                            <Grid Grid.IsSharedSizeScope="True">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Name="BaseStatColumn" />
-                            <ColumnDefinition Name="Level100Column" />
-                            <ColumnDefinition Name="Level120Column" />
-                        </Grid.ColumnDefinitions>
 
-                        <ContentControl Grid.Column="0" Template="{StaticResource StatTableTemplate}" DataContext="{Binding InitialStats}"/>
-                        <ContentControl Grid.Column="1" Template="{StaticResource StatTableTemplate}" DataContext="{Binding Level100Stats}"/>
-                        <ContentControl Grid.Column="2" Template="{StaticResource StatTableTemplate}" DataContext="{Binding Level120Stats}"/>
-                    </Grid>
+                    <materialDesign:Card.Background>
+                        <SolidColorBrush  Color="{DynamicResource Primary50}"/>
+                    </materialDesign:Card.Background>
+
+                    <StackPanel>
+                        <Expander Header="STATS"
+                                  Background="Transparent"
+                                  HorizontalAlignment="Stretch">
+                            <Grid Grid.IsSharedSizeScope="True" Margin="0 40 0 40">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Name="BaseStatColumn" />
+                                    <ColumnDefinition Name="Level100Column" />
+                                    <ColumnDefinition Name="Level120Column" />
+                                </Grid.ColumnDefinitions>
+
+                                <ContentControl Grid.Column="0" Template="{StaticResource StatTableTemplate}"
+                                                DataContext="{Binding InitialStats}"  />
+                                <ContentControl Grid.Column="1" Template="{StaticResource StatTableTemplate}"
+                                                DataContext="{Binding Level100Stats}" />
+                                <ContentControl Grid.Column="2" Template="{StaticResource StatTableTemplate}"
+                                                DataContext="{Binding Level120Stats}" />
+                            </Grid>
                         </Expander>
 
                         <Border
@@ -367,7 +470,8 @@
                             HorizontalAlignment="Stretch"
                             SnapsToDevicePixels="True" />
 
-                        <Expander Header="Equipment"
+                        <Expander Header="EQUIPMENT"
+                                  Background="Transparent"
                                   HorizontalAlignment="Stretch">
                             <Grid>
                                 <ListView
@@ -383,6 +487,7 @@
                                             <GridViewColumn
                                                 DisplayMemberBinding="{Binding Equippable}"
                                                 Header="Equippable" />
+
                                             <!--TODO: Add Examples AND WRAPPING TEXT IN CELLS
                                                 <GridViewColumn
                                                 DisplayMemberBinding="{Binding Description}"
@@ -399,7 +504,7 @@
                             HorizontalAlignment="Stretch"
                             SnapsToDevicePixels="True" />
 
-                        <Expander Header="Skills"
+                        <Expander Header="SKILLS"
                                   HorizontalAlignment="Stretch">
                             <Grid>
                                 <ListView
@@ -431,7 +536,7 @@
                             HorizontalAlignment="Stretch"
                             SnapsToDevicePixels="True" />
 
-                        <Expander Header="Limit Breaks"
+                        <Expander Header="LIMIT BREAKS"
                                   HorizontalAlignment="Stretch">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -493,7 +598,7 @@
                             HorizontalAlignment="Stretch"
                             SnapsToDevicePixels="True" />
 
-                        <Expander Header="Drops"
+                        <Expander Header="DROP LOCATIONS"
                                   HorizontalAlignment="Stretch">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -548,10 +653,8 @@
                                           local:DynamicBindingListView.GenerateColumnsGridView="True"
                                           IsManipulationEnabled="False">
                                     <ListView.View>
-                                        <GridView AllowsColumnReorder="False">
-                                           
-                                        </GridView>
-                                                  
+                                        <GridView AllowsColumnReorder="False" />
+
                                     </ListView.View>
                                 </ListView>
                             </Grid>

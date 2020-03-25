@@ -2,12 +2,16 @@
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using azurlane_wiki_app.Annotations;
 
 namespace azurlane_wiki_app
 {
@@ -63,7 +67,7 @@ namespace azurlane_wiki_app
             SpeedStatValue = speedStatValue;
             AirStatValue = airStatValue;
             ConsumptionStatValue = consumptionStatValue;
-            AaStatValue = aaStatValue;
+            AAStatValue = aaStatValue;
             AccStatValue = accStatValue;
             ASWStatValue = aswStatValue;
             OxygenStatValue = oxygenStatValue;
@@ -91,6 +95,199 @@ namespace azurlane_wiki_app
 
             Width = Height = 25;
         }
+
+        #region HighLight
+
+        public static event EventHandler BC_00Changed;
+        public static event EventHandler BC_01Changed;
+        public static event EventHandler BC_02Changed;
+        public static event EventHandler BC_03Changed;
+
+        public static event EventHandler BC_10Changed;
+        public static event EventHandler BC_11Changed;
+        public static event EventHandler BC_12Changed;
+        public static event EventHandler BC_13Changed;
+
+        public static event EventHandler BC_20Changed;
+        public static event EventHandler BC_21Changed;
+        public static event EventHandler BC_22Changed;
+        public static event EventHandler BC_23Changed;
+
+        public static event EventHandler BC_30Changed;
+        public static event EventHandler BC_31Changed;
+        public static event EventHandler BC_32Changed;
+
+        private static Brush bc_00;
+        private static Brush bc_01;
+        private static Brush bc_02;
+        private static Brush bc_03;
+
+        private static Brush bc_10;
+        private static Brush bc_11;
+        private static Brush bc_12;
+        private static Brush bc_13;
+
+        private static Brush bc_20;
+        private static Brush bc_21;
+        private static Brush bc_22;
+        private static Brush bc_23;
+
+        private static Brush bc_30;
+        private static Brush bc_31;
+        private static Brush bc_32;
+
+        // 1
+        public static Brush BC_00
+        {
+            get => bc_00;
+            set
+            {
+                bc_00 = value; BC_00Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        public static Brush BC_01
+        {
+            get => bc_01;
+            set
+            {
+                bc_01 = value;
+                BC_01Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        public static Brush BC_02
+        {
+            get => bc_02;
+            set
+            {
+                bc_02 = value; BC_02Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        public static Brush BC_03
+        {
+            get => bc_03;
+            set
+            {
+                bc_03 = value; BC_03Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+        
+        // 2
+        public static Brush BC_10
+        {
+            get => bc_10;
+            set
+            {
+                bc_10 = value; BC_10Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        public static Brush BC_11
+        {
+            get => bc_11;
+            set
+            {
+                bc_11 = value;
+                BC_11Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        public static Brush BC_12
+        {
+            get => bc_12;
+            set
+            {
+                bc_12 = value; BC_12Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        public static Brush BC_13
+        {
+            get => bc_13;
+            set
+            {
+                bc_13 = value; BC_13Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+        
+        // 3
+        public static Brush BC_20
+        {
+            get => bc_20;
+            set
+            {
+                bc_20 = value; BC_20Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        public static Brush BC_21
+        {
+            get => bc_21;
+            set
+            {
+                bc_21 = value;
+                BC_21Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        public static Brush BC_22
+        {
+            get => bc_22;
+            set
+            {
+                bc_22 = value; BC_22Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        public static Brush BC_23
+        {
+            get => bc_23;
+            set
+            {
+                bc_23 = value; BC_23Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        // 4
+        public static Brush BC_30
+        {
+            get => bc_30;
+            set
+            {
+                bc_30 = value; BC_30Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        public static Brush BC_31
+        {
+            get => bc_31;
+            set
+            {
+                bc_31 = value;
+                BC_31Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        public static Brush BC_32
+        {
+            get => bc_32;
+            set
+            {
+                bc_32 = value; BC_32Changed?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
+        public static void BrushCell(int row, int column, SolidColorBrush brush)
+        {
+            string propertyName = "BC_" + row + column;
+            PropertyInfo property = typeof(StatTable).GetProperty(propertyName);
+            property?.SetValue(property, brush);
+        }
+
+        #endregion
+
 
         public string StatTableTitle { get; set; }
 
@@ -128,7 +325,7 @@ namespace azurlane_wiki_app
         public string EvadeStatValue { get; set; }
         public string SpeedStatValue { get; set; }
 
-        public string AaStatValue { get; set; }
+        public string AAStatValue { get; set; }
         public string AirStatValue { get; set; }
         public string ConsumptionStatValue { get; set; }
         public string AccStatValue { get; set; }
@@ -174,6 +371,8 @@ namespace azurlane_wiki_app
         public IEnumerable<Skill> SkillsList { get; set; }
 
         public string Rarity { get; set; }
+
+        public Visibility RetrofitVisibility { get; set; } = Visibility.Visible;
 
         #region LimitBreakProperties
         public string LimitBreak1 { get; set; }
@@ -360,6 +559,11 @@ namespace azurlane_wiki_app
 
                 ConstructionNote += location.Note;
             }
+
+            if (shipGirl.Remodel.Equals("f"))
+            {
+                RetrofitVisibility = Visibility.Collapsed;
+            }
         }
 
         private BitmapImage getBitmapImage(string path)
@@ -374,6 +578,9 @@ namespace azurlane_wiki_app
     /// </summary>
     public partial class ShipGirlPage : Page
     {
+        public int StatTableSelectedColumn { get; set; } = 5;
+        public int StatTableSelectedRow { get; set; }
+
         public ShipGirlPage(ShipGirl shipGirl)
         {
             InitializeComponent();
@@ -391,6 +598,18 @@ namespace azurlane_wiki_app
 
             gView.Columns[0].Width = Math.Abs(workingWidth * col1);
             gView.Columns[1].Width = Math.Abs(workingWidth * col2);
+        }
+
+        private void StatTable_OnEnter(object sender, MouseEventArgs e)
+        {
+            var element = (Border)e.Source;
+            StatTable.BrushCell(Grid.GetRow(element), Grid.GetColumn(element), Brushes.LightGray);
+        }
+
+        private void StatTable_OnLeave(object sender, MouseEventArgs e)
+        {
+            var element = (Border)e.Source;
+            StatTable.BrushCell(Grid.GetRow(element), Grid.GetColumn(element), Brushes.Transparent);
         }
     }
 }

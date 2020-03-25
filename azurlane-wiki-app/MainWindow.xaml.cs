@@ -23,7 +23,7 @@ namespace azurlane_wiki_app
 
             //Button_Click(this, new RoutedEventArgs());
 
-            Main.Content = new ShipGirlPage(cargoContext.ShipGirls.Find("224"));
+            Main.Content = new ShipGirlPage(cargoContext.ShipGirls.Find("188"));
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
