@@ -2,16 +2,12 @@
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using azurlane_wiki_app.Annotations;
 
 namespace azurlane_wiki_app
 {
@@ -19,7 +15,7 @@ namespace azurlane_wiki_app
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public BitmapImage Icon { get; set; }
+        public string Icon { get; set; }
         public int IconWidth { get; set; }
         public int IconHeight { get; set; }
     }
@@ -27,7 +23,9 @@ namespace azurlane_wiki_app
     public struct EquipmentItem
     {
         public string Slot { get; set; }
-        public string Efficiency { get; set; }
+        public string EfficiencyInit { get; set; }
+        public string EfficiencyMax { get; set; }
+        public string EfficiencyKai { get; set; }
         public string Equippable { get; set; }
     }
 
@@ -75,23 +73,22 @@ namespace azurlane_wiki_app
 
             using (CargoContext cargoContext = new CargoContext())
             {
-                HealthStatIcon = getBitmapImage(cargoContext.Icons.Find("Health")?.FileName);
-                ArmorStatIcon = getBitmapImage(cargoContext.Icons.Find("Armor")?.FileName);
-                ReloadStatIcon = getBitmapImage(cargoContext.Icons.Find("Reload")?.FileName);
-                LuckStatIcon = getBitmapImage(cargoContext.Icons.Find("Luck")?.FileName);
-                FireStatIcon = getBitmapImage(cargoContext.Icons.Find("Firepower")?.FileName);
-                TorpStatIcon = getBitmapImage(cargoContext.Icons.Find("Torpedo")?.FileName);
-                EvadeStatIcon = getBitmapImage(cargoContext.Icons.Find("Evasion")?.FileName);
-                AAStatIcon = getBitmapImage(cargoContext.Icons.Find("Anti-air")?.FileName);
-                AirStatIcon = getBitmapImage(cargoContext.Icons.Find("Aviation")?.FileName);
-                ConsumptionStatIcon = getBitmapImage(cargoContext.Icons.Find("Oil consumption")?.FileName);
-                AccStatIcon = getBitmapImage(cargoContext.Icons.Find("Accuracy")?.FileName);
-                ASWStatIcon = getBitmapImage(cargoContext.Icons.Find("Anti-submarine warfare")?.FileName);
-                OxygenStatIcon = getBitmapImage(cargoContext.Icons.Find("Oxygen")?.FileName);
-                AmmoStatIcon = getBitmapImage(cargoContext.Icons.Find("Ammunition")?.FileName);
-                HuntingRangeStatIcon = getBitmapImage(cargoContext.Icons.Find("Hunting range")?.FileName);
+                HealthStatIcon = cargoContext.Icons.Find("Health")?.FileName;
+                ArmorStatIcon = cargoContext.Icons.Find("Armor")?.FileName;
+                ReloadStatIcon = cargoContext.Icons.Find("Reload")?.FileName;
+                LuckStatIcon = cargoContext.Icons.Find("Luck")?.FileName;
+                FireStatIcon = cargoContext.Icons.Find("Firepower")?.FileName;
+                TorpStatIcon = cargoContext.Icons.Find("Torpedo")?.FileName;
+                EvadeStatIcon = cargoContext.Icons.Find("Evasion")?.FileName;
+                AAStatIcon = cargoContext.Icons.Find("Anti-air")?.FileName;
+                AirStatIcon = cargoContext.Icons.Find("Aviation")?.FileName;
+                ConsumptionStatIcon = cargoContext.Icons.Find("Oil consumption")?.FileName;
+                AccStatIcon = cargoContext.Icons.Find("Accuracy")?.FileName;
+                ASWStatIcon = cargoContext.Icons.Find("Anti-submarine warfare")?.FileName;
+                OxygenStatIcon = cargoContext.Icons.Find("Oxygen")?.FileName;
+                AmmoStatIcon = cargoContext.Icons.Find("Ammunition")?.FileName;
+                HuntingRangeStatIcon = cargoContext.Icons.Find("Hunting range")?.FileName;
             }
-
 
             Width = Height = 25;
         }
@@ -117,24 +114,24 @@ namespace azurlane_wiki_app
         public static event EventHandler BC_31Changed;
         public static event EventHandler BC_32Changed;
 
-        private static Brush bc_00;
-        private static Brush bc_01;
-        private static Brush bc_02;
-        private static Brush bc_03;
+        private static Brush bc_00 = Brushes.Transparent;
+        private static Brush bc_01 = Brushes.Transparent;
+        private static Brush bc_02 = Brushes.Transparent;
+        private static Brush bc_03 = Brushes.Transparent;
 
-        private static Brush bc_10;
-        private static Brush bc_11;
-        private static Brush bc_12;
-        private static Brush bc_13;
+        private static Brush bc_10 = Brushes.Transparent;
+        private static Brush bc_11 = Brushes.Transparent;
+        private static Brush bc_12 = Brushes.Transparent;
+        private static Brush bc_13 = Brushes.Transparent;
 
-        private static Brush bc_20;
-        private static Brush bc_21;
-        private static Brush bc_22;
-        private static Brush bc_23;
+        private static Brush bc_20 = Brushes.Transparent;
+        private static Brush bc_21 = Brushes.Transparent;
+        private static Brush bc_22 = Brushes.Transparent;
+        private static Brush bc_23 = Brushes.Transparent;
 
-        private static Brush bc_30;
-        private static Brush bc_31;
-        private static Brush bc_32;
+        private static Brush bc_30 = Brushes.Transparent;
+        private static Brush bc_31 = Brushes.Transparent;
+        private static Brush bc_32 = Brushes.Transparent;
 
         // 1
         public static Brush BC_00
@@ -295,24 +292,24 @@ namespace azurlane_wiki_app
         public int Height { get; set; }
 
         // ICONS
-        public BitmapImage HealthStatIcon { get; set; }
-        public BitmapImage ArmorStatIcon { get; set; }
-        public BitmapImage ReloadStatIcon { get; set; }
-        public BitmapImage LuckStatIcon { get; set; }
+        public string HealthStatIcon { get; set; }
+        public string ArmorStatIcon { get; set; }
+        public string ReloadStatIcon { get; set; }
+        public string LuckStatIcon { get; set; }
 
-        public BitmapImage FireStatIcon { get; set; }
-        public BitmapImage TorpStatIcon { get; set; }
-        public BitmapImage EvadeStatIcon { get; set; }
+        public string FireStatIcon { get; set; }
+        public string TorpStatIcon { get; set; }
+        public string EvadeStatIcon { get; set; }
 
-        public BitmapImage AAStatIcon { get; set; }
-        public BitmapImage AirStatIcon { get; set; }
-        public BitmapImage ConsumptionStatIcon { get; set; }
-        public BitmapImage AccStatIcon { get; set; }
+        public string AAStatIcon { get; set; }
+        public string AirStatIcon { get; set; }
+        public string ConsumptionStatIcon { get; set; }
+        public string AccStatIcon { get; set; }
 
-        public BitmapImage ASWStatIcon { get; set; }
-        public BitmapImage OxygenStatIcon { get; set; }
-        public BitmapImage AmmoStatIcon { get; set; }
-        public BitmapImage HuntingRangeStatIcon { get; set; }
+        public string ASWStatIcon { get; set; }
+        public string OxygenStatIcon { get; set; }
+        public string AmmoStatIcon { get; set; }
+        public string HuntingRangeStatIcon { get; set; }
 
         // STATS
         public string HealthStatValue { get; set; }
@@ -333,31 +330,24 @@ namespace azurlane_wiki_app
         public string ASWStatValue { get; set; }
         public string OxygenStatValue { get; set; }
         public string AmmoStatValue { get; set; }
-
-        private static BitmapImage getBitmapImage(string path)
-        {
-            return new BitmapImage(new Uri(@"pack://siteoforigin:,,,"
-                                           + path.Remove(0, 1)));
-        }
     }
 
     public class ShipGirlPageViewModel
     {
         public string ShipName { get; set; }
-        public BitmapImage ShipGirlIcon { get; set; }
+        public string ShipGirlIcon { get; set; }
 
-        public BitmapImage ChibiImage { get; set; }
-        public BitmapImage BannerImage { get; set; }
-        public BitmapImage MainImage { get; set; }
+        public string ChibiImage { get; set; }
+        public string BannerImage { get; set; }
+        public string MainImage { get; set; }
         public List<GeneralInfoItem> GeneralInfoList { get; set; }
-        public BitmapImage ShipGirlTypeIcon { get; set; }
-        public BitmapImage ShipGirlSubtypeIcon { get; set; }
-        public Visibility ClassificationChevron { get; set; }
+        public string ShipGirlTypeIcon { get; set; }
+        public string ShipGirlSubtypeIcon { get; set; }
         public string ShipGirlType { get; set; }
         public string ShipGirlSubtype { get; set; }
-        public BitmapImage CoinIcon { get; set; }
-        public BitmapImage OilIcon { get; set; }
-        public BitmapImage MedalIcon { get; set; }
+        public string CoinIcon { get; set; }
+        public string OilIcon { get; set; }
+        public string MedalIcon { get; set; }
         public string ScrapCoinsValue { get; set; }
         public string ScrapOilValue { get; set; }
         public string ScrapMedalsValue { get; set; }
@@ -397,11 +387,11 @@ namespace azurlane_wiki_app
         public ShipGirlPageViewModel(ShipGirl shipGirl)
         {
             ShipName = shipGirl.Name;
-            ShipGirlIcon = getBitmapImage(shipGirl.ImageIcon);
-            MainImage = getBitmapImage(shipGirl.Image);
+            ShipGirlIcon = shipGirl.ImageIcon;
+            MainImage = shipGirl.Image;
 
-            ChibiImage = getBitmapImage(shipGirl.ImageChibi);
-            BannerImage = getBitmapImage(shipGirl.ImageBanner);
+            ChibiImage = shipGirl.ImageChibi;
+            BannerImage = shipGirl.ImageBanner;
 
             GeneralInfoList = new List<GeneralInfoItem>
             {
@@ -412,7 +402,7 @@ namespace azurlane_wiki_app
                 {
                     Name = "Nationality", 
                     Description = shipGirl.FK_Nationality.Name,
-                    Icon = getBitmapImage(shipGirl.FK_Nationality.FK_Icon.FileName),
+                    Icon = shipGirl.FK_Nationality.FK_Icon.FileName,
                     IconHeight = 52,
                     IconWidth = 50
                 },
@@ -420,26 +410,22 @@ namespace azurlane_wiki_app
                 {
                     Name = "Rarity", 
                     Description = shipGirl.FK_Rarity.Name,
-                    Icon = getBitmapImage(shipGirl.FK_Rarity.FK_Icon.FileName),
+                    Icon = shipGirl.FK_Rarity.FK_Icon.FileName,
                     IconHeight = 25,
                     IconWidth = 50
                 }
             };
 
             Rarity = shipGirl.FK_Rarity.Name;
-            ShipGirlTypeIcon = getBitmapImage(shipGirl.FK_ShipType.FK_Icon.FileName);
+            ShipGirlTypeIcon = shipGirl.FK_ShipType.FK_Icon.FileName;
             ShipGirlType = shipGirl.FK_ShipType.Name;
 
             if (shipGirl.FK_SubtypeRetro != null)
             {
-                ShipGirlSubtypeIcon = getBitmapImage(shipGirl.FK_SubtypeRetro.FK_Icon.FileName);
+                ShipGirlSubtypeIcon = shipGirl.FK_SubtypeRetro.FK_Icon.FileName;
                 ShipGirlSubtype = shipGirl.FK_SubtypeRetro.Name;
-                ClassificationChevron = Visibility.Visible;
             }
-            else
-            {
-                ClassificationChevron = Visibility.Collapsed;
-            }
+
 
             if (shipGirl.FK_Rarity.Name != "Priority" 
                 && shipGirl.FK_Rarity.Name != "Decisive" 
@@ -451,9 +437,9 @@ namespace azurlane_wiki_app
 
                 using (CargoContext cargoContext = new CargoContext())
                 {
-                    CoinIcon = getBitmapImage(cargoContext.Icons.Find("Coin")?.FileName);
-                    OilIcon = getBitmapImage(cargoContext.Icons.Find("Oil")?.FileName);
-                    MedalIcon = getBitmapImage(cargoContext.Icons.Find("Medal")?.FileName);
+                    CoinIcon = cargoContext.Icons.Find("Coin")?.FileName;
+                    OilIcon = cargoContext.Icons.Find("Oil")?.FileName;
+                    MedalIcon = cargoContext.Icons.Find("Medal")?.FileName;
                 }
             }
             else
@@ -469,11 +455,11 @@ namespace azurlane_wiki_app
                 shipGirl.OxygenInitial.ToString(), shipGirl.AmmoInitial.ToString());
 
             Level100Stats = new StatTable("Level 100", shipGirl.Health120.ToString(),
-                    shipGirl.Armor, shipGirl.Reload120.ToString(), shipGirl.Luck.ToString(),
-                    shipGirl.Fire120.ToString(), shipGirl.Torp120.ToString(), shipGirl.Evade120.ToString(),
-                    shipGirl.Speed.ToString(), shipGirl.Air120.ToString(), shipGirl.Consumption120.ToString(),
-                    shipGirl.AA120.ToString(), shipGirl.Acc120.ToString(), shipGirl.ASW120.ToString(),
-                    shipGirl.Oxygen120.ToString(), shipGirl.Ammo120.ToString());
+                shipGirl.Armor, shipGirl.Reload120.ToString(), shipGirl.Luck.ToString(),
+                shipGirl.Fire120.ToString(), shipGirl.Torp120.ToString(), shipGirl.Evade120.ToString(),
+                shipGirl.Speed.ToString(), shipGirl.Air120.ToString(), shipGirl.Consumption120.ToString(),
+                shipGirl.AA120.ToString(), shipGirl.Acc120.ToString(), shipGirl.ASW120.ToString(),
+                shipGirl.Oxygen120.ToString(), shipGirl.Ammo120.ToString());
 
             Level120Stats = new StatTable("Level 120", shipGirl.HealthMax.ToString(),
                 shipGirl.Armor, shipGirl.ReloadMax.ToString(), shipGirl.Luck.ToString(),
@@ -487,29 +473,41 @@ namespace azurlane_wiki_app
                 new EquipmentItem
                 {
                     Slot = "1",
-                    Efficiency = shipGirl.Eq1EffInit + "->" + shipGirl.Eq1EffInitMax + "->" + shipGirl.Eq1EffInitKai,
-                    Equippable = shipGirl.Eq1Type
+                    EfficiencyInit = shipGirl.Eq1EffInit,
+                    EfficiencyMax = shipGirl.Eq1EffInitMax,
+                    EfficiencyKai = shipGirl.Eq1EffInitKai,
+                    Equippable = shipGirl.FK_Eq1Type.Name
                 },
+
                 new EquipmentItem
                 {
                     Slot = "2",
-                    Efficiency = shipGirl.Eq2EffInit + "->" + shipGirl.Eq2EffInitMax + "->" + shipGirl.Eq2EffInitKai,
-                    Equippable = shipGirl.Eq2Type
+                    EfficiencyInit = shipGirl.Eq2EffInit,
+                    EfficiencyMax = shipGirl.Eq2EffInitMax,
+                    EfficiencyKai = shipGirl.Eq2EffInitKai,
+                    Equippable = shipGirl.FK_Eq2Type.Name
                 },
+
                 new EquipmentItem
                 {
                     Slot = "3",
-                    Efficiency = shipGirl.Eq3EffInit + "->" + shipGirl.Eq3EffInitMax + "->" + shipGirl.Eq3EffInitKai,
-                    Equippable = shipGirl.Eq3Type
+                    EfficiencyInit = shipGirl.Eq3EffInit,
+                    EfficiencyMax = shipGirl.Eq3EffInitMax,
+                    EfficiencyKai = shipGirl.Eq3EffInitKai,
+                    Equippable = shipGirl.FK_Eq3Type.Name
                 }
             };
 
             SkillsList = shipGirl.Skills;
 
-            LimitBreak1 = shipGirl.LimitBreak1;
-            LimitBreak2 = shipGirl.LimitBreak2;
-            LimitBreak3 = shipGirl.LimitBreak3;
-
+            if (!string.IsNullOrEmpty(shipGirl.LimitBreak1))
+            {
+                string listMarker = "\u2022  ";
+                LimitBreak1 = listMarker + shipGirl.LimitBreak1.Replace("/ ", "\n" + listMarker);
+                LimitBreak2 = listMarker + shipGirl.LimitBreak2.Replace("/ ", "\n" + listMarker);
+                LimitBreak3 = listMarker + shipGirl.LimitBreak3.Replace("/ ", "\n" + listMarker);
+            }
+            
             // DROPS
             ConstructionTime = shipGirl.ConstructTime;
 
@@ -565,12 +563,6 @@ namespace azurlane_wiki_app
                 RetrofitVisibility = Visibility.Collapsed;
             }
         }
-
-        private BitmapImage getBitmapImage(string path)
-        {
-            return new BitmapImage(new Uri(@"pack://siteoforigin:,,,"
-                                           + path.Remove(0, 1)));
-        }
     }
 
     /// <summary>
@@ -578,9 +570,6 @@ namespace azurlane_wiki_app
     /// </summary>
     public partial class ShipGirlPage : Page
     {
-        public int StatTableSelectedColumn { get; set; } = 5;
-        public int StatTableSelectedRow { get; set; }
-
         public ShipGirlPage(ShipGirl shipGirl)
         {
             InitializeComponent();
@@ -593,11 +582,31 @@ namespace azurlane_wiki_app
             GridView gView = listView.View as GridView;
 
             var workingWidth = listView.ActualWidth - 20;
-            var col1 = 0.20;
-            var col2 = 0.80;
+            var col1 = 0.07;
+            var col2 = 0.20;
+            var col3 = 1 - (col2 + col1);
 
             gView.Columns[0].Width = Math.Abs(workingWidth * col1);
             gView.Columns[1].Width = Math.Abs(workingWidth * col2);
+            gView.Columns[2].Width = Math.Abs(workingWidth * col3);
+        }
+
+        private void EquipmentList_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ListView listView = sender as ListView;
+            GridView gView = listView.View as GridView;
+
+            var workingWidth = listView.ActualWidth - 20;
+            var col1 = 0.07;
+            var col2 = 0.2;
+            var col3 = 0.2;
+
+            var col4 = 1 - (col1 + col2 + col3);
+
+            gView.Columns[0].Width = Math.Abs(workingWidth * col1);
+            gView.Columns[1].Width = Math.Abs(workingWidth * col2);
+            gView.Columns[2].Width = Math.Abs(workingWidth * col3);
+            gView.Columns[3].Width = Math.Abs(workingWidth * col4);
         }
 
         private void StatTable_OnEnter(object sender, MouseEventArgs e)

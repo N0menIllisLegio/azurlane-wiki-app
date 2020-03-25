@@ -2,9 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:azurlane_wiki_app">
 
-
-
     <local:ColorConverter x:Key="ColorConverter" />
+    <local:VisibilityConverter x:Key="VisibilityConverter" />
+    <local:ImagePathConverter x:Key="ImagePathConverter" />
+    <local:StarsConverter x:Key="StarsConverter" />
 
     <!--ScrollBar-->
     <Style x:Key="ScrollBarTrackThumb"
@@ -42,6 +43,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
     <Style TargetType="{x:Type ScrollBar}">
         <Setter Property="Stylus.IsFlicksEnabled"
             Value="false" />

@@ -93,6 +93,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="StarsConverter.cs" />
+    <Compile Include="VisibilityConverter.cs" />
     <Compile Include="ColorConverter.cs" />
     <Compile Include="Data\CargoContext.cs" />
     <Compile Include="Data\Downloaders\DataDownloader.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="Data\Tables\ShipClass.cs" />
     <Compile Include="Data\Tables\ShipGirl.cs" />
     <Compile Include="DynamicBindingListView.cs" />
+    <Compile Include="ImagePathConverter.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ShipGirlPage.xaml.cs">
       <DependentUpon>ShipGirlPage.xaml</DependentUpon>

@@ -1,7 +1,4 @@
 ﻿using azurlane_wiki_app.Data.Downloaders;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace azurlane_wiki_app
