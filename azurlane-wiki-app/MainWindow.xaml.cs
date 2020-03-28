@@ -1,5 +1,7 @@
 ﻿using azurlane_wiki_app.Data.Downloaders;
 using System.Windows;
+using azurlane_wiki_app.Data.Tables;
+using azurlane_wiki_app.ShipPage;
 
 namespace azurlane_wiki_app
 {
@@ -19,8 +21,7 @@ namespace azurlane_wiki_app
             CargoContext cargoContext = new CargoContext();
 
             //Button_Click(this, new RoutedEventArgs());
-
-            Main.Content = new ShipGirlPage(cargoContext.ShipGirls.Find("188"));
+            Main.Content = new ShipGirlPage(cargoContext.ShipGirls.Find("246"));
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)

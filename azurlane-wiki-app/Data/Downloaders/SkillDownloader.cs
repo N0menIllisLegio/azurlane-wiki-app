@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using azurlane_wiki_app.Data.Tables;
 using Newtonsoft.Json;
@@ -65,6 +66,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                     {
                         wrappedSkill.Skill.FK_ShipGirl
                             = await cargoContext.ShipGirls.FindAsync(wrappedSkill.Skill.ShipID);
+                        wrappedSkill.Skill.Detail = RemoveHTML(wrappedSkill.Skill.Detail);
                         SavePaths(wrappedSkill.Skill);
                         cargoContext.Skills.Add(wrappedSkill.Skill);
                     }
@@ -120,6 +122,7 @@ namespace azurlane_wiki_app.Data.Downloaders
 
                 wrappedSkill.Skill.FK_ShipGirl
                     = await cargoContext.ShipGirls.FindAsync(wrappedSkill.Skill.ShipID);
+                wrappedSkill.Skill.Detail = RemoveHTML(wrappedSkill.Skill.Detail);
                 SavePaths(wrappedSkill.Skill);
 
                 if (await cargoContext.Skills
@@ -197,6 +200,7 @@ namespace azurlane_wiki_app.Data.Downloaders
             foreach (SkillJsonWrapper wrappedSkill in wrappedSkills)
             {
                 wrappedSkill.Skill.FK_ShipGirl = shipGirl;
+                wrappedSkill.Skill.Detail = RemoveHTML(wrappedSkill.Skill.Detail);
                 SavePaths(wrappedSkill.Skill);
 
                 if (await cargoContext.Skills
@@ -229,6 +233,27 @@ namespace azurlane_wiki_app.Data.Downloaders
         private void SavePaths(Skill skill)
         {
             skill.Icon = GetImageFolder(skill.Icon) + "/" + skill.Icon;
+        }
+
+        private string RemoveHTML(string skillDetails)
+        {
+            // ''' ... ''' - bold
+            skillDetails = skillDetails.Replace("'''", "");
+
+            // [[:File:...|...]] - remove
+            Regex regex = new Regex(@"\[\[:File:.*?\]\]");
+            skillDetails = regex.Replace(skillDetails, "");
+
+            // &lt;...&gt;
+            regex = new Regex(@"\&lt\;.*?\&gt\;");
+            skillDetails = regex.Replace(skillDetails, "  ");
+
+            skillDetails = Regex.Replace(skillDetails, @"\[\[.*?\|(.*?)\]\]", "$1");
+
+            skillDetails = skillDetails.Replace("[", "");
+            skillDetails = skillDetails.Replace("]", "");
+
+            return skillDetails;
         }
     }
 }
