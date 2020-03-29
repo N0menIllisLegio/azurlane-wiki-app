@@ -1,7 +1,9 @@
-﻿using azurlane_wiki_app.Data.Downloaders;
+﻿using System.Threading.Tasks;
+using azurlane_wiki_app.Data.Downloaders;
 using System.Windows;
-using azurlane_wiki_app.Data.Tables;
-using azurlane_wiki_app.ShipPage;
+using azurlane_wiki_app.Data;
+using azurlane_wiki_app.PageEquipment;
+using azurlane_wiki_app.PageShipGirl;
 
 namespace azurlane_wiki_app
 {
@@ -10,21 +12,27 @@ namespace azurlane_wiki_app
     /// </summary>
     public partial class MainWindow : Window
     {
-        // private Random random;
 
         public MainWindow()
         {
             InitializeComponent();
-            // random = new Random();
+            
+            // DownloadMethod();
 
-            // StatusGrid.Visibility = Visibility.Hidden;
-            CargoContext cargoContext = new CargoContext();
+            using (CargoContext cargoContext = new CargoContext())
+            {
+                
+                ShipGirlPageViewModel shipPageViewModel = 
+                    new ShipGirlPageViewModel(cargoContext.ShipGirls.Find("246"));
+                EquipmentPageViewModel equipmentPageViewModel =
+                    new EquipmentPageViewModel(cargoContext.ShipGirlsEquipment.Find(363));
 
-            //Button_Click(this, new RoutedEventArgs());
-            Main.Content = new ShipGirlPage(cargoContext.ShipGirls.Find("246"));
+                // Main.Content = new ShipGirlPage(shipPageViewModel);
+                Main.Content = new EquipmentPage(equipmentPageViewModel);
+            }
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void DownloadMethod()
         {
             IconDownloader iconDownloader = new IconDownloader();
             ShipDownloader shipDownloader = new ShipDownloader(6);
@@ -32,59 +40,19 @@ namespace azurlane_wiki_app
             SkillDownloader skillDownloader = new SkillDownloader();
             WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
 
-            //SkillCurrentCount.DataContext = SkillDownloadProgress.DataContext 
-            //    = SkillTotalCount.DataContext = skillDownloader;
+            await Task.Run(() => iconDownloader.Download());
 
-            //ShipCurrentCount.DataContext = ShipDownloadProgress.DataContext 
-            //    = ShipTotalCount.DataContext = shipDownloader;
+            Task[] tasks = new Task[2];
 
-            //EquipCurrentCount.DataContext = EquipDownloadProgress.DataContext 
-            //    = EquipTotalCount.DataContext = equipmentDownloader;
+            tasks[0] = Task.Run(() => shipDownloader.Download());
+            tasks[1] = Task.Run(() => equipmentDownloader.Download());
 
-            //StatusGrid.Visibility = Visibility.Visible;
+            await Task.WhenAll(tasks);
 
-            //await Task.Run(() => iconDownloader.Download());
+            tasks[0] = Task.Run(() => skillDownloader.Download());
+            tasks[1] = Task.Run(() => wtgShipGirlDownloader.Download());
 
-            //Task[] tasks = new Task[2];
-
-            //tasks[0] = Task.Run(() => shipDownloader.Download());
-            //tasks[1] = Task.Run(() => equipmentDownloader.Download());
-
-            //await Task.WhenAll(tasks);
-
-            //tasks[0] = Task.Run(() => skillDownloader.Download());
-            //tasks[1] = Task.Run(() => wtgShipGirlDownloader.Download());
-
-            //await Task.WhenAll(tasks);
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void ActionEvent(object sender, RoutedEventArgs e)
-        {
-            ShipDownloader shipDownloader = new ShipDownloader();
-            EquipmentDownloader equipmentDownloader = new EquipmentDownloader(2);
-            SkillDownloader skillDownloader = new SkillDownloader();
-            WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
-            IconDownloader iconDownloader = new IconDownloader();
-
-            //await seeder.DownloadIcons();
-
-            //await shipDownloader.Download();
-            //await iconDownloader.Download();
-            //await shipDownloader.Download("001");
-            //await equipmentDownloader.Download("Z Flag");
-            //await skillDownloader.Download("Martyr");
-            //await wtgShipGirlDownloader.Download("363");
-
-            using (CargoContext cargoContext = new CargoContext())
-            {
-                //  var ship = cargoContext.ShipGirls.Find("001");
-                //  await skillDownloader.Download(ship, cargoContext);
-                //  InfoLabel.Content = cargoContext.Icons.Count();
-            }
+            await Task.WhenAll(tasks);
         }
     }
 }

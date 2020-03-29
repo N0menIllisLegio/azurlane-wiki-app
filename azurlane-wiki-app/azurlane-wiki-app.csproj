@@ -99,15 +99,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="PageEquipment\EquipmentPage.xaml.cs">
+      <DependentUpon>EquipmentPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageEquipment\EquipmentPageViewModel.cs" />
     <Compile Include="ImageChecker.cs" />
-    <Compile Include="ShipPage\DropItem.cs" />
-    <Compile Include="ShipPage\EquipmentItem.cs" />
-    <Compile Include="ShipPage\GeneralInfoItem.cs" />
-    <Compile Include="ShipPage\RarityConverter.cs" />
+    <Compile Include="PageShipGirl\DropItem.cs" />
+    <Compile Include="PageShipGirl\EquipmentItem.cs" />
+    <Compile Include="PageShipGirl\GeneralInfoItem.cs" />
+    <Compile Include="PageShipGirl\RarityConverter.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="ShipPage\ShipGirlPageViewModel.cs" />
-    <Compile Include="ShipPage\StarsConverter.cs" />
-    <Compile Include="ShipPage\StatTable.cs" />
+    <Compile Include="PageShipGirl\ShipGirlPageViewModel.cs" />
+    <Compile Include="PageShipGirl\StarsConverter.cs" />
+    <Compile Include="PageShipGirl\StatTable.cs" />
     <Compile Include="VisibilityConverter.cs" />
     <Compile Include="ColorConverter.cs" />
     <Compile Include="Data\CargoContext.cs" />
@@ -122,12 +126,16 @@
     <Compile Include="Data\Tables\Rarity.cs" />
     <Compile Include="Data\Tables\ShipClass.cs" />
     <Compile Include="Data\Tables\ShipGirl.cs" />
-    <Compile Include="ShipPage\DynamicBindingListView.cs" />
+    <Compile Include="PageShipGirl\DynamicBindingListView.cs" />
     <Compile Include="ImagePathConverter.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="ShipPage\ShipGirlPage.xaml.cs">
+    <Compile Include="PageShipGirl\ShipGirlPage.xaml.cs">
       <DependentUpon>ShipGirlPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="PageEquipment\EquipmentPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -153,7 +161,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ShipPage\ShipGirlPage.xaml">
+    <Page Include="PageShipGirl\ShipGirlPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

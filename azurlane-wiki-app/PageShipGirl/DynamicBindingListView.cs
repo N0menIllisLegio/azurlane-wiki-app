@@ -1,5 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
-using System;
+﻿using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Linq;
@@ -8,8 +7,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using MaterialDesignThemes.Wpf;
 
-namespace azurlane_wiki_app.ShipPage
+namespace azurlane_wiki_app.PageShipGirl
 {
     public class DynamicBindingListView
     {

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using azurlane_wiki_app.Annotations;
+using azurlane_wiki_app.Properties;
 
-namespace azurlane_wiki_app.ShipPage
+namespace azurlane_wiki_app.PageShipGirl
 {
     public class GeneralInfoItem : INotifyPropertyChanged
     {

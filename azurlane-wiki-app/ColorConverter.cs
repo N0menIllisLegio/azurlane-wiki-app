@@ -84,6 +84,7 @@ namespace azurlane_wiki_app
             string target; 
             string brushPicker;
 
+
             if (values.Length < 1)
             {
                 return Brushes.Transparent;

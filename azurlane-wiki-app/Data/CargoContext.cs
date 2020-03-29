@@ -1,13 +1,12 @@
-﻿using azurlane_wiki_app.Data.Downloaders;
-using azurlane_wiki_app.Data.Tables;
-using SQLite.CodeFirst;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using azurlane_wiki_app.Data.Downloaders;
+using azurlane_wiki_app.Data.Tables;
+using SQLite.CodeFirst;
 
-namespace azurlane_wiki_app
+namespace azurlane_wiki_app.Data
 {
     class CargoContext : DbContext
     {

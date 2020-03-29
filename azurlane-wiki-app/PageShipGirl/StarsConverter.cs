@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace azurlane_wiki_app.ShipPage
+namespace azurlane_wiki_app.PageShipGirl
 {
     class StarsConverter : IMultiValueConverter
     {

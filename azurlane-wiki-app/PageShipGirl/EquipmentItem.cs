@@ -1,4 +1,4 @@
-﻿namespace azurlane_wiki_app.ShipPage
+﻿namespace azurlane_wiki_app.PageShipGirl
 {
     public struct EquipmentItem
     {

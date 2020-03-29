@@ -5,11 +5,12 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using azurlane_wiki_app.Annotations;
+using azurlane_wiki_app.Data;
 using azurlane_wiki_app.Data.Tables;
+using azurlane_wiki_app.Properties;
 using MaterialDesignThemes.Wpf;
 
-namespace azurlane_wiki_app.ShipPage
+namespace azurlane_wiki_app.PageShipGirl
 {
     public class ShipGirlPageViewModel : INotifyPropertyChanged
     {

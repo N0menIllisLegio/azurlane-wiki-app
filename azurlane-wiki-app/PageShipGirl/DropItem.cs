@@ -1,6 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 
-namespace azurlane_wiki_app.ShipPage
+namespace azurlane_wiki_app.PageShipGirl
 {
     public class DropItem
     {

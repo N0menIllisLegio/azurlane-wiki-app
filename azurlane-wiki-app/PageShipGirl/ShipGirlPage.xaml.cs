@@ -1,21 +1,20 @@
-﻿using azurlane_wiki_app.Data.Tables;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace azurlane_wiki_app.ShipPage
+namespace azurlane_wiki_app.PageShipGirl
 {
     /// <summary>
     /// Interaction logic for ShipGirlPage.xaml
     /// </summary>
     public partial class ShipGirlPage : Page
     {
-        public ShipGirlPage(ShipGirl shipGirl)
+        public ShipGirlPage(ShipGirlPageViewModel viewModel)
         {
             InitializeComponent();
-            DataContext = new ShipGirlPageViewModel(shipGirl);
+            DataContext = viewModel;
         }
 
         private void SkillsListView_SizeChanged(object sender, SizeChangedEventArgs e)

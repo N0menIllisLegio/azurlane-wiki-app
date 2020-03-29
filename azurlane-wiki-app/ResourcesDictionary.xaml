@@ -1,12 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:azurlane_wiki_app"
-                    xmlns:shipPage="clr-namespace:azurlane_wiki_app.ShipPage">
+                    xmlns:pageShipGirl="clr-namespace:azurlane_wiki_app.PageShipGirl">
 
     <local:ColorConverter x:Key="ColorConverter" />
     <local:VisibilityConverter x:Key="VisibilityConverter" />
     <local:ImagePathConverter x:Key="ImagePathConverter" />
-    <shipPage:StarsConverter x:Key="StarsConverter" />
+    <pageShipGirl:StarsConverter x:Key="StarsConverter" />
 
     <!--ScrollBar-->
     <Style x:Key="ScrollBarTrackThumb"

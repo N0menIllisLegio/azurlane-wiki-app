@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows.Media;
+using azurlane_wiki_app.Data;
 
-namespace azurlane_wiki_app.ShipPage
+namespace azurlane_wiki_app.PageShipGirl
 {
     public struct StatTable
     {
