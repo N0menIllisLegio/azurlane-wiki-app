@@ -17,12 +17,17 @@ namespace azurlane_wiki_app
         {
             InitializeComponent();
             
-            // DownloadMethod();
+            DownloadData();
 
+            // DisplayContent();
+        }
+
+        private void DisplayContent()
+        {
             using (CargoContext cargoContext = new CargoContext())
             {
-                
-                ShipGirlPageViewModel shipPageViewModel = 
+
+                ShipGirlPageViewModel shipPageViewModel =
                     new ShipGirlPageViewModel(cargoContext.ShipGirls.Find("246"));
                 EquipmentPageViewModel equipmentPageViewModel =
                     new EquipmentPageViewModel(cargoContext.ShipGirlsEquipment.Find(363));
@@ -32,7 +37,7 @@ namespace azurlane_wiki_app
             }
         }
 
-        private async void DownloadMethod()
+        private async void DownloadData()
         {
             IconDownloader iconDownloader = new IconDownloader();
             ShipDownloader shipDownloader = new ShipDownloader(6);

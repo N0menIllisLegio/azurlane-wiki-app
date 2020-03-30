@@ -186,7 +186,7 @@ namespace azurlane_wiki_app.Data.Tables
         [MaxLength(20)]
         [ForeignKey("FK_SubtypeRetro")]
         public string SubtypeRetro { get; set; }
-        public virtual SubtypeRetro FK_SubtypeRetro { get; set; }
+        public virtual ShipType FK_SubtypeRetro { get; set; }
 
         [MaxLength(20)]
         [ForeignKey("FK_ShipClass")]

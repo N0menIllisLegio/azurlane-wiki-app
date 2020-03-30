@@ -28,6 +28,9 @@ namespace azurlane_wiki_app.PageEquipment
         public string Rarity { get; set; }
         public string RarityIcon { get; set; }
 
+
+        public List<EquipmentUsedBy> UsedByList { get; set; }
+
         public string Image { get; set; }
         public EquipmentPageViewModel(Equipment equipment)
         {
@@ -43,6 +46,9 @@ namespace azurlane_wiki_app.PageEquipment
             {
                 RarityIcon = cargoContext.Icons.Find(Rarity)?.FileName;
             }
+
+            // UsedByList.Add();
+
 
         }
 

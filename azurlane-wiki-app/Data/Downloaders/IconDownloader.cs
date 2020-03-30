@@ -240,11 +240,6 @@ namespace azurlane_wiki_app.Data.Downloaders
         {
             using (CargoContext cargoContext = new CargoContext())
             {
-                foreach (SubtypeRetro subtypeRetro in cargoContext.SubtypeRetros)
-                {
-                    subtypeRetro.FK_Icon = cargoContext.Icons.Find(subtypeRetro.Abbreviation);
-                }
-
                 foreach (ShipType shipType in cargoContext.ShipTypes)
                 {
                     shipType.FK_Icon = cargoContext.Icons.Find(shipType.Abbreviation);

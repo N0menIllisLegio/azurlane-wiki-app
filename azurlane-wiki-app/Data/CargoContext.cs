@@ -21,7 +21,6 @@ namespace azurlane_wiki_app.Data
         public DbSet<ShipGroup> ShipGroups { get; set; }
         public DbSet<ShipClass> ShipClasses { get; set; }
         public DbSet<ShipType> ShipTypes { get; set; }
-        public DbSet<SubtypeRetro> SubtypeRetros { get; set; }
         public DbSet<EquipmentTech> EquipmentTeches { get; set; }
         public DbSet<EquipmentType> EquipmentTypes { get; set; }
 

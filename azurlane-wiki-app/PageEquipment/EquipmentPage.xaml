@@ -53,8 +53,8 @@
                 <StackPanel Orientation="Horizontal" Grid.Row="0"
                             HorizontalAlignment="Center">
 
-                    <materialDesign:Card Margin="10 10 5 10" VerticalAlignment="Stretch"
-                                         Width="{Binding RelativeSource={RelativeSource Self}, Path=Height}">
+                    <materialDesign:Card Margin="10 10 5 0" VerticalAlignment="Stretch"
+                                         Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}">
                         <materialDesign:Card.Background>
                             <MultiBinding Converter="{StaticResource ColorConverter}" ConverterParameter="Rarity">
                                 <Binding Path="Rarity" />
@@ -151,6 +151,34 @@
                         </StackPanel>
                     </materialDesign:Card>
                 </StackPanel>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <materialDesign:Card Grid.Column="0" Margin="10 10 5 0"
+                                         Background="{DynamicResource PrimaryHueLightBrush}">
+
+                    </materialDesign:Card>
+
+                    <materialDesign:Card Grid.Column="1" Margin="5 10 10 0"
+                                         Background="{DynamicResource PrimaryHueLightBrush}">
+                        <ItemsControl ItemsSource="{Binding UsedByList}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel>
+                                        <Image RenderOptions.BitmapScalingMode="HighQuality"
+                                               Source="{Binding Icon, Converter={StaticResource ImagePathConverter}}"/>
+                                        <TextBlock Text="{Binding Name}"/>
+                                        <materialDesign:PackIcon Kind="{Binding Kind}" ToolTip="{Binding Note}"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </materialDesign:Card>
+                </Grid>
             </Grid>
         </ScrollViewer>
     </Grid>

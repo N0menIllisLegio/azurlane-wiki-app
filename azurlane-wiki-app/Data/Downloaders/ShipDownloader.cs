@@ -1,5 +1,4 @@
-﻿using System;
-using azurlane_wiki_app.Data.Tables;
+﻿using azurlane_wiki_app.Data.Tables;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -133,7 +132,6 @@ namespace azurlane_wiki_app.Data.Downloaders
             Status = Statuses.DownloadComplete;
         }
 
-        //TODO: add paths changes
         /// <summary>
         /// Download one ShipGirl and update her or save if she doesn't exist.
         /// </summary>
@@ -273,8 +271,8 @@ namespace azurlane_wiki_app.Data.Downloaders
         }
 
         /// <summary>
-        /// Create relationships depending on values of shipGirl.{ nationality, rarity, class, type, subtyperetro, group }.
-        /// If { nationality, rarity, class, type, subtyperetro, group } doesn't exists, creates it.
+        /// Create relationships depending on values of shipGirl.{ nationality, rarity, class, type, group }.
+        /// If { nationality, rarity, class, type, group } doesn't exists, creates it.
         /// </summary>
         /// <param name="shipGirl">ShipGirl</param>
         /// <param name="cargoContext">CargoContext</param>
@@ -284,8 +282,9 @@ namespace azurlane_wiki_app.Data.Downloaders
             Nationality nationality = cargoContext.Nationalities.Find(shipGirl.Nationality);
             ShipClass shipClass = cargoContext.ShipClasses.Find(shipGirl.Class);
             ShipGroup shipGroup = cargoContext.ShipGroups.Find(shipGirl.ShipGroup);
+
             ShipType shipType = cargoContext.ShipTypes.Find(shipGirl.Type);
-            SubtypeRetro subtypeRetro = cargoContext.SubtypeRetros.Find(shipGirl.SubtypeRetro);
+            ShipType subtypeRetro = cargoContext.ShipTypes.Find(shipGirl.SubtypeRetro);
 
             EquipmentType eq1Type = cargoContext.EquipmentTypes.Find(shipGirl.Eq1Type);
             EquipmentType eq2Type = cargoContext.EquipmentTypes.Find(shipGirl.Eq2Type);
@@ -293,15 +292,15 @@ namespace azurlane_wiki_app.Data.Downloaders
 
             if (rarity == null)
             {
-                (int? Coins, int? Oil, int? Medals) = ScrapValues[shipGirl.Rarity];
+                (int? coins, int? oil, int? medals) = ScrapValues[shipGirl.Rarity];
 
                 rarity = new Rarity
                 {
                     Name = shipGirl.Rarity,
                     FK_Icon = cargoContext.Icons.Find(shipGirl.Rarity),
-                    ScrapCoins = Coins,
-                    ScrapOil = Oil,
-                    ScrapMedals = Medals
+                    ScrapCoins = coins,
+                    ScrapOil = oil,
+                    ScrapMedals = medals
                 };
 
                 cargoContext.Rarities.Add(rarity);
@@ -350,14 +349,14 @@ namespace azurlane_wiki_app.Data.Downloaders
                 }
                 else
                 {
-                    subtypeRetro = new SubtypeRetro
+                    subtypeRetro = new ShipType
                     {
                         Name = shipGirl.SubtypeRetro,
                         Abbreviation = Abbreviations[shipGirl.SubtypeRetro],
                         FK_Icon = cargoContext.Icons.Find(Abbreviations[shipGirl.SubtypeRetro])
                     };
 
-                    cargoContext.SubtypeRetros.Add(subtypeRetro);
+                    cargoContext.ShipTypes.Add(subtypeRetro);
                 }
             }
 

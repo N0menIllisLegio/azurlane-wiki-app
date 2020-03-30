@@ -104,6 +104,7 @@
     </Compile>
     <Compile Include="PageEquipment\EquipmentPageViewModel.cs" />
     <Compile Include="ImageChecker.cs" />
+    <Compile Include="PageEquipment\EquipmentUsedBy.cs" />
     <Compile Include="PageShipGirl\DropItem.cs" />
     <Compile Include="PageShipGirl\EquipmentItem.cs" />
     <Compile Include="PageShipGirl\GeneralInfoItem.cs" />
@@ -148,7 +149,6 @@
     <Compile Include="Data\Tables\ShipGirlWhereToGetShipGirl.cs" />
     <Compile Include="Data\Tables\ShipGroup.cs" />
     <Compile Include="Data\Tables\ShipType.cs" />
-    <Compile Include="Data\Tables\SubtypeRetro.cs" />
     <Compile Include="Data\Tables\WhereToGetShipGirl.cs" />
     <Compile Include="Data\Tables\Skill.cs" />
     <Compile Include="Data\Downloaders\SkillDownloader.cs" />
