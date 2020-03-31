@@ -241,14 +241,14 @@ namespace azurlane_wiki_app.Data.Downloaders
             skillDetails = skillDetails.Replace("'''", "");
 
             // [[:File:...|...]] - remove
-            Regex regex = new Regex(@"\[\[:File:.*?\]\]");
+            Regex regex = new Regex(@"\[\[:File:[^]]*?\]\]");
             skillDetails = regex.Replace(skillDetails, "");
 
             // &lt;...&gt;
             regex = new Regex(@"\&lt\;.*?\&gt\;");
             skillDetails = regex.Replace(skillDetails, "  ");
 
-            skillDetails = Regex.Replace(skillDetails, @"\[\[.*?\|(.*?)\]\]", "$1");
+            skillDetails = Regex.Replace(skillDetails, @"\[\[[^]]*?\|([^]]*?)\]\]", "$1");
 
             skillDetails = skillDetails.Replace("[", "");
             skillDetails = skillDetails.Replace("]", "");

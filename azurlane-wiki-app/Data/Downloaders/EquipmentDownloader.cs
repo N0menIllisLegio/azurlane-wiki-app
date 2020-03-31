@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using azurlane_wiki_app.Data.Tables;
 using Newtonsoft.Json;
@@ -83,6 +84,8 @@ namespace azurlane_wiki_app.Data.Downloaders
                         wrpEquipment.Equipment.FK_Nationality = nationality;
                         CreateRelationships(wrpEquipment.Equipment, cargoContext);
                         SavePaths(wrpEquipment.Equipment);
+                        wrpEquipment.Equipment.DropLocation = Refactor(wrpEquipment.Equipment.DropLocation);
+                        wrpEquipment.Equipment.Notes = Refactor(wrpEquipment.Equipment.Notes);
                         cargoContext.ShipGirlsEquipment.Add(wrpEquipment.Equipment);
                     }
                 }
@@ -151,6 +154,8 @@ namespace azurlane_wiki_app.Data.Downloaders
 
                 wrpEquipment.Equipment.FK_Nationality = nationality;
                 CreateRelationships(wrpEquipment.Equipment, cargoContext);
+                wrpEquipment.Equipment.DropLocation = Refactor(wrpEquipment.Equipment.DropLocation);
+                wrpEquipment.Equipment.Notes = Refactor(wrpEquipment.Equipment.Notes);
                 SavePaths(wrpEquipment.Equipment);
 
                 if (await cargoContext.ShipGirlsEquipment
@@ -212,6 +217,29 @@ namespace azurlane_wiki_app.Data.Downloaders
             equipment.FK_Type = equipmentType;
 
             cargoContext.SaveChanges();
+        }
+
+        private string Refactor(string data)
+        {
+            // &quot; - remove
+            data = data.Replace("&quot;", "");
+
+            // [[File:...|...]] - remove
+            Regex regex = new Regex(@"\[\[File:[^]]*?\]\]");
+            data = regex.Replace(data, "");
+
+            // &lt;...&gt;
+            regex = new Regex(@"\&lt\;.*?\&gt\;");
+            data = regex.Replace(data, "  ");
+
+            data = Regex.Replace(data, @"\[\[[^]]*?\|([^]]*?)\]\]", "$1");
+
+            data = data.Replace(":[[", "\t");
+
+            data = data.Replace("[", "");
+            data = data.Replace("]", "");
+
+            return data;
         }
     }
 }

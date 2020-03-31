@@ -267,10 +267,12 @@
                        Name="ImageIcon" Source="{Binding ShipGirlIcon, Converter={StaticResource ImagePathConverter}}" />
             </Border>
 
-            <TextBlock Grid.Column="2" Text="{Binding ShipName}" VerticalAlignment="Center"
-                       Margin="40 0 0 0"
-                       Style="{StaticResource MaterialDesignHeadline3TextBlock}"
-                       Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" />
+            <Viewbox Grid.Column="2" HorizontalAlignment="Left" Stretch="Uniform" Margin="40 0 0 0"
+                     VerticalAlignment="Center">
+                <TextBlock Text="{Binding ShipName}" 
+                           Style="{StaticResource MaterialDesignHeadline3TextBlock}"
+                           Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" />
+            </Viewbox>
 
             <materialDesign:Chip Grid.Column="3" Margin="0 0 20 0" Visibility="{Binding RetrofitVisibility}"
                                  Background="{DynamicResource PrimaryHueMidForegroundBrush}">
@@ -774,7 +776,7 @@
                                         <Grid IsSharedSizeScope="True">
                                             <Grid.Resources>
                                                 <Style TargetType="materialDesign:PackIcon">
-                                                    <Setter Property="Foreground" Value="Black" />
+                                                    <Setter Property="Foreground" Value="Gray" />
                                                     <Style.Triggers>
                                                         <Trigger Property="Kind" Value="Check">
                                                             <Setter Property="Foreground" Value="Green" />
@@ -869,7 +871,7 @@
 
                                         <ListView.Resources>
                                             <Style TargetType="materialDesign:PackIcon">
-                                                <Setter Property="Foreground" Value="Black" />
+                                                <Setter Property="Foreground" Value="Gray" />
                                                 <Style.Triggers>
                                                     <Trigger Property="Kind" Value="Check">
                                                         <Setter Property="Foreground" Value="Green" />
@@ -887,12 +889,21 @@
                                     </ListView>
                                 </Border>
 
-                                <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
-                                           Margin="0 20 0 0" FontWeight="Light" FontSize="13"
-                                           Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
-                                           Text="Hover cursor on check marks to attain additional info, if such info exist." />
-                            </Grid>
+                                <StackPanel Orientation="Horizontal" Margin="0 20 0 0"
+                                            Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
 
+                                    <TextBlock  FontWeight="Light" FontSize="13"
+                                                Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                                Text="Hover cursor on" />
+
+                                    <materialDesign:PackIcon Kind="CalendarText" Margin="5 0 5 0"
+                                                             Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"/>
+
+                                    <TextBlock  FontWeight="Light" FontSize="13"
+                                                Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                                Text="icon to attain additional info, if such icon displayed." />
+                                </StackPanel>
+                            </Grid>
                         </Expander>
                     </StackPanel>
                 </materialDesign:Card>

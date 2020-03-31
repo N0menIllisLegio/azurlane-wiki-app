@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using azurlane_wiki_app.Data;
 using azurlane_wiki_app.Data.Downloaders;
-using System.Windows;
-using azurlane_wiki_app.Data;
 using azurlane_wiki_app.PageEquipment;
 using azurlane_wiki_app.PageShipGirl;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace azurlane_wiki_app
 {
@@ -16,10 +16,8 @@ namespace azurlane_wiki_app
         public MainWindow()
         {
             InitializeComponent();
-            
-            DownloadData();
-
-            // DisplayContent();
+            //DownloadData();
+            DisplayContent();
         }
 
         private void DisplayContent()
@@ -28,11 +26,11 @@ namespace azurlane_wiki_app
             {
 
                 ShipGirlPageViewModel shipPageViewModel =
-                    new ShipGirlPageViewModel(cargoContext.ShipGirls.Find("246"));
+                    new ShipGirlPageViewModel(cargoContext.ShipGirls.Find("155"));
                 EquipmentPageViewModel equipmentPageViewModel =
-                    new EquipmentPageViewModel(cargoContext.ShipGirlsEquipment.Find(363));
+                    new EquipmentPageViewModel(cargoContext.ShipGirlsEquipment.Find(364));
 
-                // Main.Content = new ShipGirlPage(shipPageViewModel);
+               // Main.Content = new ShipGirlPage(shipPageViewModel);
                 Main.Content = new EquipmentPage(equipmentPageViewModel);
             }
         }

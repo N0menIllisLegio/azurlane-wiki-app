@@ -137,7 +137,6 @@ namespace azurlane_wiki_app.Data.Tables
 
         #region Relationships
 
-        //TODO: create relationship!!!
         [MaxLength(50)]
         [ForeignKey("FK_Nationality")]
         public string Nationality { get; set; }

@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace azurlane_wiki_app.PageEquipment
 {
@@ -11,6 +13,19 @@ namespace azurlane_wiki_app.PageEquipment
         {
             InitializeComponent();
             DataContext = viewModel;
+        }
+
+        private void StatsList_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ListView listView = sender as ListView;
+            GridView gView = listView.View as GridView;
+
+            var workingWidth = listView.ActualWidth - 20;
+            var col1 = 0.6;
+            var col2 = 1 - col1;
+
+            gView.Columns[0].Width = Math.Abs(workingWidth * col1);
+            gView.Columns[1].Width = Math.Abs(workingWidth * col2);
         }
     }
 }

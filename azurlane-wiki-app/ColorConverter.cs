@@ -101,7 +101,10 @@ namespace azurlane_wiki_app
                 brushPicker = values[1]?.ToString();
             }
 
-            if (target == null || brushPicker == null)
+            if (target == null 
+                || brushPicker == null
+                || target == DependencyProperty.UnsetValue.ToString()
+                || brushPicker ==  DependencyProperty.UnsetValue.ToString())
             {
                 return Brushes.Transparent;
             }

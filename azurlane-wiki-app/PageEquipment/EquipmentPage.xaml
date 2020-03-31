@@ -36,25 +36,36 @@
                                      VerticalAlignment="Center" Margin="5"
                                      Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" />
 
-            <TextBlock Grid.Column="1" Text="{Binding EquipmentName}"
-                       VerticalAlignment="Center" Margin="40 0"
-                       Style="{StaticResource MaterialDesignHeadline3TextBlock}"
-                       Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" />
+            <Viewbox Grid.Column="1" HorizontalAlignment="Left" Stretch="Uniform"
+                     VerticalAlignment="Center" Margin="40 0">
+                <TextBlock Text="{Binding EquipmentName}"
+                           Style="{StaticResource MaterialDesignHeadline3TextBlock}"
+                           Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" />
+            </Viewbox>
         </Grid>
 
         <ScrollViewer Grid.Row="1">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Orientation="Horizontal" Grid.Row="0"
-                            HorizontalAlignment="Center">
+                <Grid Grid.Row="0" IsSharedSizeScope="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="0.6*"/>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" SharedSizeGroup="A"/>
+                    </Grid.RowDefinitions>
 
-                    <materialDesign:Card Margin="10 10 5 0" VerticalAlignment="Stretch"
-                                         Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}">
+                    <materialDesign:Card Margin="10 10 5 0"
+                                         Grid.Column="0"
+                                         VerticalAlignment="Center"
+                                         Padding="25">
                         <materialDesign:Card.Background>
                             <MultiBinding Converter="{StaticResource ColorConverter}" ConverterParameter="Rarity">
                                 <Binding Path="Rarity" />
@@ -66,9 +77,11 @@
                                Source="{Binding Image, Converter={StaticResource ImagePathConverter}}" />
                     </materialDesign:Card>
 
-                    <materialDesign:Card Margin="5 10 10 0"
+                    <materialDesign:Card Margin="5 10 5 0"
+                                         Grid.Column="1"
+                                         VerticalAlignment="Center"
                                          Background="{DynamicResource PrimaryHueLightBrush}"
-                                         Width="400">
+                                         x:Name="GeneralInfoCard">
                         <StackPanel>
                             <Border Padding="8" BorderThickness="0 0 0 1"
                                     BorderBrush="{DynamicResource MaterialDesignDivider}">
@@ -121,7 +134,7 @@
                             <Border Padding="8" BorderThickness="0 0 0 1"
                                     BorderBrush="{DynamicResource MaterialDesignDivider}">
                                 <Border.Background>
-                                    <MultiBinding Converter="{StaticResource ColorConverter}" 
+                                    <MultiBinding Converter="{StaticResource ColorConverter}"
                                                   ConverterParameter="Nationality">
                                         <Binding Path="Nation" />
                                     </MultiBinding>
@@ -150,33 +163,155 @@
                             </Border>
                         </StackPanel>
                     </materialDesign:Card>
-                </StackPanel>
+
+                    <materialDesign:Card Margin="5 10 5 0"
+                                         Grid.Column="2"
+                                         VerticalAlignment="Center"
+                                         Height="{Binding ElementName=GeneralInfoCard, Path=ActualHeight}"
+                                         Background="{DynamicResource PrimaryHueLightBrush}">
+                        <materialDesign:Card.Visibility>
+                            <MultiBinding Converter="{StaticResource VisibilityConverter}">
+                                <Binding Path="DropLocation"/>
+                                <Binding Path="Notes"/>
+                            </MultiBinding>
+                        </materialDesign:Card.Visibility>
+
+                        <ScrollViewer>
+                            <StackPanel Margin="20 10 20 0">
+                                <StackPanel Visibility="{Binding DropLocation, Converter={StaticResource VisibilityConverter}}">
+                                    <TextBlock Text="Drop Location"
+                                               Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                               FontWeight="Medium" FontSize="25" Margin="5 0" />
+                                    <Border BorderBrush="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                            BorderThickness="0 0 0 1"
+                                            Margin="0 5 0 5" />
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding DropLocation}" FontWeight="Normal"
+                                               Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                               Padding="5 5 5 20" />
+                                </StackPanel>
+
+                                <StackPanel Visibility="{Binding Notes, Converter={StaticResource VisibilityConverter}}">
+                                    <TextBlock Text="Notes"
+                                               Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                               FontWeight="Medium" FontSize="25" Margin="5 0" />
+                                    <Border BorderBrush="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                            BorderThickness="0 0 0 1"
+                                            Margin="0 5 0 5" />
+
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Notes}" FontWeight="Normal"
+                                               Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                               Padding="5" />
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </materialDesign:Card>
+                </Grid>
 
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="0.6*" />
                     </Grid.ColumnDefinitions>
 
-                    <materialDesign:Card Grid.Column="0" Margin="10 10 5 0"
+                    <materialDesign:Card Grid.Column="0" Margin="10 10 5 10"
+                                         VerticalAlignment="Top"
                                          Background="{DynamicResource PrimaryHueLightBrush}">
+                        <StackPanel Margin="20 10 20 0">
+                            <TextBlock Text="Stats" Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                       FontWeight="Medium" FontSize="25" Margin="5 0" />
+                            <Border BorderBrush="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                    BorderThickness="0 0 0 1"
+                                    Margin="0 5 0 0" />
 
+                            <ListView ItemsSource="{Binding StatsList}" Margin="7 0 7 0"
+                                      SizeChanged="StatsList_OnSizeChanged">
+                                <ListView.View>
+                                    <GridView AllowsColumnReorder="False">
+                                        <GridViewColumn Header="Parameter">
+                                            <GridViewColumn.CellTemplate>   
+                                                <DataTemplate >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Image RenderOptions.BitmapScalingMode="HighQuality"
+                                                               VerticalAlignment="Center"
+                                                               Height="20" Width="20"
+                                                               Margin="5 0 5 0"
+                                                               Visibility="{Binding Icon, Converter={StaticResource VisibilityConverter}}"
+                                                               Source="{Binding Icon, Converter={StaticResource ImagePathConverter}}" />
+                                                        <TextBlock Margin="5 0" Text="{Binding Name}"
+                                                                   VerticalAlignment="Center"
+                                                                   FontWeight="Normal" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="Value">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding DescriptionFirstPart}" FontWeight="Normal"
+                                                                   VerticalAlignment="Center"/>
+                                                        <materialDesign:PackIcon Kind="ChevronTripleRight" Margin="5 0 5 0"
+                                                                                 VerticalAlignment="Center"
+                                                                                 Visibility="{Binding DescriptionSecondPart, 
+                                                                                Converter={StaticResource VisibilityConverter}}"/>
+                                                        <TextBlock Text="{Binding DescriptionSecondPart}" 
+                                                                   VerticalAlignment="Center" FontWeight="Normal"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </StackPanel>
                     </materialDesign:Card>
 
-                    <materialDesign:Card Grid.Column="1" Margin="5 10 10 0"
+                    <materialDesign:Card Grid.Column="1" Margin="5 10 5 10"
+                                         VerticalAlignment="Top"
                                          Background="{DynamicResource PrimaryHueLightBrush}">
-                        <ItemsControl ItemsSource="{Binding UsedByList}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <DockPanel>
-                                        <Image RenderOptions.BitmapScalingMode="HighQuality"
-                                               Source="{Binding Icon, Converter={StaticResource ImagePathConverter}}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <materialDesign:PackIcon Kind="{Binding Kind}" ToolTip="{Binding Note}"/>
-                                    </DockPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        <StackPanel Margin="20 10 20 0">
+                            <TextBlock Text="Used By" Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                       FontWeight="Medium" FontSize="25" Margin="5 0" />
+                            <Border BorderBrush="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                    BorderThickness="0 0 0 1"
+                                    Margin="0 5 0 5" />
+
+                            <ItemsControl ItemsSource="{Binding UsedByList}" Margin="7 0 7 0">
+                                <ItemsControl.Resources>
+                                    <Style TargetType="materialDesign:PackIcon">
+                                        <Setter Property="Foreground" Value="Gray" />
+                                        <Style.Triggers>
+                                            <Trigger Property="Kind" Value="Check">
+                                                <Setter Property="Foreground" Value="Green" />
+                                            </Trigger>
+                                            <Trigger Property="Kind" Value="Close">
+                                                <Setter Property="Foreground" Value="Red" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ItemsControl.Resources>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{DynamicResource MaterialDesignDivider}"
+                                                BorderThickness="0 0 0 1"
+                                                Padding="7">
+                                            <DockPanel>
+                                                <Image RenderOptions.BitmapScalingMode="HighQuality"
+                                                       Height="18" Width="30"
+                                                       Source="{Binding Icon, Converter={StaticResource ImagePathConverter}}" />
+                                                <TextBlock Margin="5 0" Text="{Binding Name}"
+                                                           FontWeight="Normal" />
+                                                <materialDesign:PackIcon Kind="{Binding Kind}" ToolTip="{Binding Note}"
+                                                                         Background="Transparent"
+                                                                         HorizontalAlignment="Right" />
+                                            </DockPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
                     </materialDesign:Card>
                 </Grid>
             </Grid>

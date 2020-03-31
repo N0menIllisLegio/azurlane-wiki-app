@@ -254,16 +254,6 @@ namespace azurlane_wiki_app.PageShipGirl
             // SKILLS
             SkillsList = shipGirl.Skills;
 
-            // TODO: Refactor
-            // &lt;br&gt; - <br> new line - change to \n
-            // &lt;ul&gt;&lt;li&gt; - list, change to \u2022
-            // [[]] - hyperlink (girl, nationality) and equip
-            // [[|]] - hyperlink to equip
-            // ''' ... ''' - bold
-            // [[where to link|what to display]]
-            // [[:Category:...|...]] - hyperlink to class
-            // [[:File:...|...]] - remove
-            // TODO: check image for corruption
             // TODO: add animation of image transition
 
             // LIMIT BREAKS
@@ -288,6 +278,10 @@ namespace azurlane_wiki_app.PageShipGirl
             {
                 string locationName = location.FK_WhereToGetShipGirl.Name;
                 string locationNote = string.IsNullOrEmpty(location.Note) ? null : location.Note;
+                
+                PackIconKind icon = string.IsNullOrEmpty(locationNote)
+                    ? PackIconKind.Check
+                    : PackIconKind.CalendarText;
 
                 if (locationName.Contains('-'))
                 {
@@ -296,7 +290,7 @@ namespace azurlane_wiki_app.PageShipGirl
 
                     DropItem row = DropsList[map - 1];
                     PropertyInfo propertyInfo = row.GetType().GetProperty("Ch_" + chapter);
-                    propertyInfo?.SetValue(row, PackIconKind.Check, null);
+                    propertyInfo?.SetValue(row, icon, null);
 
                     propertyInfo = row.GetType().GetProperty("ToolTip_" + chapter);
                     propertyInfo?.SetValue(row, locationNote, null);
@@ -306,23 +300,23 @@ namespace azurlane_wiki_app.PageShipGirl
                     switch (locationName)
                     {
                         case "Light":
-                            LightConstructionIcon = PackIconKind.Check;
+                            LightConstructionIcon = icon;
                             LightConstructionNote = locationNote;
                             break;
                         case "Heavy":
-                            HeavyConstructionIcon = PackIconKind.Check;
+                            HeavyConstructionIcon = icon;
                             HeavyConstructionNote = locationNote;
                             break;
                         case "Aviation":
-                            AviationConstructionIcon = PackIconKind.Check;
+                            AviationConstructionIcon = icon;
                             AviationConstructionNote = locationNote;
                             break;
                         case "Limited":
-                            LimitedConstructionIcon = PackIconKind.Check;
+                            LimitedConstructionIcon = icon;
                             LimitedConstructionNote = locationNote;
                             break;
                         case "Exchange":
-                            ExchangeConstructionIcon = PackIconKind.Check;
+                            ExchangeConstructionIcon = icon;
                             ExchangeConstructionNote = locationNote;
                             break;
                     }

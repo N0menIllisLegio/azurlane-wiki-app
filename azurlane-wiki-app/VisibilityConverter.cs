@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace azurlane_wiki_app
 {
-    class VisibilityConverter : IValueConverter
+    class VisibilityConverter : IValueConverter, IMultiValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -18,6 +18,31 @@ namespace azurlane_wiki_app
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            int count = 0;
+
+            foreach (object value in values)
+            {
+                if (string.IsNullOrEmpty(value?.ToString()))
+                {
+                    count++;
+                }
+            }
+
+            if (count == values.Length)
+            {
+                return Visibility.Collapsed;
+            }
+
+            return Visibility.Visible;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

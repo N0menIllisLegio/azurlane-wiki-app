@@ -104,6 +104,7 @@
     </Compile>
     <Compile Include="PageEquipment\EquipmentPageViewModel.cs" />
     <Compile Include="ImageChecker.cs" />
+    <Compile Include="PageEquipment\EquipmentStats.cs" />
     <Compile Include="PageEquipment\EquipmentUsedBy.cs" />
     <Compile Include="PageShipGirl\DropItem.cs" />
     <Compile Include="PageShipGirl\EquipmentItem.cs" />
