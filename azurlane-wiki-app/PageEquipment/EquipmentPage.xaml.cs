@@ -9,6 +9,11 @@ namespace azurlane_wiki_app.PageEquipment
     /// </summary>
     public partial class EquipmentPage : Page
     {
+        public EquipmentPage()
+        {
+            InitializeComponent();
+        }
+
         public EquipmentPage(EquipmentPageViewModel viewModel)
         {
             InitializeComponent();

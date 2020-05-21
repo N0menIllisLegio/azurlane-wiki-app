@@ -17,6 +17,8 @@ namespace azurlane_wiki_app.Data.Downloaders
 
         public SkillDownloader(int ThreadsCount = 0) : base(ThreadsCount)
         {
+            DownloadTitle = "Downloading Skills...";
+
             if (!Directory.Exists(SkillImagesFolderPath))
             {
                 Directory.CreateDirectory(SkillImagesFolderPath);
@@ -29,6 +31,8 @@ namespace azurlane_wiki_app.Data.Downloaders
         public override async Task Download()
         {
             Status = Statuses.InProgress;
+            StatusDataMessage = "Downloading data.";
+            StatusImageMessage = "Pending.";
             List<SkillJsonWrapper> wrappedSkills;
 
             try
@@ -49,15 +53,21 @@ namespace azurlane_wiki_app.Data.Downloaders
             }
 
             TotalImageCount = wrappedSkills.Count;
+            TotalDataCount = wrappedSkills.Count;
 
             using (CargoContext cargoContext = new CargoContext())
             {
+                StatusImageMessage = "Adding icons to download queue.";
+
                 foreach (SkillJsonWrapper wrappedSkill in wrappedSkills)
                 {
                     downloadBlock.Post(wrappedSkill.Skill.Icon);
                 }
 
                 downloadBlock.Complete();
+
+                StatusImageMessage = "Downloading icons.";
+                StatusDataMessage = "Saving data.";
 
                 foreach (SkillJsonWrapper wrappedSkill in wrappedSkills)
                 {
@@ -70,12 +80,18 @@ namespace azurlane_wiki_app.Data.Downloaders
                         SavePaths(wrappedSkill.Skill);
                         cargoContext.Skills.Add(wrappedSkill.Skill);
                     }
+
+                    lock (locker)
+                    {
+                        CurrentDataCount++;
+                    }
                 }
 
                 await cargoContext.SaveChangesAsync();
             }
 
-            //downloadBlock.Completion.Wait();
+            StatusDataMessage = "Complete.";
+            downloadBlock.Completion.Wait();
             Status = Statuses.DownloadComplete;
         }
 

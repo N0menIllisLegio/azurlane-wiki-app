@@ -8,7 +8,7 @@ using System.Threading.Tasks.Dataflow;
 
 namespace azurlane_wiki_app.Data.Downloaders
 {
-    enum Statuses
+    public enum Statuses
     {
         Pending,
         DownloadComplete,
@@ -18,14 +18,14 @@ namespace azurlane_wiki_app.Data.Downloaders
         EmptyResponse
     }
 
-    abstract class DataDownloader : INotifyPropertyChanged
+    public abstract class DataDownloader : INotifyPropertyChanged
     {
         public static readonly string ImagesFolderPath = "./Images";
 
         protected const string WikiApiEndpoint = "https://azurlane.koumakan.jp/w/api.php";
         protected ActionBlock<string> downloadBlock;
 
-        private Object locker = new Object();
+        protected object locker = new object();
         private const string ImageInfoApiEndpoint =
             "https://azurlane.koumakan.jp/w/api.php?action=query&format=json&list=allimages&ailimit=1&aifrom=";
 
@@ -34,6 +34,10 @@ namespace azurlane_wiki_app.Data.Downloaders
         private int _currentImageCount;
         private int _totalImageCount;
         private Statuses _statuses;
+        private string _statusImageMessage;
+        private string _statusDataMessage;
+        private int _currentDataCount;
+        private int _totalDataCount;
 
         public int TotalImageCount
         {
@@ -55,6 +59,27 @@ namespace azurlane_wiki_app.Data.Downloaders
             }
         }
 
+
+        public int TotalDataCount
+        {
+            get => _totalDataCount;
+            set
+            {
+                _totalDataCount = value;
+                OnPropertyChanged(nameof(TotalDataCount));
+            }
+        }
+
+        public int CurrentDataCount
+        {
+            get => _currentDataCount;
+            set
+            {
+                _currentDataCount = value;
+                OnPropertyChanged(nameof(CurrentDataCount));
+            }
+        }
+
         public Statuses Status
         {
             get => _statuses;
@@ -64,6 +89,28 @@ namespace azurlane_wiki_app.Data.Downloaders
                 OnPropertyChanged(nameof(Status));
             }
         }
+
+        public string StatusImageMessage
+        {
+            get => _statusImageMessage;
+            set
+            {
+                _statusImageMessage = value;
+                OnPropertyChanged(nameof(StatusImageMessage));
+            }
+        }
+
+        public string StatusDataMessage
+        {
+            get => _statusDataMessage;
+            set
+            {
+                _statusDataMessage = value;
+                OnPropertyChanged(nameof(StatusDataMessage));
+            }
+        }
+
+        public string DownloadTitle { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -96,6 +143,8 @@ namespace azurlane_wiki_app.Data.Downloaders
                     {
                         MaxDegreeOfParallelism = ThreadsCount
                     });
+
+            downloadBlock.Completion.ContinueWith(dB => StatusImageMessage = "Complete.");
         }
 
         /// <summary>
@@ -261,46 +310,54 @@ namespace azurlane_wiki_app.Data.Downloaders
                 request.Timeout = 14400000;
                 request.KeepAlive = true;
 
-                using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
+                try
                 {
-                    try
+                    using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
                     {
-                        Stream stream = response.GetResponseStream();
-
-                        if (stream != null)
+                        try
                         {
-                            using (BinaryReader binaryReader = new BinaryReader(stream))
+                            Stream stream = response.GetResponseStream();
+
+                            if (stream != null)
                             {
-                                using (MemoryStream memoryStream = new MemoryStream())
+                                using (BinaryReader binaryReader = new BinaryReader(stream))
                                 {
-                                    byte[] buffer = binaryReader.ReadBytes(1024);
-
-                                    while (buffer.Length > 0)
+                                    using (MemoryStream memoryStream = new MemoryStream())
                                     {
-                                        memoryStream.Write(buffer, 0, buffer.Length);
-                                        buffer = binaryReader.ReadBytes(1024);
-                                    }
+                                        byte[] buffer = binaryReader.ReadBytes(1024);
 
-                                    byte[] fileBuffer = new byte[(int)memoryStream.Length];
-                                    memoryStream.Position = 0;
-                                    await memoryStream.ReadAsync(fileBuffer, 0, fileBuffer.Length);
+                                        while (buffer.Length > 0)
+                                        {
+                                            memoryStream.Write(buffer, 0, buffer.Length);
+                                            buffer = binaryReader.ReadBytes(1024);
+                                        }
 
-                                    string folderName = GetImageFolder(imageName);
-                                    imagePath = folderName + "/" + imageName;
+                                        byte[] fileBuffer = new byte[(int)memoryStream.Length];
+                                        memoryStream.Position = 0;
+                                        await memoryStream.ReadAsync(fileBuffer, 0, fileBuffer.Length);
 
-                                    using (FileStream fileStream =
-                                        new FileStream(imagePath, FileMode.Create))
-                                    {
-                                        await fileStream.WriteAsync(fileBuffer, 0, fileBuffer.Length);
+                                        string folderName = GetImageFolder(imageName);
+                                        imagePath = folderName + "/" + imageName;
+
+                                        using (FileStream fileStream =
+                                            new FileStream(imagePath, FileMode.Create))
+                                        {
+                                            await fileStream.WriteAsync(fileBuffer, 0, fileBuffer.Length);
+                                        }
                                     }
                                 }
                             }
                         }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                            //TODO: Add error display
+                        }
                     }
-                    catch
-                    {
-                        //TODO: Add error display
-                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message); // 404
                 }
             }
 

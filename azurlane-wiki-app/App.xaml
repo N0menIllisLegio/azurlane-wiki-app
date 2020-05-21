@@ -41,6 +41,8 @@
                 </ResourceDictionary>
 
                 <ResourceDictionary Source="ResourcesDictionary.xaml" />
+                <ResourceDictionary Source="PageShipGirlList/GraphicalListTemplate.xaml"/>
+                <ResourceDictionary Source="PageShipGirlList/TableShipGirlTemplate.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
 

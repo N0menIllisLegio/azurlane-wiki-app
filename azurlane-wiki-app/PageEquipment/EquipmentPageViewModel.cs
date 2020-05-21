@@ -37,35 +37,46 @@ namespace azurlane_wiki_app.PageEquipment
         public List<EquipmentUsedBy> UsedByList { get; set; }
         public List<EquipmentStats> StatsList { get; set; }
 
-        
-        public EquipmentPageViewModel(Equipment equipment)
+        public RelayCommand ClosePageCommand { get; set; }
+
+
+        public EquipmentPageViewModel(int id)
         {
-            EquipmentName = equipment.Name;
-            Rarity = StarsRarityDictionary[(int) equipment.Stars];
-            Image = equipment.Image;
-            EquipmentType = equipment.Type;
-
-            DropLocation = string.IsNullOrEmpty(equipment.DropLocation) 
-                ? null 
-                : equipment.DropLocation;
-
-            Notes = string.IsNullOrEmpty(equipment.Notes) 
-                ? null
-                : equipment.Notes;
-
-            Nation = equipment.FK_Nationality.Name;
-            NationIcon = equipment.FK_Nationality.FK_Icon.FileName;
-            UsedByList = new List<EquipmentUsedBy>();
+            ClosePageCommand = new RelayCommand(obj =>
+            {
+                Navigation.Service.GoBack();
+            });
 
             using (CargoContext cargoContext = new CargoContext())
             {
+                Equipment equipment = cargoContext.ShipGirlsEquipment.Find(id);
+
+                EquipmentName = equipment.Name;
+                Rarity = StarsRarityDictionary[(int) equipment.Stars];
+                Image = equipment.Image;
+                EquipmentType = equipment.Type;
+
+                DropLocation = string.IsNullOrEmpty(equipment.DropLocation)
+                    ? null
+                    : equipment.DropLocation;
+
+                Notes = string.IsNullOrEmpty(equipment.Notes)
+                    ? null
+                    : equipment.Notes;
+
+                Nation = equipment.FK_Nationality.Name;
+                NationIcon = equipment.FK_Nationality.FK_Icon.FileName;
+                UsedByList = new List<EquipmentUsedBy>();
+
+
                 RarityIcon = cargoContext.Icons.Find(Rarity)?.FileName;
 
                 foreach (ShipType shipType in cargoContext.ShipTypes)
                 {
                     string kind = (string) equipment.GetType().GetProperty(shipType.Abbreviation)?.GetValue(equipment);
-                    string note = (string) equipment.GetType().GetProperty(shipType.Abbreviation + "Note")?.GetValue(equipment);
-                    
+                    string note = (string) equipment.GetType().GetProperty(shipType.Abbreviation + "Note")
+                        ?.GetValue(equipment);
+
                     EquipmentUsedBy listItem = new EquipmentUsedBy();
 
                     switch (kind)
@@ -87,9 +98,9 @@ namespace azurlane_wiki_app.PageEquipment
 
                     UsedByList.Add(listItem);
                 }
-            }
 
-            FillStatsList(equipment);
+                FillStatsList(equipment);
+            }
         }
 
         private void FillStatsList(Equipment equipment)
@@ -110,49 +121,48 @@ namespace azurlane_wiki_app.PageEquipment
             CreateRowIfPossible("Speed", equipment.Spd?.ToString(), equipment.SpdMax?.ToString());
             CreateRowIfPossible("Plane Health", equipment.PlaneHP?.ToString(), equipment.PlaneHPMax?.ToString());
             CreateRowIfPossible("Damage", equipment.Damage?.ToString(), equipment.DamageMax?.ToString());
-            
-            CreateRowIfPossible("Rate of Fire", 
-                FormatDescription("{0}s", equipment.RoF?.ToString()), 
+
+            CreateRowIfPossible("Rate of Fire",
+                FormatDescription("{0}s", equipment.RoF?.ToString()),
                 FormatDescription("{0}s", equipment.RoFMax?.ToString()));
 
-            CreateRowIfPossible("No. of Torpedoes", 
+            CreateRowIfPossible("No. of Torpedoes",
                 FormatDescription("{0} torpedoes", equipment.Number?.ToString()));
 
-            CreateRowIfPossible("Spread", 
+            CreateRowIfPossible("Spread",
                 FormatDescription("{0}°", equipment.Spread?.ToString()));
 
-            CreateRowIfPossible("Angle", 
+            CreateRowIfPossible("Angle",
                 FormatDescription("{0}°", equipment.Angle?.ToString()));
 
             CreateRowIfPossible("Range", equipment.WepRange?.ToString());
 
-            CreateRowIfPossible("Volley", 
-                FormatDescription("{0} x {1} Shells", 
+            CreateRowIfPossible("Volley",
+                FormatDescription("{0} x {1} Shells",
                     equipment.Salvoes?.ToString(), equipment.Shells?.ToString()));
 
-            CreateRowIfPossible("Volley Time", 
+            CreateRowIfPossible("Volley Time",
                 FormatDescription("{0}s", equipment.VolleyTime?.ToString()));
 
-            CreateRowIfPossible("Coefficient", 
-                FormatDescription("{0}%",equipment.Coef?.ToString()));
+            CreateRowIfPossible("Coefficient",
+                FormatDescription("{0}%", equipment.Coef?.ToString()));
 
             CreateRowIfPossible("Ammo Type", equipment.Ammo);
 
-            CreateRowIfPossible("Ping Frequency", 
+            CreateRowIfPossible("Ping Frequency",
                 FormatDescription("{0}s per sweep", equipment.PingFreq?.ToString()));
 
             CreateRowIfPossible("Characteristic", equipment.Characteristic);
 
-            CreateRowIfPossible("AA Guns", 
+            CreateRowIfPossible("AA Guns",
                 FormatDescription("{0}\n{1}", equipment.AAGun1, equipment.AAGun2));
 
-            CreateRowIfPossible("Ordnance", 
+            CreateRowIfPossible("Ordnance",
                 FormatDescription("{0}\n{1}", equipment.Bombs1, equipment.Bombs2));
         }
 
         private string FormatDescription(string format, params string[] descriptions)
         {
-
             if (descriptions.Length < 1)
             {
                 return null;
@@ -166,7 +176,8 @@ namespace azurlane_wiki_app.PageEquipment
             return string.Format(format, descriptions);
         }
 
-        private void CreateRowIfPossible(string name, string firstDescription, string secondDescription = null, string icon = null)
+        private void CreateRowIfPossible(string name, string firstDescription, string secondDescription = null,
+            string icon = null)
         {
             if (!string.IsNullOrEmpty(firstDescription))
             {

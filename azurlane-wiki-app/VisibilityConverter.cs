@@ -9,7 +9,12 @@ namespace azurlane_wiki_app
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (string.IsNullOrEmpty(value?.ToString()))
+            if (value == null)
+            {
+                return Visibility.Collapsed;
+            }
+
+            if (string.IsNullOrEmpty(value.ToString()))
             {
                 return Visibility.Collapsed;
             }

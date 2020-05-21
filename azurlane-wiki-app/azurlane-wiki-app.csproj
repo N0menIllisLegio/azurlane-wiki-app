@@ -99,6 +99,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Navigation.cs" />
+    <Compile Include="PageDownload\DownloadPage.xaml.cs">
+      <DependentUpon>DownloadPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageDownload\DownloadPageViewModel.cs" />
+    <Compile Include="PageDownload\DownloadStatusesConverter.cs" />
+    <Compile Include="PageDownload\PercentConverter.cs" />
+    <Compile Include="PageEquipmentList\Items\AAGun.cs" />
+    <Compile Include="PageEquipmentList\Items\ASWItem.cs" />
+    <Compile Include="PageEquipmentList\Items\AuxiliaryItem.cs" />
+    <Compile Include="PageEquipmentList\Items\BaseEquipmentItem.cs" />
+    <Compile Include="PageEquipmentList\EquipmentListPage.xaml.cs">
+      <DependentUpon>EquipmentListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageEquipmentList\EquipmentListPageViewModel.cs" />
+    <Compile Include="PageEquipmentList\Items\ItemsListsStorage.cs" />
+    <Compile Include="PageEquipmentList\Items\MainGun.cs" />
+    <Compile Include="PageEquipmentList\Items\Plane.cs" />
+    <Compile Include="PageEquipmentList\Items\SubmarineTorpedo.cs" />
+    <Compile Include="PageEquipmentList\Items\Torpedo.cs" />
+    <Compile Include="PageEquipmentList\Items\TorpedoBomberPlane.cs" />
     <Compile Include="PageEquipment\EquipmentPage.xaml.cs">
       <DependentUpon>EquipmentPage.xaml</DependentUpon>
     </Compile>
@@ -106,10 +127,21 @@
     <Compile Include="ImageChecker.cs" />
     <Compile Include="PageEquipment\EquipmentStats.cs" />
     <Compile Include="PageEquipment\EquipmentUsedBy.cs" />
+    <Compile Include="PageShipGirlList\Items\BaseShipGirlItem.cs" />
+    <Compile Include="PageShipGirlList\Items\GraphicShipGirlItem.cs" />
+    <Compile Include="PageShipGirlList\IconConverter.cs" />
+    <Compile Include="PageShipGirlList\ShipGirlListPage.xaml.cs">
+      <DependentUpon>ShipGirlListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageShipGirlList\ShipGirlListPageViewModel.cs" />
+    <Compile Include="PageShipGirlList\ShipGirlSorters.cs" />
+    <Compile Include="PageShipGirlList\Items\TableShipGirlItem.cs" />
+    <Compile Include="TextBoxEnterKeyUpdateBehavior.cs" />
     <Compile Include="PageShipGirl\DropItem.cs" />
     <Compile Include="PageShipGirl\EquipmentItem.cs" />
     <Compile Include="PageShipGirl\GeneralInfoItem.cs" />
     <Compile Include="PageShipGirl\RarityConverter.cs" />
+    <Compile Include="Properties\Annotations1.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="PageShipGirl\ShipGirlPageViewModel.cs" />
     <Compile Include="PageShipGirl\StarsConverter.cs" />
@@ -134,6 +166,14 @@
     <Compile Include="PageShipGirl\ShipGirlPage.xaml.cs">
       <DependentUpon>ShipGirlPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="PageDownload\DownloadPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PageEquipmentList\EquipmentListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PageEquipment\EquipmentPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -158,6 +198,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PageShipGirlList\GraphicalListTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PageShipGirlList\ShipGirlListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PageShipGirlList\TableShipGirlTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ResourcesDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

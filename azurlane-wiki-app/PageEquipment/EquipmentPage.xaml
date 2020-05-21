@@ -31,10 +31,14 @@
                 <ColumnDefinition Name="TitleColumn" Width="*" />
             </Grid.ColumnDefinitions>
 
-            <materialDesign:PackIcon Grid.Column="0" Kind="ChevronLeft"
-                                     Height="40" Width="40"
-                                     VerticalAlignment="Center" Margin="5"
-                                     Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" />
+            <Button ToolTip="Go Back" Height="Auto" Width="Auto"
+                    Grid.Column="0"
+                    Margin="3" Style="{StaticResource MaterialDesignFlatButton}"
+                    Command="{Binding ClosePageCommand}">
+                <materialDesign:PackIcon Kind="ChevronLeft" Height="40" Width="40"
+                                         VerticalAlignment="Center"
+                                         Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"/>
+            </Button>
 
             <Viewbox Grid.Column="1" HorizontalAlignment="Left" Stretch="Uniform"
                      VerticalAlignment="Center" Margin="40 0">

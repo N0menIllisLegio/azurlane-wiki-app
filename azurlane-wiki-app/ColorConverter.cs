@@ -57,6 +57,7 @@ namespace azurlane_wiki_app
             ["Battleship"] = Brushes.Pink,
             ["Battlecruiser"] = Brushes.Pink,
             ["Aviation Battleship"] = Brushes.Pink,
+            ["Large Cruiser"] = Brushes.Pink,
             ["Monitor"] = Brushes.NavajoWhite,
             ["Heavy Cruiser"] = Brushes.NavajoWhite,
             ["Light Cruiser"] = Brushes.NavajoWhite,
@@ -83,7 +84,6 @@ namespace azurlane_wiki_app
         {
             string target; 
             string brushPicker;
-
 
             if (values.Length < 1)
             {

@@ -60,6 +60,8 @@ namespace azurlane_wiki_app.Data.Downloaders
 
         public ShipDownloader(int ThreadsCount = 0) : base(ThreadsCount)
         {
+            DownloadTitle = "Downloading ShipGirls...";
+
             if (!Directory.Exists(KaiImagesFolderPath))
             {
                 Directory.CreateDirectory(KaiImagesFolderPath);
@@ -76,6 +78,8 @@ namespace azurlane_wiki_app.Data.Downloaders
         public override async Task Download()
         {
             Status = Statuses.InProgress;
+            StatusDataMessage = "Downloading data.";
+            StatusImageMessage = "Pending.";
             List<ShipGirlJsonWrapper> wrappedGirls;
 
             try
@@ -93,11 +97,14 @@ namespace azurlane_wiki_app.Data.Downloaders
                 Status = Statuses.DownloadError;
                 return;
             }
-            
+
+            TotalDataCount = wrappedGirls.Count;
             TotalImageCount = wrappedGirls.Count * 10;
 
             using (CargoContext cargoContext = new CargoContext())
             {
+                StatusImageMessage = "Adding images to download queue.";
+
                 foreach (ShipGirlJsonWrapper wrappedGirl in wrappedGirls)
                 {
                     // Add images in queue for download
@@ -115,20 +122,30 @@ namespace azurlane_wiki_app.Data.Downloaders
 
                 downloadBlock.Complete();
 
+                StatusImageMessage = "Downloading images.";
+                StatusDataMessage = "Saving data.";
+
                 foreach (ShipGirlJsonWrapper wrappedGirl in wrappedGirls)
                 {
                     if (await cargoContext.ShipGirls.FindAsync(wrappedGirl.ShipGirl.ShipID) == null)
                     {
                         CreateRelationships(wrappedGirl.ShipGirl, cargoContext);
                         SavePaths(wrappedGirl.ShipGirl);
+                        wrappedGirl.ShipGirl.Name = Refactor(wrappedGirl.ShipGirl.Name);
                         cargoContext.ShipGirls.Add(wrappedGirl.ShipGirl);
+                    }
+
+                    lock (locker)
+                    {
+                        CurrentDataCount++;
                     }
                 }
 
                 await cargoContext.SaveChangesAsync();
             }
 
-            //downloadBlock.Completion.Wait();
+            StatusDataMessage = "Complete.";
+            downloadBlock.Completion.Wait();
             Status = Statuses.DownloadComplete;
         }
 
@@ -185,6 +202,7 @@ namespace azurlane_wiki_app.Data.Downloaders
 
                 CreateRelationships(wrappedGirl.ShipGirl, cargoContext);
                 SavePaths(wrappedGirl.ShipGirl);
+                wrappedGirl.ShipGirl.Name = Refactor(wrappedGirl.ShipGirl.Name);
 
                 if (await cargoContext.ShipGirls.FindAsync(wrappedGirl.ShipGirl.ShipID) == null)
                 {
@@ -441,6 +459,13 @@ namespace azurlane_wiki_app.Data.Downloaders
             shipGirl.ImageChibiKai = !string.IsNullOrEmpty(shipGirl.ImageChibiKai)
                 ? GetImageFolder(shipGirl.ImageChibiKai) + "/" + shipGirl.ImageChibiKai
                 : null;
+        }
+
+        private string Refactor(string text)
+        {
+            string refactoredText = text.Replace(@"&amp;#39;", "\'");
+
+            return refactoredText;
         }
     }
 }

@@ -22,6 +22,8 @@ namespace azurlane_wiki_app.Data.Downloaders
 
         public EquipmentDownloader(int threadsCount = 0) : base(threadsCount)
         {
+            DownloadTitle = "Downloading Equipment...";
+
             if (!Directory.Exists(EquipmentImagesFolderPath))
             {
                 Directory.CreateDirectory(EquipmentImagesFolderPath);
@@ -34,6 +36,8 @@ namespace azurlane_wiki_app.Data.Downloaders
         public override async Task Download()
         {
             Status = Statuses.InProgress;
+            StatusDataMessage = "Downloading data.";
+            StatusImageMessage = "Pending.";
             List<EquipmentJsonWrapper> wrappedEquipment;
 
             try
@@ -52,9 +56,13 @@ namespace azurlane_wiki_app.Data.Downloaders
                 return;
             }
 
+            TotalDataCount = wrappedEquipment.Count;
             TotalImageCount = wrappedEquipment.Count;
+
             using (CargoContext cargoContext = new CargoContext())
             {
+                StatusImageMessage = "Adding images to download queue.";
+
                 foreach (EquipmentJsonWrapper wrpEquipment in wrappedEquipment)
                 {
                     downloadBlock.Post(wrpEquipment.Equipment.Image);
@@ -62,10 +70,14 @@ namespace azurlane_wiki_app.Data.Downloaders
 
                 downloadBlock.Complete();
 
+                StatusImageMessage = "Downloading images.";
+                StatusDataMessage = "Saving data.";
+
                 foreach (EquipmentJsonWrapper wrpEquipment in wrappedEquipment)
                 {
                     if (await cargoContext.ShipGirlsEquipment
-                            .CountAsync(e => e.Name == wrpEquipment.Equipment.Name) == 0)
+                            .CountAsync(e => e.Name == wrpEquipment.Equipment.Name 
+                                             && e.Stars == wrpEquipment.Equipment.Stars) == 0)
                     {
                         Nationality nationality = cargoContext.Nationalities.Find(wrpEquipment.Equipment.Nationality);
 
@@ -86,15 +98,22 @@ namespace azurlane_wiki_app.Data.Downloaders
                         SavePaths(wrpEquipment.Equipment);
                         wrpEquipment.Equipment.DropLocation = Refactor(wrpEquipment.Equipment.DropLocation);
                         wrpEquipment.Equipment.Notes = Refactor(wrpEquipment.Equipment.Notes);
+                        wrpEquipment.Equipment.Name = Refactor(wrpEquipment.Equipment.Name);
                         cargoContext.ShipGirlsEquipment.Add(wrpEquipment.Equipment);
+                    }
+
+                    lock (locker)
+                    {
+                        CurrentDataCount++;
                     }
                 }
 
                 await cargoContext.SaveChangesAsync();
             }
 
-            //downloadBlock.Completion.Wait();
-            // TODO: downloadBlock.Completion.ContinueWith(e => { Status = Statuses.DownloadComplete; });
+            StatusDataMessage = "Complete.";
+            downloadBlock.Completion.Wait();
+            // downloadBlock.Completion.ContinueWith(e => { Status = Statuses.DownloadComplete; });
             Status = Statuses.DownloadComplete;
         }
 
@@ -156,6 +175,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                 CreateRelationships(wrpEquipment.Equipment, cargoContext);
                 wrpEquipment.Equipment.DropLocation = Refactor(wrpEquipment.Equipment.DropLocation);
                 wrpEquipment.Equipment.Notes = Refactor(wrpEquipment.Equipment.Notes);
+                wrpEquipment.Equipment.Name = Refactor(wrpEquipment.Equipment.Name);
                 SavePaths(wrpEquipment.Equipment);
 
                 if (await cargoContext.ShipGirlsEquipment
@@ -221,8 +241,8 @@ namespace azurlane_wiki_app.Data.Downloaders
 
         private string Refactor(string data)
         {
-            // &quot; - remove
-            data = data.Replace("&quot;", "");
+            // &quot; - "
+            data = data.Replace("&quot;", "\"");
 
             // [[File:...|...]] - remove
             Regex regex = new Regex(@"\[\[File:[^]]*?\]\]");

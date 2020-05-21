@@ -13,7 +13,6 @@ namespace azurlane_wiki_app.PageShipGirl
 {
     public class DynamicBindingListView
     {
-
         public static bool GetGenerateColumnsGridView(DependencyObject element)
         {
             if (element == null)

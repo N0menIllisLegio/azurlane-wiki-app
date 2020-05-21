@@ -17,8 +17,12 @@ namespace azurlane_wiki_app.Data.Downloaders
 
         private ActionBlock<string> urlDownloaderBlock;
 
+        private object locker = new object();
+
         public IconDownloader(int threadsCount = 0) : base(threadsCount)
         {
+            DownloadTitle = "Downloading Icons...";
+
             if (!Directory.Exists(IconsFolderPath))
             {
                 Directory.CreateDirectory(IconsFolderPath);
@@ -58,8 +62,15 @@ namespace azurlane_wiki_app.Data.Downloaders
                 return null;
             }
 
-            async Task UrlDownloaderFunction(string iconUrl) => 
-                await DownloadImageByUrl(iconUrl, iconUrl?.Split('/').Last());
+            async Task UrlDownloaderFunction(string iconUrl)
+            {
+                await DownloadImageByUrl(iconUrl, iconUrl?.Split('/').Last()); 
+                
+                lock (locker)
+                {
+                    CurrentImageCount++;
+                }
+            }
 
             urlGetterBlock = threadsCount <= 0
                 ? new TransformBlock<string, string>(UrlGetterFunction)
@@ -82,13 +93,17 @@ namespace azurlane_wiki_app.Data.Downloaders
         public override async Task Download()
         {
             Status = Statuses.InProgress;
+            StatusImageMessage = "Getting icons names.";
             HashSet<string> iconsNames = await GetIconsNames();
+            TotalImageCount = iconsNames.Count;
 
+            StatusImageMessage = "Adding icons to download queue.";
             foreach (string iconsName in iconsNames)
             {
                 urlGetterBlock.Post(iconsName);
             }
 
+            StatusImageMessage = "Downloading icons.";
             urlGetterBlock.Complete();
             urlDownloaderBlock.Completion.Wait();
             Status = Statuses.DownloadComplete;
@@ -213,15 +228,16 @@ namespace azurlane_wiki_app.Data.Downloaders
         /// <returns>URL to image</returns>
         private string GetIconsUrl(string iconTag)
         {
-            string iconUrl = "https://azurlane.koumakan.jp/w/images/";
+            string iconUrl = "https://azurlane.koumakan.jp";
 
             Regex getSrc = new Regex(@"src="".+?""");
             Match match = getSrc.Match(iconTag);
 
             if (match.Success)
             {
-                string temp = match.Value.Replace("src=\"/w/images/thumb/", "");
-                temp = temp.Remove(temp.LastIndexOf('/'));
+                string temp = match.Value.Replace("src=\"", "");
+                temp = temp.Replace("thumb/", "");
+                temp = temp.Remove(temp.Contains("px-") ? temp.LastIndexOf('/') : temp.LastIndexOf('\"'));
 
                 iconUrl += temp;
             }

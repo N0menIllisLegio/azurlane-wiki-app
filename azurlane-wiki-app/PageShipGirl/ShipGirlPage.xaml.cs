@@ -11,6 +11,11 @@ namespace azurlane_wiki_app.PageShipGirl
     /// </summary>
     public partial class ShipGirlPage : Page
     {
+        public ShipGirlPage()
+        {
+            InitializeComponent();
+        }
+
         public ShipGirlPage(ShipGirlPageViewModel viewModel)
         {
             InitializeComponent();

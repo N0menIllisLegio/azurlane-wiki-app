@@ -371,7 +371,12 @@ namespace azurlane_wiki_app.Data.Downloaders
                             "11-1note,11-2note,11-3note,11-4note,12-1note,12-2note,12-3note,12-4note,13-1note,13-2note," +
                             "13-3note,13-4note";
 
-        public WTGShipGirlDownloader(int ThreadsCount = 0) : base(ThreadsCount) { }
+        private object locker = new object();
+
+        public WTGShipGirlDownloader(int ThreadsCount = 0) : base(ThreadsCount)
+        {
+            DownloadTitle = "Downloading Maps...";
+        }
 
         /// <summary>
         /// Download all cases of getting a ship girl and save them
@@ -379,6 +384,7 @@ namespace azurlane_wiki_app.Data.Downloaders
         public override async Task Download()
         {
             Status = Statuses.InProgress;
+            StatusDataMessage = "Downloading data.";
             List<WTGShipGirlJsonWrapper> wrappedDrops;
 
             try
@@ -396,7 +402,9 @@ namespace azurlane_wiki_app.Data.Downloaders
                 Status = Statuses.DownloadError;
                 return;
             }
-            
+
+            TotalDataCount = wrappedDrops.Count;
+            StatusDataMessage = "Placing ShipGirls on Maps...";
             // Adding location if didn't exists and creating connection between drop location and ship girl
             using (CargoContext cargoContext = new CargoContext())
             {
@@ -430,9 +438,15 @@ namespace azurlane_wiki_app.Data.Downloaders
                             }
                         }
                     }
+
+                    lock (locker)
+                    {
+                        CurrentDataCount++;
+                    }
                 }
             }
 
+            StatusDataMessage = "Complete.";
             Status = Statuses.DownloadComplete;
         }
 

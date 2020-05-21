@@ -180,9 +180,24 @@ namespace azurlane_wiki_app.PageShipGirl
 
         public RelayCommand RetrofitCommand { get; set; }
         public RelayCommand UnretrofitCommand { get; set; }
+        public RelayCommand ClosePageCommand { get; set; }
 
-        public ShipGirlPageViewModel(ShipGirl shipGirl)
+        public ShipGirlPageViewModel(string shipGirlId)
         {
+            ClosePageCommand = new RelayCommand(obj =>
+            {
+                Navigation.Service.GoBack();
+            });
+
+            CargoContext cargoContext = new CargoContext();
+
+            ShipGirl shipGirl = cargoContext.ShipGirls.Find(shipGirlId);
+            
+            if (shipGirl == null)
+            {
+                return;
+            }
+
             // GENERAL INFO
             ShipName = shipGirl.Name;
 

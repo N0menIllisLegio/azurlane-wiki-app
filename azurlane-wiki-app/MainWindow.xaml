@@ -16,7 +16,7 @@
     <Window.Resources>
                                                                  
     </Window.Resources>
-    <Frame x:Name="Main"/>
+    <Frame x:Name="Main" NavigationUIVisibility="Hidden"/>
     <!--<Grid>
         <Button Content="Download" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click" Height="40" Width="186" Margin="0,10,10,0"/>
 

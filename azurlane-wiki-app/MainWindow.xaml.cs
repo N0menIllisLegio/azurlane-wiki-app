@@ -1,8 +1,6 @@
-﻿using azurlane_wiki_app.Data;
-using azurlane_wiki_app.Data.Downloaders;
-using azurlane_wiki_app.PageEquipment;
-using azurlane_wiki_app.PageShipGirl;
-using System.Threading.Tasks;
+﻿using azurlane_wiki_app.PageDownload;
+using azurlane_wiki_app.PageEquipmentList;
+using azurlane_wiki_app.PageShipGirlList;
 using System.Windows;
 
 namespace azurlane_wiki_app
@@ -12,50 +10,22 @@ namespace azurlane_wiki_app
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ShipGirlListPageViewModel ShipGirlListPageVM { get; set; }
+        public EquipmentListPageViewModel EquipmentListPageVM { get; set; }
+        public DownloadPageViewModel DownloadPageVM { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-            //DownloadData();
-            DisplayContent();
-        }
+            Navigation.Service = Main.NavigationService;
 
-        private void DisplayContent()
-        {
-            using (CargoContext cargoContext = new CargoContext())
-            {
+            ShipGirlListPageVM = new ShipGirlListPageViewModel();
+            EquipmentListPageVM = new EquipmentListPageViewModel();
+            DownloadPageVM = new DownloadPageViewModel();
 
-                ShipGirlPageViewModel shipPageViewModel =
-                    new ShipGirlPageViewModel(cargoContext.ShipGirls.Find("155"));
-                EquipmentPageViewModel equipmentPageViewModel =
-                    new EquipmentPageViewModel(cargoContext.ShipGirlsEquipment.Find(364));
-
-               // Main.Content = new ShipGirlPage(shipPageViewModel);
-                Main.Content = new EquipmentPage(equipmentPageViewModel);
-            }
-        }
-
-        private async void DownloadData()
-        {
-            IconDownloader iconDownloader = new IconDownloader();
-            ShipDownloader shipDownloader = new ShipDownloader(6);
-            EquipmentDownloader equipmentDownloader = new EquipmentDownloader(2);
-            SkillDownloader skillDownloader = new SkillDownloader();
-            WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
-
-            await Task.Run(() => iconDownloader.Download());
-
-            Task[] tasks = new Task[2];
-
-            tasks[0] = Task.Run(() => shipDownloader.Download());
-            tasks[1] = Task.Run(() => equipmentDownloader.Download());
-
-            await Task.WhenAll(tasks);
-
-            tasks[0] = Task.Run(() => skillDownloader.Download());
-            tasks[1] = Task.Run(() => wtgShipGirlDownloader.Download());
-
-            await Task.WhenAll(tasks);
+            //Navigation.Navigate(new ShipGirlListPage(), ShipGirlListPageVM);
+            //Navigation.Navigate(new EquipmentListPage(), EquipmentListPageVM);
+            Navigation.Navigate(new DownloadPage(), DownloadPageVM);
         }
     }
 }
