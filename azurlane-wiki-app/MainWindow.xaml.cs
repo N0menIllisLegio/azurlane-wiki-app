@@ -21,11 +21,9 @@ namespace azurlane_wiki_app
 
             ShipGirlListPageVM = new ShipGirlListPageViewModel();
             EquipmentListPageVM = new EquipmentListPageViewModel();
-            DownloadPageVM = new DownloadPageViewModel();
+            DownloadPageVM = new DownloadPageViewModel(this);
 
-            //Navigation.Navigate(new ShipGirlListPage(), ShipGirlListPageVM);
-            //Navigation.Navigate(new EquipmentListPage(), EquipmentListPageVM);
-            Navigation.Navigate(new DownloadPage(), DownloadPageVM);
+            Navigation.Navigate(new ShipGirlListPage(false), ShipGirlListPageVM);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
                 { "Ship Torpedoes", "Torpedo" },
                 { "Fighter Planes", "Fighter" },
                 { "Dive Bomber Planes", "Dive Bomber" },
-                { "Auxiliary Equipment", "Auxiliary }" }
+                { "Auxiliary Equipment", "Auxiliary" }
             };
 
             List<string> dbTypes = new List<string>();

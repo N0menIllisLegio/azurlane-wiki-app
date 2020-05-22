@@ -17,7 +17,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         //[DisplayName("AoE Radius")]
         //public int AoE { get; set; }
 
-        [DisplayName("Type")]
+        //[DisplayName("Type")]
         public string ASWItemType { get; set; }
         public string Notes { get; set; }
 

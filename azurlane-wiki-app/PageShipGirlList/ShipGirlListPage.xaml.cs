@@ -37,10 +37,7 @@ namespace azurlane_wiki_app.PageShipGirlList
                 (Window.GetWindow(this) as MainWindow)?.ShipGirlListPageVM.SetTableView();
             }
 
-            if (DataContext == null)
-            {
-                DataContext = (Window.GetWindow(this) as MainWindow)?.ShipGirlListPageVM;
-            }
+            DataContext = (Window.GetWindow(this) as MainWindow)?.ShipGirlListPageVM;
         }
     }
 }

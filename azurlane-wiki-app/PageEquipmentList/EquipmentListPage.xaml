@@ -18,7 +18,6 @@
       TextElement.FontWeight="Medium"
       TextElement.FontSize="14"
       FontFamily="{wpf:MaterialDesignFont}">
-
     <materialDesign:DrawerHost>
         <materialDesign:DrawerHost.LeftDrawerContent>
             <StackPanel Background="{DynamicResource PrimaryHueLightBrush}">
@@ -86,6 +85,7 @@
             </StackPanel>
         </materialDesign:DrawerHost.LeftDrawerContent>
         <Grid>
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="70" />
                 <RowDefinition Height="*" />
@@ -117,6 +117,144 @@
                                Style="{StaticResource MaterialDesignHeadline3TextBlock}"
                                Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" />
                 </Viewbox>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <DockPanel Grid.Row="0">
+                    <TextBox DockPanel.Dock="Left"
+                             Width="200" Margin="20"
+                             materialDesign:HintAssist.Hint="Equipment Name"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             VerticalAlignment="Center" Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}"
+                             HorizontalAlignment="Left">
+                        <i:Interaction.Behaviors>
+                            <azurlaneWikiApp:TextBoxEnterKeyUpdateBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <ComboBox Width="150" DockPanel.Dock="Right" Margin="20"
+                              ItemsSource="{Binding Path=TypeCollection}"
+                              SelectedItem="{Binding Path=TypeSelectedItem}">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+
+                    <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right"
+                               VerticalAlignment="Center" Text="Equipment Type: " />
+                </DockPanel>
+
+
+                <DataGrid
+                    Grid.Row="1"
+                    ItemsSource="{Binding EquipmentList}"
+                    IsReadOnly="True"
+                    CanUserSortColumns="True"
+                    CanUserAddRows="False"
+                    AlternatingRowBackground="{DynamicResource PrimaryHueLightBrush}"
+                    CanUserResizeRows="False"
+                    ColumnHeaderHeight="75"
+                    SelectionMode="Single"
+                    SelectionUnit="FullRow"
+                    AutoGenerateColumns="True"
+                    AutoGeneratingColumn="DataGrid_AutoGeneratingColumn">
+
+                    <DataGrid.Resources>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                            <Setter Property="VerticalAlignment" Value="Stretch" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{x:Null}" />
+                                    <Setter Property="BorderBrush" Value="{x:Null}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+
+                        <Style TargetType="{x:Type DataGridColumnHeader}"
+                               BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="FontSize" Value="14" />
+                        </Style>
+                    </DataGrid.Resources>
+
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Icon">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Padding="1" Margin="3" Background="Black">
+                                        <Border Padding="1">
+                                            <Border.Background>
+                                                <MultiBinding Converter="{StaticResource ColorConverter}"
+                                                              ConverterParameter="Rarity">
+                                                    <Binding Path="Rarity" />
+                                                </MultiBinding>
+                                            </Border.Background>
+
+                                            <Image RenderOptions.BitmapScalingMode="HighQuality" Cursor="Hand"
+                                                   Height="64" Width="64"
+                                                   Source="{Binding Icon, Converter={StaticResource ImagePathConverter}}" />
+
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                    <i:InvokeCommandAction
+                                                        Command="{Binding Path=DataContext.OpenEquipmentPageCommand, 
+                                                    RelativeSource={RelativeSource Mode=FindAncestor, 
+                                                    AncestorType=materialDesign:DrawerHost}}"
+                                                        CommandParameter="{Binding Id}" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Border>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Name" SortMemberPath="." CanUserSort="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock FontWeight="Regular" Text="{Binding Name}" VerticalAlignment="Center" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Tech" SortMemberPath="." CanUserSort="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock FontWeight="Regular" Text="{Binding Tech}" VerticalAlignment="Center" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Stars" SortMemberPath="." CanUserSort="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock FontWeight="Regular" Text="{Binding Stars}" VerticalAlignment="Center" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Nationality">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image RenderOptions.BitmapScalingMode="HighQuality"
+                                           ToolTip="{Binding Nationality}"
+                                           Height="35" Width="35"
+                                           Source="{Binding NationalityIcon, Converter={StaticResource ImagePathConverter}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </Grid>
     </materialDesign:DrawerHost>

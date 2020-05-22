@@ -1,13 +1,12 @@
-﻿using System;
-using azurlane_wiki_app.Annotations;
+﻿using azurlane_wiki_app.Annotations;
 using azurlane_wiki_app.Data.Downloaders;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using System.Windows;
 using azurlane_wiki_app.PageEquipmentList;
 using azurlane_wiki_app.PageShipGirlList;
 using MaterialDesignThemes.Wpf;
+using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace azurlane_wiki_app.PageDownload
 {
@@ -110,7 +109,12 @@ namespace azurlane_wiki_app.PageDownload
         public ISnackbarMessageQueue SnackBarMessageQueue { get; set; } 
             = new SnackbarMessageQueue(TimeSpan.FromSeconds(3));
 
-        public DownloadPageViewModel()
+
+        /// <summary>
+        /// Download Page's view model
+        /// </summary>
+        /// <param name="mainWindow">To access other VMs for update after download</param>
+        public DownloadPageViewModel(MainWindow mainWindow)
         {
             Download = new RelayCommand(async obj =>
             {
@@ -157,8 +161,12 @@ namespace azurlane_wiki_app.PageDownload
 
                     await Task.WhenAll(tasks);
 
-                    //(Window.GetWindow(this) as MainWindow)?.ShipGirlListPageVM;
-
+                    if (mainWindow != null)
+                    {
+                        mainWindow.ShipGirlListPageVM = new ShipGirlListPageViewModel();
+                        mainWindow.EquipmentListPageVM = new EquipmentListPageViewModel();
+                    }
+                    
                     Downloading = false;
                 }
                 else

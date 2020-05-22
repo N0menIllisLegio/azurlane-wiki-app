@@ -24,10 +24,7 @@ namespace azurlane_wiki_app.PageEquipmentList
 
         private void EquipmentListPage_Loaded(object sender, RoutedEventArgs e)
         {
-            if (DataContext == null)
-            {
-                DataContext = (Window.GetWindow(this) as MainWindow)?.EquipmentListPageVM;
-            }
+            DataContext = (Window.GetWindow(this) as MainWindow)?.EquipmentListPageVM;
         }
 
         private void DataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
@@ -36,7 +33,7 @@ namespace azurlane_wiki_app.PageEquipmentList
 
             if (string.IsNullOrEmpty(columnName) || columnName == "Icon"
                                                  || columnName == "Id" || columnName == "Type" || columnName == "Name"
-                                                 || columnName == "Tech" || columnName == "Stars"
+                                                 || columnName == "Tech" || columnName == "Stars" || columnName == "Rarity"
                                                  || columnName == "Nationality" || columnName == "NationalityIcon")
             {
                 e.Cancel = true;

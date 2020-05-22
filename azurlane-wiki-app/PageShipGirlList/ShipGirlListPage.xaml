@@ -112,12 +112,11 @@
 
                 <Viewbox Grid.Column="1" HorizontalAlignment="Left" Stretch="Uniform" Margin="40 0 0 0"
                          VerticalAlignment="Center">
-                    <TextBlock Text="Azur Lane Wiki"
+                    <TextBlock Text="ShipGirls"
                                Style="{StaticResource MaterialDesignHeadline3TextBlock}"
                                Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" />
                 </Viewbox>
             </Grid>
-
 
             <ContentControl Grid.Row="1" Template="{Binding DisplayingContent}" />
         </Grid>
