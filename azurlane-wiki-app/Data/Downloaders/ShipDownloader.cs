@@ -198,8 +198,6 @@ namespace azurlane_wiki_app.Data.Downloaders
                 downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIcon);
                 downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIconKai);
                 
-                downloadBlock.Complete();
-
                 CreateRelationships(wrappedGirl.ShipGirl, cargoContext);
                 SavePaths(wrappedGirl.ShipGirl);
                 wrappedGirl.ShipGirl.Name = Refactor(wrappedGirl.ShipGirl.Name);
@@ -213,9 +211,11 @@ namespace azurlane_wiki_app.Data.Downloaders
                 {
                     await cargoContext.Update(wrappedGirl.ShipGirl);
                 }
+
+                downloadBlock.Complete();
             }
 
-            //downloadBlock.Completion.Wait();
+            downloadBlock.Completion.Wait();
             Status = Statuses.DownloadComplete;
         }
 
@@ -437,27 +437,27 @@ namespace azurlane_wiki_app.Data.Downloaders
         /// <param name="shipGirl">ShipGirl for changing</param>
         private void SavePaths(ShipGirl shipGirl)
         {
-            shipGirl.Image = GetImageFolder(shipGirl.Image) + "/" + shipGirl.Image;
-            shipGirl.ImageIcon = GetImageFolder(shipGirl.ImageIcon) + "/" + shipGirl.ImageIcon;
-            shipGirl.ImageBanner = GetImageFolder(shipGirl.ImageBanner) + "/" + shipGirl.ImageBanner;
-            shipGirl.ImageChibi = GetImageFolder(shipGirl.ImageChibi) + "/" + shipGirl.ImageChibi;
-            shipGirl.ImageShipyardIcon = GetImageFolder(shipGirl.ImageShipyardIcon) + "/" + shipGirl.ImageShipyardIcon;
+            shipGirl.Image = GetImageFolder(shipGirl.Image) + "/" + RefactorImageName(shipGirl.Image);
+            shipGirl.ImageIcon = GetImageFolder(shipGirl.ImageIcon) + "/" + RefactorImageName(shipGirl.ImageIcon);
+            shipGirl.ImageBanner = GetImageFolder(shipGirl.ImageBanner) + "/" + RefactorImageName(shipGirl.ImageBanner);
+            shipGirl.ImageChibi = GetImageFolder(shipGirl.ImageChibi) + "/" + RefactorImageName(shipGirl.ImageChibi);
+            shipGirl.ImageShipyardIcon = GetImageFolder(shipGirl.ImageShipyardIcon) + "/" + RefactorImageName(shipGirl.ImageShipyardIcon);
 
             // Kai
             shipGirl.ImageShipyardIconKai = !string.IsNullOrEmpty(shipGirl.ImageShipyardIconKai) 
-                ? GetImageFolder(shipGirl.ImageShipyardIconKai) + "/" + shipGirl.ImageShipyardIconKai
+                ? GetImageFolder(shipGirl.ImageShipyardIconKai) + "/" + RefactorImageName(shipGirl.ImageShipyardIconKai)
                 : null;
             shipGirl.ImageBannerKai = !string.IsNullOrEmpty(shipGirl.ImageBannerKai) 
-                ? GetImageFolder(shipGirl.ImageBannerKai) + "/" + shipGirl.ImageBannerKai
+                ? GetImageFolder(shipGirl.ImageBannerKai) + "/" + RefactorImageName(shipGirl.ImageBannerKai)
                 : null;
             shipGirl.ImageKai = !string.IsNullOrEmpty(shipGirl.ImageKai) 
-                ? GetImageFolder(shipGirl.ImageKai) + "/" + shipGirl.ImageKai
+                ? GetImageFolder(shipGirl.ImageKai) + "/" + RefactorImageName(shipGirl.ImageKai)
                 : null;
             shipGirl.ImageIconKai = !string.IsNullOrEmpty(shipGirl.ImageIconKai)
-                ? GetImageFolder(shipGirl.ImageIconKai) + "/" + shipGirl.ImageIconKai
+                ? GetImageFolder(shipGirl.ImageIconKai) + "/" + RefactorImageName(shipGirl.ImageIconKai)
                 : null;
             shipGirl.ImageChibiKai = !string.IsNullOrEmpty(shipGirl.ImageChibiKai)
-                ? GetImageFolder(shipGirl.ImageChibiKai) + "/" + shipGirl.ImageChibiKai
+                ? GetImageFolder(shipGirl.ImageChibiKai) + "/" + RefactorImageName(shipGirl.ImageChibiKai)
                 : null;
         }
 

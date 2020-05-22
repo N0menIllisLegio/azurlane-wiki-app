@@ -33,7 +33,7 @@ namespace azurlane_wiki_app
             }
             catch
             {
-                return null;
+                return new BitmapImage(new Uri(@"pack://application:,,," + ImagePlaceholder));
             }
         }
 

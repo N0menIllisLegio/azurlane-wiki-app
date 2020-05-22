@@ -59,7 +59,7 @@ namespace azurlane_wiki_app.Data
         /// <param name="path">Path to file</param>
         private void DeleteImage(string path)
         {
-            if (File.Exists(path))
+            if (path != null && File.Exists(path))
             {
                 File.Delete(path);
             }
@@ -75,18 +75,16 @@ namespace azurlane_wiki_app.Data
 
             if (oldShipGirl !=  null)
             {
-                ShipDownloader shipDownloader = new ShipDownloader();
-
-                DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.Image) + "/" + oldShipGirl.Image);
-                DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageBanner) + "/" + oldShipGirl.ImageBanner);
-                DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageBannerKai) + "/" + oldShipGirl.ImageBannerKai);
-                DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageChibi) + "/" + oldShipGirl.ImageChibi);
-                DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageChibiKai) + "/" + oldShipGirl.ImageChibiKai);
-                DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageIcon) + "/" + oldShipGirl.ImageIcon);
-                DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageIconKai) + "/" + oldShipGirl.ImageIconKai);
-                DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageKai) + "/" + oldShipGirl.ImageKai);
-                DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageShipyardIcon) + "/" + oldShipGirl.ImageShipyardIcon);
-                DeleteImage(shipDownloader.GetImageFolder(oldShipGirl.ImageShipyardIconKai) + "/" + oldShipGirl.ImageShipyardIconKai);
+                DeleteImage(oldShipGirl.Image);
+                DeleteImage(oldShipGirl.ImageBanner);
+                DeleteImage(oldShipGirl.ImageBannerKai);
+                DeleteImage(oldShipGirl.ImageChibi);
+                DeleteImage(oldShipGirl.ImageChibiKai);
+                DeleteImage(oldShipGirl.ImageIcon);
+                DeleteImage(oldShipGirl.ImageIconKai);
+                DeleteImage(oldShipGirl.ImageKai);
+                DeleteImage(oldShipGirl.ImageShipyardIcon);
+                DeleteImage(oldShipGirl.ImageShipyardIconKai);
                  
                 #region Fuck Ship Girls
 
@@ -208,9 +206,7 @@ namespace azurlane_wiki_app.Data
 
             if (oldEquipment != null)
             {
-                EquipmentDownloader equipmentDownloader = new EquipmentDownloader();
-
-                DeleteImage(equipmentDownloader.GetImageFolder(oldEquipment.Image) + "/" + oldEquipment.Image);
+                DeleteImage(oldEquipment.Image);
 
                 #region Fuck Equipment
 
@@ -311,9 +307,7 @@ namespace azurlane_wiki_app.Data
 
             if (oldSkill != null)
             {
-                SkillDownloader skillDownloader = new SkillDownloader();
-
-                DeleteImage(skillDownloader.GetImageFolder(oldSkill.Icon) + "/" + oldSkill.Icon);
+                DeleteImage(oldSkill.Icon);
 
                 oldSkill.Num = newSkill.Num;
                 oldSkill.Name = newSkill.Name;

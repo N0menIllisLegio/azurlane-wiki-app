@@ -17,8 +17,6 @@ namespace azurlane_wiki_app.Data.Downloaders
 
         private ActionBlock<string> urlDownloaderBlock;
 
-        private object locker = new object();
-
         public IconDownloader(int threadsCount = 0) : base(threadsCount)
         {
             DownloadTitle = "Downloading Icons...";
