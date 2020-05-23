@@ -1,5 +1,5 @@
 ## Azur Lane Wiki
-Offline wiki for Azur Lane.
+Offline client for [Azur Lane Wiki](https://azurlane.koumakan.jp/).
 
 ## Screenshots
 ![Alt text](../images/ShipGirlsGraphicalList.png?raw=true)
@@ -26,6 +26,3 @@ Offline wiki for Azur Lane.
 - [ ] Add ability to display min equipment stats and only max rarity equipment
 - [ ] Fix performance issues
 - [ ] Add a display of the best equipment for shipgirl
-
-## Data and images
-Ship's and equipment's data and images were fetched from: azurlane.koumakan.jp.
