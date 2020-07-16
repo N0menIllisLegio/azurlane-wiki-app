@@ -164,7 +164,9 @@
                     SelectionMode="Single"
                     SelectionUnit="FullRow"
                     AutoGenerateColumns="True"
-                    AutoGeneratingColumn="DataGrid_AutoGeneratingColumn">
+                    AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
+                    VirtualizingPanel.ScrollUnit="Pixel"
+                    VirtualizingPanel.VirtualizationMode="Recycling">
 
                     <DataGrid.Resources>
                         <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MaterialDesignDataGridCell}">

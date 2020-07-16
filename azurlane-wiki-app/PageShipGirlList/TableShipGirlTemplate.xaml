@@ -67,7 +67,9 @@
                 ColumnHeaderHeight="75"
                 SelectionMode="Single"
                 SelectionUnit="FullRow"
-                AutoGenerateColumns="False">
+                AutoGenerateColumns="False"
+                VirtualizingPanel.ScrollUnit="Pixel"
+                VirtualizingPanel.VirtualizationMode="Recycling">
 
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="Icon">
