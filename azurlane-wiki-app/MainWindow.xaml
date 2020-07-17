@@ -11,6 +11,6 @@
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
-        FontFamily="{materialDesign:MaterialDesignFont}" Icon="Resources/Icon.png">
+        FontFamily="{materialDesign:MaterialDesignFont}" Icon="Resources/AppIcon.ico">
     <Frame x:Name="Main" NavigationUIVisibility="Hidden"/>
 </Window>

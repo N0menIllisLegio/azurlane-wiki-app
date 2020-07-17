@@ -266,6 +266,8 @@ namespace azurlane_wiki_app.Data.Downloaders
 
             if (!string.IsNullOrEmpty(imageName))
             {
+                imageName = RefactorImageName(imageName);
+
                 try
                 {
                     imageUrl = await GetImageInfo(imageName);
@@ -405,6 +407,14 @@ namespace azurlane_wiki_app.Data.Downloaders
             }
 
             return result;
+        }
+
+        protected string RefactorImageName(string imageName)
+        {
+            // replace &amp;#39; with '
+            string refactoredName = imageName.Replace(@"&amp;#39;", "\'");
+
+            return refactoredName;
         }
     }
 }
