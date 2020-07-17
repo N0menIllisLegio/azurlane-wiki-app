@@ -8,7 +8,7 @@ namespace azurlane_wiki_app
 {
     class ImagePathConverter : IValueConverter
     {
-        private static readonly BitmapImage ImagePlaceholder = 
+        public static readonly BitmapImage ImagePlaceholder = 
             new BitmapImage(new Uri(@"pack://application:,,,/Resources/Placeholder.png"));
 
         private static Dictionary<string, BitmapImage> icons = new Dictionary<string, BitmapImage>();

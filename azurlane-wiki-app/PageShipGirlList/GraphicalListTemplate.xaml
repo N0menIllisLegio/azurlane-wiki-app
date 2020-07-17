@@ -127,20 +127,25 @@
                                             <DockPanel Height="20">
                                                 <Image RenderOptions.BitmapScalingMode="HighQuality" Width="30"
                                                        Height="18"
-                                                       Source="{Binding TypeIcon, Converter={StaticResource ImagePathConverter}}"
+                                                       Source="{Binding TypeIcon, Converter={StaticResource ImagePathConverter}, 
+                                                                IsAsync=True, Mode=OneWay}"
                                                        Margin="5 2 5 2" VerticalAlignment="Center"
                                                        HorizontalAlignment="Left" />
                                                 <Viewbox Stretch="Uniform" VerticalAlignment="Center" Height="16"
                                                          HorizontalAlignment="Right">
-                                                    <TextBlock Text="{Binding ShipID}" Foreground="White"
-                                                               FontWeight="Normal" Margin="0 0 5 0" />
+                                                    <TextBlock Text="{Binding ShipID, IsAsync=True, Mode=OneWay}" 
+                                                               Foreground="White" FontWeight="Normal" Margin="0 0 5 0" />
                                                 </Viewbox>
                                             </DockPanel>
                                         </Border>
 
+                                        <!--<Image RenderOptions.BitmapScalingMode="HighQuality" Width="128"
+                                               Height="171"
+                                               Source="{Binding ImageShipyardIcon, Converter={StaticResource ImagePathConverter}}" />-->
+
                                         <Image RenderOptions.BitmapScalingMode="HighQuality" Width="128"
                                                Height="171"
-                                               Source="{Binding ImageShipyardIcon, Converter={StaticResource ImagePathConverter}}" />
+                                               Source="{Binding ImageShipyardIcon, IsAsync=True, Mode=OneWay}" />
 
                                         <Border BorderBrush="{DynamicResource MaterialDesignDivider}"
                                                 BorderThickness="0 1 0 1"
@@ -155,7 +160,8 @@
                                                 <Image Grid.Column="0"
                                                        RenderOptions.BitmapScalingMode="HighQuality"
                                                        Width="50" Height="52"
-                                                       Source="{Binding NationalityIcon, Converter={StaticResource ImagePathConverter}}" />
+                                                       Source="{Binding NationalityIcon, Converter={StaticResource ImagePathConverter}, 
+                                                                IsAsync=True, Mode=OneWay}" />
 
                                                 <Border Grid.Column="1"
                                                         BorderBrush="{DynamicResource MaterialDesignDivider}"
@@ -164,13 +170,14 @@
                                                 <Image Grid.Column="2"
                                                        RenderOptions.BitmapScalingMode="HighQuality"
                                                        Width="50" Height="25"
-                                                       Source="{Binding RarityIcon, Converter={StaticResource ImagePathConverter}}" />
+                                                       Source="{Binding RarityIcon, Converter={StaticResource ImagePathConverter}, 
+                                                                IsAsync=True, Mode=OneWay}" />
                                             </Grid>
                                         </Border>
 
                                         <Border Background="Gray" CornerRadius="0 0 2 2"
                                                 RenderOptions.EdgeMode="Aliased">
-                                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Center"
+                                            <TextBlock Text="{Binding Name, IsAsync=True, Mode=OneWay}" HorizontalAlignment="Center"
                                                        TextAlignment="Center" TextWrapping="Wrap"
                                                        FontWeight="Normal"
                                                        Foreground="White" />

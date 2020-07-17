@@ -1,6 +1,10 @@
-﻿using azurlane_wiki_app.Data;
+﻿using azurlane_wiki_app.Annotations;
+using azurlane_wiki_app.Data;
 using azurlane_wiki_app.Data.Tables;
+using azurlane_wiki_app.PageDownload;
+using azurlane_wiki_app.PageEquipmentList;
 using azurlane_wiki_app.PageShipGirl;
+using azurlane_wiki_app.PageShipGirlList.Items;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,21 +14,31 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using azurlane_wiki_app.Annotations;
-using azurlane_wiki_app.PageDownload;
-using azurlane_wiki_app.PageEquipmentList;
-using azurlane_wiki_app.PageShipGirlList.Items;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace azurlane_wiki_app.PageShipGirlList
 {
     public class ShipGirlListPageViewModel : INotifyPropertyChanged
     {
-        public Object ShipGirlsList => _shipGirlsList.View;
+        //public Object ShipGirlsList => _shipGirlsList.View;
+
+        public ObservableCollection<GraphicShipGirlItem> GraphicShipGirlsList { get; set; }//= new ObservableCollection<GraphicShipGirlItem>();
+
+        public CollectionViewSource ShipGirlsList => _shipGirlsList;
         private CollectionViewSource _shipGirlsList = new CollectionViewSource();
+
+        private List<GraphicShipGirlItem> graphList { get; set; } = new List<GraphicShipGirlItem>();
+        private List<TableShipGirlItem> tableList { get; set; } = new List<TableShipGirlItem>();
+
+
+        #region Grouping
 
         private string _groupBySelectedItem;
 
         public ObservableCollection<string> GroupByCollection { get; set; }
+            = new ObservableCollection<string> { "Rarity", "Nationality", "Type" };
 
         public string GroupBySelectedItem
         {
@@ -32,14 +46,23 @@ namespace azurlane_wiki_app.PageShipGirlList
             set
             {
                 _groupBySelectedItem = value;
-                _shipGirlsList.GroupDescriptions.Clear();
-                _shipGirlsList.GroupDescriptions.Add(new PropertyGroupDescription(value));
+
+                using (_shipGirlsList.DeferRefresh())
+                {
+                    _shipGirlsList.GroupDescriptions.Clear();
+                    _shipGirlsList.GroupDescriptions.Add(new PropertyGroupDescription(value));
+                }
             }
         }
-        
+
+        #endregion
+
+        #region Sorting
+
         private string _sortBySelectedItem;
 
-        public ObservableCollection<string> SortByCollection { get; set; }
+        public ObservableCollection<string> SortByCollection { get; set; } 
+            = new ObservableCollection<string> { "Name", "ShipID", "Rarity", "Nationality", "Type" };
 
         public string SortBySelectedItem
         {
@@ -73,6 +96,10 @@ namespace azurlane_wiki_app.PageShipGirlList
             }
         }
 
+        #endregion
+
+        #region Filtering
+
         private string _filterString;
         private ControlTemplate _displayingContent;
 
@@ -87,15 +114,43 @@ namespace azurlane_wiki_app.PageShipGirlList
             }
         }
 
-        public RelayCommand OpenShipPageCommand { get; set; }
+        private bool Search(object item)
+        {
+            BaseShipGirlItem shipGirl = item as BaseShipGirlItem;
+            return shipGirl.Name.ToLower().Contains(_filterString.ToLower());
+        }
+
+        #endregion
+
+        #region Commands
+
+        public RelayCommand OpenShipPageCommand { get; set; } = new RelayCommand(obj =>
+        {
+            string id = obj as string;
+
+            if (!string.IsNullOrEmpty(id))
+            {
+                Navigation.Navigate(new ShipGirlPage(), new ShipGirlPageViewModel(id));
+            }
+        });
+
+        public RelayCommand OpenEquipmentListPageCommand { get; set; } = new RelayCommand(obj =>
+        {
+            Navigation.Navigate(new EquipmentListPage());
+        });
+
+        public RelayCommand OpenDownloadPageCommand { get; set; } = new RelayCommand(obj =>
+        {
+            Navigation.Navigate(new DownloadPage());
+        });
+
         public RelayCommand OpenGraphicalShipGirlPageCommand { get; set; }
         public RelayCommand OpenTableShipGirlPageCommand { get; set; }
-        public RelayCommand OpenEquipmentListPageCommand { get; set; }
-        public RelayCommand OpenDownloadPageCommand { get; set; }
 
-        private List<GraphicShipGirlItem> graphList { get; set; }
-        private List<TableShipGirlItem> tableList { get; set; }
+        #endregion
 
+
+        // Current template
         public ControlTemplate DisplayingContent
         {
             get => _displayingContent;
@@ -110,61 +165,55 @@ namespace azurlane_wiki_app.PageShipGirlList
         {
             using (CargoContext cargoContext = new CargoContext())
             {
-                List<ShipGirl> shipGirls = cargoContext.ShipGirls.Where(sg => sg.FK_Rarity.Name != "Unreleased").ToList();
-                graphList = new List<GraphicShipGirlItem>();
-                tableList = new List<TableShipGirlItem>();
+
+                // Owner...
+                List<ShipGirl> shipGirls = cargoContext.
+                    ShipGirls.Where(sg => sg.FK_Rarity.Name != "Unreleased").
+                    Include(sg => sg.FK_Rarity.FK_Icon).Include(sg => sg.FK_Nationality.FK_Icon).
+                    Include(sg => sg.FK_ShipType.FK_Icon).ToList();
+
+                //List<Task<GraphicShipGirlItem>> graphicShips = new List<Task<GraphicShipGirlItem>>();
 
                 foreach (ShipGirl shipGirl in shipGirls)
                 {
+                    //graphicShips.Add(Task.Factory.StartNew(() => new GraphicShipGirlItem(shipGirl)));
+
                     graphList.Add(new GraphicShipGirlItem(shipGirl));
                     tableList.Add(new TableShipGirlItem(shipGirl));
                 }
 
-                OpenShipPageCommand = new RelayCommand(obj =>
+                //Task.WaitAll(graphicShips.ToArray());
+
+                //foreach (var task in graphicShips)
+                //{
+                //    graphList.Add(task.Result);
+                //}
+
+
+            }
+
+            OpenGraphicalShipGirlPageCommand = new RelayCommand(obj =>
+            {
+                if (_shipGirlsList.Source is List<GraphicShipGirlItem>)
                 {
-                    string id = obj as string;
+                    return;
+                }
 
-                    if (!string.IsNullOrEmpty(id))
-                    {
-                        Navigation.Navigate(new ShipGirlPage(), new ShipGirlPageViewModel(id));
-                    }
-                });
+                SetGraphicalView();
+            });
 
-                GroupByCollection = new ObservableCollection<string> { "Rarity", "Nationality", "Type" };
-                SortByCollection = new ObservableCollection<string> { "Name", "ShipID", "Rarity", "Nationality", "Type" };
-
-                OpenGraphicalShipGirlPageCommand = new RelayCommand(obj =>
+            OpenTableShipGirlPageCommand = new RelayCommand(obj =>
+            {
+                if (_shipGirlsList.Source is List<TableShipGirlItem>)
                 {
-                    if (_shipGirlsList.Source is List<GraphicShipGirlItem>)
-                    {
-                        return;
-                    }
-
-                    SetGraphicalView();
-                });
-                
-                OpenTableShipGirlPageCommand = new RelayCommand(obj =>
-                {
-                    if (_shipGirlsList.Source is List<TableShipGirlItem>)
-                    {
-                       return; 
-                    }
-
-                    SetTableView();
-                });
-
-                OpenEquipmentListPageCommand = new RelayCommand(obj => 
-                {
-                    Navigation.Navigate(new EquipmentListPage());
-                });
-
-                OpenDownloadPageCommand = new RelayCommand(obj =>
-                {
-                    Navigation.Navigate(new DownloadPage());
-                });
+                    return;
+                }
 
                 SetTableView();
-            }
+            });
+
+
+            SetTableView();
         }
 
         public void SetGraphicalView()
@@ -177,10 +226,13 @@ namespace azurlane_wiki_app.PageShipGirlList
 
             DisplayingContent = Application.Current.Resources["GraphicalList"] as ControlTemplate;
         }
-
+        
         public void SetTableView()
         {
-            _shipGirlsList.Source = tableList;
+            //Application.Current.Dispatcher.Invoke(() =>
+            //{
+                _shipGirlsList.Source = tableList;
+            //});
 
             GroupBySelectedItem = null;
             SortBySelectedItem = null;
@@ -188,12 +240,6 @@ namespace azurlane_wiki_app.PageShipGirlList
             _shipGirlsList.View.Filter = Search;
 
             DisplayingContent = Application.Current.Resources["TableList"] as ControlTemplate;
-        }
-
-        private bool Search(object item)
-        {
-            BaseShipGirlItem shipGirl = item as BaseShipGirlItem;
-            return shipGirl.Name.ToLower().Contains(_filterString.ToLower());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
