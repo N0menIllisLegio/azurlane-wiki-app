@@ -88,12 +88,12 @@ namespace azurlane_wiki_app.PageEquipmentList
 
             OpenGraphicalShipGirlPageCommand = new RelayCommand(obj =>
             {
-                Navigation.Navigate(new ShipGirlListPage(true));
+                Navigation.Navigate(new GraphicalShipGirlListPage());
             });
 
             OpenTableShipGirlPageCommand = new RelayCommand(obj =>
             {
-                Navigation.Navigate(new ShipGirlListPage(false));
+                Navigation.Navigate(new TableShipGirlListPage());
             });
 
             OpenEquipmentPageCommand = new RelayCommand(obj =>

@@ -10,20 +10,25 @@ namespace azurlane_wiki_app
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ShipGirlListPageViewModel ShipGirlListPageVM { get; set; }
         public EquipmentListPageViewModel EquipmentListPageVM { get; set; }
         public DownloadPageViewModel DownloadPageVM { get; set; }
+
+        public TableShipGirlListPageViewModel TableShipGirlListPageVM { get; set; }
+        public GraphicalShipGirlListPageViewModel GraphicalShipGirlListPageVM { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
             Navigation.Service = Main.NavigationService;
 
-            ShipGirlListPageVM = new ShipGirlListPageViewModel();
+            // ViewModels loading should be hided by loading screen on startup
+            TableShipGirlListPageVM = new TableShipGirlListPageViewModel();
+            GraphicalShipGirlListPageVM = new GraphicalShipGirlListPageViewModel();
+
             EquipmentListPageVM = new EquipmentListPageViewModel();
             DownloadPageVM = new DownloadPageViewModel(this);
 
-            Navigation.Navigate(new ShipGirlListPage(false), ShipGirlListPageVM);
+            Navigation.Navigate(new TableShipGirlListPage(), TableShipGirlListPageVM);
         }
     }
 }
