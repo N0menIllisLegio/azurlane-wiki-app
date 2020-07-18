@@ -1,8 +1,11 @@
-﻿using azurlane_wiki_app.Data.Tables;
+﻿using azurlane_wiki_app.Annotations;
+using azurlane_wiki_app.Data.Tables;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace azurlane_wiki_app.PageShipGirlList.Items
 {
-    public class BaseShipGirlItem
+    public class BaseShipGirlItem : INotifyPropertyChanged
     {
         public string Name { get; set; }
         public string ShipID { get; set; }
@@ -23,6 +26,14 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
             Nationality = shipGirl.FK_Nationality.Name;
             TypeIcon = shipGirl.FK_ShipType.FK_Icon.FileName;
             Type = shipGirl.FK_ShipType.Name;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

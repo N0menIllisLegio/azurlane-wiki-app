@@ -8,9 +8,20 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
 {
     public class GraphicShipGirlItem : BaseShipGirlItem
     {
+        private BitmapImage imageShipyardIcon;
+
         //public string ImageShipyardIcon { get; set; }
         //public string ImageShipyardIconKai { get; set; }
-        public BitmapImage ImageShipyardIcon { get; set; }
+        public BitmapImage ImageShipyardIcon 
+        { 
+            get => imageShipyardIcon;
+            set
+            {
+                imageShipyardIcon = value;
+                OnPropertyChanged(nameof(ImageShipyardIcon));
+            }
+        }
+
         //public BitmapImage ImageShipyardIconKai { get; set; } 
 
         public GraphicShipGirlItem(ShipGirl shipGirl) : base(shipGirl)
@@ -43,7 +54,7 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
             //        ImageShipyardIconKai = ImagePathConverter.ImagePlaceholder;
             //    }
             //}
-            
+
             //ImageShipyardIcon = shipGirl.ImageShipyardIcon;
             //ImageShipyardIconKai = shipGirl.ImageShipyardIconKai;
         }

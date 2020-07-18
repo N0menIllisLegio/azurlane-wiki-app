@@ -8,8 +8,18 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
 {
     public class TableShipGirlItem : BaseShipGirlItem
     {
+        private BitmapImage shipGirlIcon;
+
         //public string ShipGirlIcon { get; set; }
-        public BitmapImage ShipGirlIcon { get; set; }
+        public BitmapImage ShipGirlIcon 
+        { 
+            get => shipGirlIcon;
+            set
+            {
+                shipGirlIcon = value;
+                OnPropertyChanged(nameof(ShipGirlIcon));
+            }
+        }
         public bool Remodel { get; set; }
         public int Firepower { get; set; }
         public int Health { get; set; }
