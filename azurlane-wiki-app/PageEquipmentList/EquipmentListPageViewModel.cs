@@ -1,4 +1,5 @@
 ﻿using azurlane_wiki_app.Annotations;
+using azurlane_wiki_app.PageDownload;
 using azurlane_wiki_app.PageEquipment;
 using azurlane_wiki_app.PageEquipmentList.Items;
 using azurlane_wiki_app.PageShipGirlList;
@@ -7,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
-using azurlane_wiki_app.PageDownload;
 
 namespace azurlane_wiki_app.PageEquipmentList
 {
@@ -43,7 +43,7 @@ namespace azurlane_wiki_app.PageEquipmentList
         }
 
         private string _filterString = "";
-        
+
         public string FilterString
         {
             get => _filterString;
