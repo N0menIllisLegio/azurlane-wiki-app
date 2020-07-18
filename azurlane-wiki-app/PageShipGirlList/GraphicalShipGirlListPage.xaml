@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:azurlane_wiki_app.PageShipGirlList"
+      xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
       xmlns:azurlaneWikiApp="clr-namespace:azurlane_wiki_app"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -120,191 +121,213 @@
                 </Viewbox>
             </Grid>
 
-            <ScrollViewer Grid.Row="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                    <TextBox Grid.Column="0" Grid.Row="0"
+                <TextBox Grid.Column="0" Grid.Row="0"
                          Width="200" Margin="20"
                          materialDesign:HintAssist.Hint="Ship Name"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         VerticalAlignment="Center" Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}">
-                        <i:Interaction.Behaviors>
-                            <azurlaneWikiApp:TextBoxEnterKeyUpdateBehavior />
-                        </i:Interaction.Behaviors>
-                    </TextBox>
+                         VerticalAlignment="Center" 
+                         Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged, Delay=500}">
+                    <i:Interaction.Behaviors>
+                        <azurlaneWikiApp:TextBoxEnterKeyUpdateBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
 
-                    <StackPanel Orientation="Horizontal" Margin="20" Grid.Column="1" Grid.Row="0">
-                        <TextBlock VerticalAlignment="Center" Text="Group By: " Margin="0 0 20 0" />
+                <!--GROUPING-->
+                <StackPanel Orientation="Horizontal" Margin="20" Grid.Column="1" Grid.Row="0">
+                    <TextBlock VerticalAlignment="Center" Text="Group By: " Margin="0 0 20 0" />
 
-                        <ComboBox Width="150"
+                    <ComboBox Width="150"
                               ItemsSource="{Binding Path=GroupByCollection}"
-                              SelectedItem="{Binding Path=GroupBySelectedItem}">
-                            <ComboBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <VirtualizingStackPanel />
-                                </ItemsPanelTemplate>
-                            </ComboBox.ItemsPanel>
-                        </ComboBox>
-                    </StackPanel>
+                              SelectedItem="{Binding Path=GroupBySelectedItem, Delay=500}">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+                </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="20" Grid.Column="2" Grid.Row="0">
-                        <TextBlock VerticalAlignment="Center" Text="Sort: " Margin="0 0 20 0" />
+                <!--SORTING-->
+                <StackPanel Orientation="Horizontal" Margin="20" Grid.Column="2" Grid.Row="0">
+                    <TextBlock VerticalAlignment="Center" Text="Sort: " Margin="0 0 20 0" />
 
-                        <ComboBox Name="Sort" Width="150"
+                    <ComboBox Name="Sort" Width="150"
                               ItemsSource="{Binding Path=SortByCollection}"
-                              SelectedItem="{Binding Path=SortBySelectedItem}">
-                            <ComboBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <VirtualizingStackPanel />
-                                </ItemsPanelTemplate>
-                            </ComboBox.ItemsPanel>
-                        </ComboBox>
-                    </StackPanel>
+                              SelectedItem="{Binding Path=SortBySelectedItem, Delay=500}">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+                </StackPanel>
+                
+                <Border BorderBrush="{StaticResource MaterialDesignDivider}" 
+                        Margin="10 0 16.7 0" BorderThickness="0 1 0 0"
+                        Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" />
 
-                    <ItemsControl Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"
-                              Margin="10 10 0 10" ItemsSource="{Binding ShipGirlsList}">
-                        <ItemsControl.GroupStyle>
-                            <GroupStyle>
-                                <GroupStyle.ContainerStyle>
-                                    <Style TargetType="{x:Type GroupItem}">
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="{x:Type GroupItem}">
-                                                    <Expander Header="{Binding Name}" IsExpanded="True">
+                <ItemsControl ItemsSource="{Binding ShipGirlsList}"   
+                                Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Margin="10 1 0 10"
+                                VirtualizingPanel.ScrollUnit="Pixel"
+                                VirtualizingPanel.CacheLength="1,1"
+                                VirtualizingPanel.CacheLengthUnit="Page"
+                                VirtualizingPanel.IsVirtualizingWhenGrouping="True">
+                    <ItemsControl.GroupStyle>
+                        <GroupStyle HidesIfEmpty="True">
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="{x:Type GroupItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type GroupItem}">
+                                                <Border BorderBrush="{StaticResource MaterialDesignDivider}" 
+                                                    BorderThickness="1 0 1 1">
+                                                    <Expander Header="{Binding Name, IsAsync=True, Mode=OneWay}" 
+                                                                IsExpanded="True">
                                                         <ItemsPresenter />
                                                     </Expander>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupStyle.ContainerStyle>
+                        </GroupStyle>
+                    </ItemsControl.GroupStyle>
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <wpftk:VirtualizingWrapPanel 
+                                Orientation="Vertical" 
+                                SpacingMode="None" StretchItems="True" />
+                            <!--<WrapPanel/>-->
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.Template>
+                        <ControlTemplate TargetType="ItemsControl">
+                            <ScrollViewer CanContentScroll="True" Focusable="False">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <materialDesign:Card VerticalAlignment="Center" HorizontalAlignment="Center"
+                                            Cursor="Hand" Margin="10" Padding="1" Width="120">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction
+                                                Command="{Binding Path=DataContext.OpenShipPageCommand, 
+                                                RelativeSource=
+                                            {RelativeSource Mode=FindAncestor, AncestorType=Grid, AncestorLevel=3}}"
+                                                CommandParameter="{Binding ShipID, IsAsync=True, Mode=OneWay}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                                <materialDesign:Card.Background>
+                                    <MultiBinding Converter="{StaticResource ColorConverter}"
+                                            ConverterParameter="Rarity">
+                                        <Binding Path="Rarity" />
+                                    </MultiBinding>
+                                </materialDesign:Card.Background>
+
+                                <materialDesign:Card.Style>
+                                    <Style TargetType="{x:Type materialDesign:Card}">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Effect">
+                                                    <Setter.Value>
+                                                        <DropShadowEffect ShadowDepth="0.5" Color="LightGray" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
                                     </Style>
-                                </GroupStyle.ContainerStyle>
-                            </GroupStyle>
-                        </ItemsControl.GroupStyle>
+                                </materialDesign:Card.Style>
 
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
+                                <Border BorderThickness="1" BorderBrush="{DynamicResource MaterialDesignDivider}"
+                                            RenderOptions.EdgeMode="Aliased" CornerRadius="2">
+                                    <StackPanel>
+                                        <Border Background="Gray"
+                                                    BorderBrush="{DynamicResource MaterialDesignDivider}"
+                                                    CornerRadius="2 2 0 0"
+                                                    BorderThickness="0 0 0 1">
+                                            <DockPanel Height="20">
+                                                <Image RenderOptions.BitmapScalingMode="HighQuality" Width="30"
+                                                Height="18"
+                                                Source="{Binding TypeIcon, Converter={StaticResource ImagePathConverter}, 
+                                                            IsAsync=True, Mode=OneWay}"
+                                                Margin="5 2 5 2" VerticalAlignment="Center"
+                                                HorizontalAlignment="Left" />
+                                                <Viewbox Stretch="Uniform" VerticalAlignment="Center" Height="16"
+                                                    HorizontalAlignment="Right">
+                                                    <TextBlock Text="{Binding ShipID, 
+                                                            IsAsync=True, Mode=OneWay}" Foreground="White"
+                                                        FontWeight="Normal" Margin="0 0 5 0" />
+                                                </Viewbox>
+                                            </DockPanel>
+                                        </Border>
 
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <materialDesign:Card VerticalAlignment="Center" HorizontalAlignment="Center"
-                                                 Cursor="Hand"
-                                                 Margin="10" Padding="1" Width="120">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="MouseLeftButtonDown">
-                                            <i:InvokeCommandAction
-                                            Command="{Binding Path=DataContext.OpenShipPageCommand, 
-                                            RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollViewer}}"
-                                            CommandParameter="{Binding ShipID}" />
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
+                                        <Image RenderOptions.BitmapScalingMode="HighQuality" Width="128"
+                                        Height="171"
+                                        Source="{Binding ImageShipyardIcon, 
+                                                            IsAsync=True, Mode=OneWay}" />
 
-                                    <materialDesign:Card.Background>
-                                        <MultiBinding Converter="{StaticResource ColorConverter}"
-                                                  ConverterParameter="Rarity">
-                                            <Binding Path="Rarity" />
-                                        </MultiBinding>
-                                    </materialDesign:Card.Background>
+                                        <Border BorderBrush="{DynamicResource MaterialDesignDivider}"
+                                        BorderThickness="0 1 0 1"
+                                        Background="Transparent">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
 
-                                    <materialDesign:Card.Style>
-                                        <Style TargetType="{x:Type materialDesign:Card}">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Effect">
-                                                        <Setter.Value>
-                                                            <DropShadowEffect ShadowDepth="0.5" Color="LightGray" />
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </materialDesign:Card.Style>
+                                                <Image Grid.Column="0"
+                                                RenderOptions.BitmapScalingMode="HighQuality"
+                                                Width="50" Height="52"
+                                                Source="{Binding NationalityIcon, Converter={StaticResource ImagePathConverter}, 
+                                                            IsAsync=True, Mode=OneWay}" />
 
-                                    <Border BorderThickness="1" BorderBrush="{DynamicResource MaterialDesignDivider}"
-                                        RenderOptions.EdgeMode="Aliased"
-                                        CornerRadius="2">
-                                        <StackPanel>
-                                            <Border Background="Gray"
+                                                <Border Grid.Column="1"
                                                 BorderBrush="{DynamicResource MaterialDesignDivider}"
-                                                CornerRadius="2 2 0 0"
-                                                BorderThickness="0 0 0 1">
-                                                <DockPanel Height="20">
-                                                    <Image RenderOptions.BitmapScalingMode="HighQuality" Width="30"
-                                                       Height="18"
-                                                       Source="{Binding TypeIcon, Converter={StaticResource ImagePathConverter}, 
-                                                                IsAsync=True, Mode=OneWay}"
-                                                       Margin="5 2 5 2" VerticalAlignment="Center"
-                                                       HorizontalAlignment="Left" />
-                                                    <Viewbox Stretch="Uniform" VerticalAlignment="Center" Height="16"
-                                                         HorizontalAlignment="Right">
-                                                        <TextBlock Text="{Binding ShipID, IsAsync=True, Mode=OneWay}" 
-                                                               Foreground="White" FontWeight="Normal" Margin="0 0 5 0" />
-                                                    </Viewbox>
-                                                </DockPanel>
-                                            </Border>
+                                                BorderThickness="0 0 1 0" />
 
-                                            <!--<Image RenderOptions.BitmapScalingMode="HighQuality" Width="128"
-                                               Height="171"
-                                               Source="{Binding ImageShipyardIcon, Converter={StaticResource ImagePathConverter}}" />-->
+                                                <Image Grid.Column="2"
+                                                RenderOptions.BitmapScalingMode="HighQuality"
+                                                Width="50" Height="25"
+                                                Source="{Binding RarityIcon, Converter={StaticResource ImagePathConverter}, 
+                                                            IsAsync=True, Mode=OneWay}" />
+                                            </Grid>
+                                        </Border>
 
-                                            <Image RenderOptions.BitmapScalingMode="HighQuality" Width="128"
-                                               Height="171"
-                                               Source="{Binding ImageShipyardIcon, IsAsync=True, Mode=OneWay}" />
-
-                                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}"
-                                                BorderThickness="0 1 0 1"
-                                                Background="Transparent">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <Image Grid.Column="0"
-                                                       RenderOptions.BitmapScalingMode="HighQuality"
-                                                       Width="50" Height="52"
-                                                       Source="{Binding NationalityIcon, Converter={StaticResource ImagePathConverter}, 
-                                                                IsAsync=True, Mode=OneWay}" />
-
-                                                    <Border Grid.Column="1"
-                                                        BorderBrush="{DynamicResource MaterialDesignDivider}"
-                                                        BorderThickness="0 0 1 0" />
-
-                                                    <Image Grid.Column="2"
-                                                       RenderOptions.BitmapScalingMode="HighQuality"
-                                                       Width="50" Height="25"
-                                                       Source="{Binding RarityIcon, Converter={StaticResource ImagePathConverter}, 
-                                                                IsAsync=True, Mode=OneWay}" />
-                                                </Grid>
-                                            </Border>
-
-                                            <Border Background="Gray" CornerRadius="0 0 2 2"
-                                                RenderOptions.EdgeMode="Aliased">
-                                                <TextBlock Text="{Binding Name, IsAsync=True, Mode=OneWay}" HorizontalAlignment="Center"
-                                                       TextAlignment="Center" TextWrapping="Wrap"
-                                                       FontWeight="Normal"
-                                                       Foreground="White" />
-                                            </Border>
-                                        </StackPanel>
-                                    </Border>
-                                </materialDesign:Card>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Grid>
-            </ScrollViewer>
+                                        <Border Background="Gray" CornerRadius="0 0 2 2"
+                                        RenderOptions.EdgeMode="Aliased">
+                                            <TextBlock Text="{Binding Name, 
+                                                            IsAsync=True, Mode=OneWay}" HorizontalAlignment="Center"
+                                                TextAlignment="Center" TextWrapping="Wrap"
+                                                FontWeight="Normal"
+                                                Foreground="White" />
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </materialDesign:Card>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
         </Grid>
     </materialDesign:DrawerHost>
 </Page>

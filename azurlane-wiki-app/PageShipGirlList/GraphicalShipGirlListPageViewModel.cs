@@ -1,12 +1,15 @@
 ﻿using azurlane_wiki_app.Data;
 using azurlane_wiki_app.Data.Tables;
 using azurlane_wiki_app.PageShipGirlList.Items;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
+using System.Windows;
 using System.Windows.Data;
+using System.Windows.Threading;
 
 namespace azurlane_wiki_app.PageShipGirlList
 {
@@ -27,13 +30,14 @@ namespace azurlane_wiki_app.PageShipGirlList
             {
                 _groupBySelectedItem = value;
 
-                using (_shipGirlsList.DeferRefresh())
+                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
                 {
-                    _shipGirlsList.GroupDescriptions.Clear();
-                    _shipGirlsList.GroupDescriptions.Add(new PropertyGroupDescription(value));
-                }
-
-
+                    using (_shipGirlsList.DeferRefresh())
+                    {
+                        _shipGirlsList.GroupDescriptions.Clear();
+                        _shipGirlsList.GroupDescriptions.Add(new PropertyGroupDescription(_groupBySelectedItem));
+                    }
+                }));
             }
         }
 
@@ -124,9 +128,6 @@ namespace azurlane_wiki_app.PageShipGirlList
             _shipGirlsList.Source = graphList;
             GroupBySelectedItem = GroupByCollection[0];
             SortBySelectedItem = SortByCollection[0];
-
-            FilterString = "";
-            _shipGirlsList.View.Filter = Search;
         }
     }
 }

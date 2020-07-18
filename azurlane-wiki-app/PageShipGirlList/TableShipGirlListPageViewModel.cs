@@ -54,9 +54,6 @@ namespace azurlane_wiki_app.PageShipGirlList
             }
 
             _shipGirlsList.Source = tableList;
-
-            FilterString = "";
-            _shipGirlsList.View.Filter = Search;
         }
     }
 }

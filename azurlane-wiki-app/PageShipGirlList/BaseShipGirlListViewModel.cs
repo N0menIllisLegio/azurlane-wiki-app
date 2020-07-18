@@ -34,11 +34,20 @@ namespace azurlane_wiki_app.PageShipGirlList
             {
                 _filterString = value;
                 OnPropertyChanged(nameof(FilterString));
-                _shipGirlsList.View.Refresh();
+
+                if(_shipGirlsList?.View != null)
+                {
+                    if (_shipGirlsList.View.Filter == null)
+                    {
+                        _shipGirlsList.View.Filter = Search;
+                    }
+                    
+                    _shipGirlsList.View.Refresh();
+                }
             }
         }
 
-        protected bool Search(object item)
+        public bool Search(object item)
         {
             BaseShipGirlItem shipGirl = item as BaseShipGirlItem;
             return shipGirl.Name.ToLower().Contains(_filterString.ToLower());
@@ -49,9 +58,9 @@ namespace azurlane_wiki_app.PageShipGirlList
         #region Commands
 
         public RelayCommand OpenShipPageCommand { get; set; }
-        public RelayCommand OpenEquipmentListPageCommand { get; set; } 
+        public RelayCommand OpenEquipmentListPageCommand { get; set; }
         public RelayCommand OpenDownloadPageCommand { get; set; }
-        public RelayCommand OpenGraphicalShipGirlPageCommand { get; set; } 
+        public RelayCommand OpenGraphicalShipGirlPageCommand { get; set; }
         public RelayCommand OpenTableShipGirlPageCommand { get; set; }
 
         #endregion
