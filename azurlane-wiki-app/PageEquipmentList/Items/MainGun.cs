@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using azurlane_wiki_app.Data.Tables;
 
 namespace azurlane_wiki_app.PageEquipmentList.Items
@@ -16,20 +17,21 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         public float Reload { get; set; }
 
         [DisplayName("Rnd/s")]
-        public float RndPerS { get; set; }
+        public string RndPerS { get; set; }
         public int Rng { get; set; }
         public string Sprd { get; set; }
         public string Angle { get; set; }
         public string Ammo { get; set; }
         public string Attr { get; set; }
-        
-        //Surface DPS
-        //public int Raw { get; set; }
-        //public int L { get; set; }
-        //public string M { get; set; }
-        //public string H { get; set; }
 
-        public MainGun(Equipment equipment) : base(equipment)
+        //Surface DPS
+        [DisplayName("Rnd\ns")]
+        public string Raw { get; set; }
+        public string L { get; set; }
+        public string M { get; set; }
+        public string H { get; set; }
+
+        public MainGun(Equipment equipment, Action<MainGun, double[]> dpsCalc) : base(equipment)
         {
             Firepower = equipment.Firepower ?? 0;
             AA = equipment.AAMax ?? 0;
@@ -37,13 +39,26 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             Damage = equipment.DamageMax ?? 0;
             Coefficient = $"{equipment.Coef ?? 0}%";
             VT = equipment.VolleyTime ?? 0;
-            Reload = equipment.ReloadMax ?? 0;
-            // RndPerS = 
+            Reload = equipment.RoFMax ?? 0;
             Rng = equipment.WepRange ?? 0;
             Sprd = $"{equipment.Spread ?? 0}°";
             Angle = $"{equipment.Angle ?? 0}°";
             Ammo = equipment.Ammo;
             Attr = equipment.Characteristic;
+
+            if(dpsCalc != null)
+            {
+                double[] args =
+                {
+                    Damage,
+                    equipment.Coef ?? 0,
+                    (equipment.Salvoes ?? 0) * (equipment.Shells ?? 0),
+                    Reload,
+                    VT
+                };
+
+                dpsCalc(this, args);
+            }
         }
     }
 }

@@ -31,10 +31,10 @@ namespace azurlane_wiki_app.PageEquipmentList
         {
             string displayedName, columnName = e.Column.Header.ToString();
 
-            if (string.IsNullOrEmpty(columnName) || columnName == "Icon"
-                                                 || columnName == "Id" || columnName == "Type" || columnName == "Name"
+            if (string.IsNullOrEmpty(columnName) || columnName == "Icon" || columnName == "Nationality"
+                                                 || columnName == "Id"   || columnName == "Type"  || columnName == "Name"
                                                  || columnName == "Tech" || columnName == "Stars" || columnName == "Rarity"
-                                                 || columnName == "Nationality" || columnName == "NationalityIcon")
+                                                 || columnName == "NationalityIcon")
             {
                 e.Cancel = true;
                 return;

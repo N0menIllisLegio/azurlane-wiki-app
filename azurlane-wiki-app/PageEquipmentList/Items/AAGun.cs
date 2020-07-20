@@ -14,6 +14,8 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         public float Reload { get; set; }
         public int Rng { get; set; }
 
+        public string AADPS { get; set; }
+
         public AAGun(Equipment equipment) : base(equipment)
         {
             Firepower = equipment.Firepower ?? 0;
@@ -22,6 +24,10 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             Damage = equipment.DamageMax ?? 0;
             Reload = equipment.RoFMax ?? 0;
             Rng = equipment.WepRange ?? 0;
+
+            double AbsoluteCD = .5;
+
+            AADPS = string.Format("{0:0.00}", Damage / (Reload + AbsoluteCD));
         }
     }
 }

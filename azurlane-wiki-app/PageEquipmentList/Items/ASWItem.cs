@@ -22,6 +22,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         public string Notes { get; set; }
 
         // DPS
+        public string DPS { get; set; }
         public ASWItem(Equipment equipment) : base(equipment)
         {
             ASW = equipment.ASWMax ?? 0;
@@ -31,6 +32,11 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             Range = equipment.WepRange ?? 0;
             ASWItemType = equipment.FK_Type.Name;
             Notes = equipment.Notes;
+
+            if (Damage != 0 && Rld != 0)
+            {
+                DPS = string.Format("{0:0.00}", Damage / Rld);
+            }
         }
     }
 }
