@@ -26,7 +26,9 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 
         #region GunsCalcs
 
-        private Dictionary<string, Action<MainGun, double[]>> DPSCalcs = new Dictionary<string, Action<MainGun, double[]>> 
+        // TODO: Move dictionaries in DB
+
+        private Dictionary<string, Action<MainGun, double[]>> GunsDPSCalcs = new Dictionary<string, Action<MainGun, double[]>> 
         {
             { 
                 "DD Gun", 
@@ -226,6 +228,19 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             }
         };
 
+        
+
+        private Dictionary<string, Action<Plane, Equipment>> PlanesDPSCalcs = new Dictionary<string, Action<Plane, Equipment>>
+        {
+            {
+                "Seaplane",
+                (plane, equipment) =>
+                {
+                    
+                }
+            }
+        };
+
         #endregion
 
         private List<string> GetDbTypes(string newType)
@@ -336,9 +351,9 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 
                     Action<MainGun, double[]> calc = null;
 
-                    if (DPSCalcs.ContainsKey(s))
+                    if (GunsDPSCalcs.ContainsKey(s))
                     {
-                        calc = DPSCalcs[s];
+                        calc = GunsDPSCalcs[s];
                     }
 
                     MainGuns.Add(new MainGun(item, calc));
