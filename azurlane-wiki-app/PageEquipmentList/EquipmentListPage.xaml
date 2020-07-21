@@ -178,7 +178,7 @@
                         <Style TargetType="{x:Type DataGridColumnHeader}"
                                BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
                             <Setter Property="VerticalAlignment" Value="Center" />
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
                         </Style>
 
                         <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MaterialDesignDataGridRow}">
@@ -223,10 +223,27 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Name" SortMemberPath="." CanUserSort="True">
+                        <DataGridTemplateColumn Header="Name" SortMemberPath="." CanUserSort="True" x:Name="NameColumn">
+                            <DataGridTemplateColumn.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MyDataGridCell}">
+                                    <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignDivider}"/>
+                                    <Setter Property="BorderThickness" Value="0 0 1 0"/>
+                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                </Style>
+                            </DataGridTemplateColumn.CellStyle>
+
+                            <DataGridTemplateColumn.HeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                    <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignDivider}"/>
+                                    <Setter Property="BorderThickness" Value="0 0 1 0"/>
+
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTemplateColumn.HeaderStyle>
+
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock FontWeight="Regular" Text="{Binding Name}" VerticalAlignment="Center"/>
+                                    <TextBlock FontWeight="Regular" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

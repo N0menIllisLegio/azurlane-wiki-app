@@ -126,25 +126,6 @@
 
             <Grid Grid.Row="1">
                 <Grid.Resources>
-                    <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-                        <Setter Property="VerticalAlignment" Value="Stretch" />
-                        <Setter Property="HorizontalAlignment" Value="Center" />
-
-                        <Style.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="{x:Null}" />
-                                <Setter Property="BorderBrush" Value="{x:Null}" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-
-                    <Style TargetType="{x:Type DataGridColumnHeader}"
-                   BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="HorizontalAlignment" Value="Center" />
-                        <Setter Property="FontSize" Value="14" />
-                    </Style>
-
                     <Style TargetType="materialDesign:PackIcon">
                         <Setter Property="Foreground" Value="Gray" />
 
@@ -177,18 +158,41 @@
                     </TextBox>
 
                     <DataGrid
-                Grid.Row="1"
-                ItemsSource="{Binding ShipGirlsList}"
-                IsReadOnly="True"
-                CanUserSortColumns="True"
-                AlternatingRowBackground="{DynamicResource PrimaryHueLightBrush}"
-                CanUserResizeRows="False"
-                ColumnHeaderHeight="75"
-                SelectionMode="Single"
-                SelectionUnit="FullRow"
-                AutoGenerateColumns="False"
-                VirtualizingPanel.ScrollUnit="Pixel"
-                VirtualizingPanel.VirtualizationMode="Recycling">
+                        FrozenColumnCount="2"
+                        Grid.Row="1"
+                        ItemsSource="{Binding ShipGirlsList}"
+                        BorderBrush="{StaticResource MaterialDesignDivider}"
+                        BorderThickness="1"
+                        Margin="5"
+                        IsReadOnly="True"
+                        CanUserSortColumns="True"
+                        CanUserResizeColumns="False"
+                        AlternatingRowBackground="{DynamicResource PrimaryHueLightBrush}"
+                        CanUserResizeRows="False"
+                        ColumnHeaderHeight="75"
+                        SelectionMode="Single"
+                        SelectionUnit="FullRow"
+                        AutoGenerateColumns="False"
+                        VirtualizingPanel.ScrollUnit="Pixel"
+                        VirtualizingPanel.VirtualizationMode="Recycling">
+                        <DataGrid.Resources>
+                            <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MyDataGridCell}"/>
+
+                            <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{x:Null}" />
+                                        <Setter Property="BorderBrush" Value="{x:Null}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+
+                            <Style TargetType="{x:Type DataGridColumnHeader}"
+                               BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGrid.Resources>
 
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Icon">
@@ -202,10 +206,6 @@
                                                         <Binding Path="Rarity" />
                                                     </MultiBinding>
                                                 </Border.Background>
-
-                                                <!--<Image RenderOptions.BitmapScalingMode="HighQuality" Cursor="Hand"
-                                               Height="64" Width="64"
-                                               Source="{Binding ShipGirlIcon, Converter={StaticResource ImagePathConverter}}" />-->
 
                                                 <Image RenderOptions.BitmapScalingMode="HighQuality" Cursor="Hand"
                                                     Height="64" Width="64" Source="{Binding ShipGirlIcon}" />
@@ -223,7 +223,33 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="ID" SortMemberPath="." CanUserSort="True">
+                            <DataGridTemplateColumn Header="Name" SortMemberPath="." CanUserSort="True" MinWidth="150">
+                                <DataGridTemplateColumn.CellStyle>
+                                    <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MyDataGridCell}">
+                                        <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignDivider}"/>
+                                        <Setter Property="BorderThickness" Value="0 0 1 0"/>
+                                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                    </Style>
+                                </DataGridTemplateColumn.CellStyle>
+
+                                <DataGridTemplateColumn.HeaderStyle>
+                                    <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                        <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignDivider}"/>
+                                        <Setter Property="BorderThickness" Value="0 0 1 0"/>
+
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTemplateColumn.HeaderStyle>
+
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock FontWeight="Regular" Text="{Binding Name, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center"                                                  
+                                                    HorizontalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="ID" SortMemberPath="." CanUserSort="True" Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="Regular" Text="{Binding ShipID, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center" />
@@ -231,13 +257,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Name" SortMemberPath="." CanUserSort="True">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock FontWeight="Regular" Text="{Binding Name, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            
 
                             <DataGridTemplateColumn Header="Type">
                                 <DataGridTemplateColumn.CellTemplate>
