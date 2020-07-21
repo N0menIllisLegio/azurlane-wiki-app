@@ -12,17 +12,17 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 
         [DisplayName("Rld(s)")]
         public float Rld { get; set; }
+        public string DPS { get; set; }
         public int Range { get; set; }
 
         //[DisplayName("AoE Radius")]
         //public int AoE { get; set; }
 
-        //[DisplayName("Type")]
+        [DisplayName("Type")]
         public string ASWItemType { get; set; }
         public string Notes { get; set; }
 
-        // DPS
-        public string DPS { get; set; }
+        
         public ASWItem(Equipment equipment) : base(equipment)
         {
             ASW = equipment.ASWMax ?? 0;

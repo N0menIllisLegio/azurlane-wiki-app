@@ -7,6 +7,14 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 {
     public class SubmarineTorpedo : BaseEquipmentItem
     {
+        //Surface DPS
+        [DisplayName("Surface DPS\nLight armour")]
+        public string DPSL { get; set; }
+        [DisplayName("Surface DPS\nLight armour")]
+        public string DPSM { get; set; }
+        [DisplayName("Surface DPS\nLight armour")]
+        public string DPSH { get; set; }
+
         [DisplayName("Torpedo")]
         public int Torp { get; set; }
         public int Rnd { get; set; }
@@ -16,11 +24,6 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         public string Sprd { get; set; }
         public string Angle { get; set; }
         public string Attr { get; set; }
-
-        //Surface DPS
-        public string L { get; set; }
-        public string M { get; set; }
-        public string H { get; set; }
 
         public SubmarineTorpedo(Equipment equipment) : base(equipment)
         {
@@ -58,9 +61,9 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 
             float raw = Damage * Rnd / Reload;
 
-            L = string.Format("{0:0.00}", raw * armourModifier.Light);
-            M = string.Format("{0:0.00}", raw * armourModifier.Medium);
-            H = string.Format("{0:0.00}", raw * armourModifier.Heavy);
+            DPSL = string.Format("{0:0.00}", raw * armourModifier.Light);
+            DPSM = string.Format("{0:0.00}", raw * armourModifier.Medium);
+            DPSH = string.Format("{0:0.00}", raw * armourModifier.Heavy);
 
         }
     }

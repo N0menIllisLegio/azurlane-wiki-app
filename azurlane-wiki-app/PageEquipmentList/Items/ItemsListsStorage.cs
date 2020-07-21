@@ -53,10 +53,10 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
                         { "AP",         new ArmourModifier {Light = .9,  Medium = .7, Heavy = .4, ShellSpeed= 220} },
                     };
 
-                    gun.Raw = string.Format("{0:0.00}", raw);
-                    gun.L = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Light);
-                    gun.M = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Medium);
-                    gun.H = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Heavy);
+                    gun.DPSRaw = string.Format("{0:0.00}", raw);
+                    gun.DPSL = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Light);
+                    gun.DPSM = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Medium);
+                    gun.DPSH = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Heavy);
                     gun.RndPerS = string.Format("{0:0.00}", numOfShots / (rld + VT + AbsoluteCD));
                 }
             },
@@ -84,10 +84,10 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
                         { "AP+",    new ArmourModifier {Light = 1.1,  Medium = .9, Heavy = .7, ShellSpeed= 220} },
                     };
 
-                    gun.Raw = string.Format("{0:0.00}", raw);
-                    gun.L = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Light);
-                    gun.M = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Medium);
-                    gun.H = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Heavy);
+                    gun.DPSRaw = string.Format("{0:0.00}", raw);
+                    gun.DPSL = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Light);
+                    gun.DPSM = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Medium);
+                    gun.DPSH = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Heavy);
                     gun.RndPerS = string.Format("{0:0.00}", numOfShots / (rld + VT + AbsoluteCD));
                 }
             },
@@ -124,10 +124,10 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
                         { "HE+", .04},
                     };
 
-                    gun.Raw = string.Format("{0:0.00}", raw);
-                    gun.L = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Light);
-                    gun.M = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Medium);
-                    gun.H = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Heavy);
+                    gun.DPSRaw = string.Format("{0:0.00}", raw);
+                    gun.DPSL = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Light);
+                    gun.DPSM = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Medium);
+                    gun.DPSH = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Heavy);
                     gun.RndPerS = string.Format("{0:0.00}", numOfShots / (rld + VT + AbsoluteCD));
                 }
             },
@@ -164,10 +164,10 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
                         { "HE+", .04},
                     };
 
-                    gun.Raw = string.Format("{0:0.00}", raw);
-                    gun.L = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Light);
-                    gun.M = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Medium);
-                    gun.H = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Heavy);
+                    gun.DPSRaw = string.Format("{0:0.00}", raw);
+                    gun.DPSL = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Light);
+                    gun.DPSM = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Medium);
+                    gun.DPSH = string.Format("{0:0.00}", raw * ArmourModifiers[gun.Ammo].Heavy);
                     gun.RndPerS = string.Format("{0:0.00}", numOfShots / (rld + VT + AbsoluteCD));
                 }
             },
@@ -217,26 +217,12 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
                         { "Type 3 Shell Fragments",     0}, // value at wiki = '-'
                         { "Super-Heavy Shell",          8},
                     };
-                    // l = 140, m = 110 h = 90
 
-                    gun.Raw = string.Format("{0:0.00}", raw);
-                    gun.L = string.Format("{0:0.00}", raw * ArmourModifiers[ammo].Light);
-                    gun.M = string.Format("{0:0.00}", raw * ArmourModifiers[ammo].Medium);
-                    gun.H = string.Format("{0:0.00}", raw * ArmourModifiers[ammo].Heavy);
+                    gun.DPSRaw = string.Format("{0:0.00}", raw);
+                    gun.DPSL = string.Format("{0:0.00}", raw * ArmourModifiers[ammo].Light);
+                    gun.DPSM = string.Format("{0:0.00}", raw * ArmourModifiers[ammo].Medium);
+                    gun.DPSH = string.Format("{0:0.00}", raw * ArmourModifiers[ammo].Heavy);
                     gun.RndPerS = string.Format("{0:0.00}", numOfShots / (rld + VT));
-                }
-            }
-        };
-
-        
-
-        private Dictionary<string, Action<Plane, Equipment>> PlanesDPSCalcs = new Dictionary<string, Action<Plane, Equipment>>
-        {
-            {
-                "Seaplane",
-                (plane, equipment) =>
-                {
-                    
                 }
             }
         };

@@ -1,11 +1,11 @@
 ﻿using azurlane_wiki_app.Data.Tables;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace azurlane_wiki_app.PageEquipmentList.Items
 {
     public class Plane : BaseEquipmentItem
     {
-
         protected struct BombDamageLevels
         {
             public int Dmg;
@@ -43,13 +43,16 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         public string Guns { get; set; }
         public float Rld { get; set; }
 
-
+        [DisplayName("Surfaced DPS\nLight armour")]
         public string SurfacedDPSL { get; set; }
+        [DisplayName("Surfaced DPS\nMedium armour")]
         public string SurfacedDPSM { get; set; }
+        [DisplayName("Surfaced DPS\nHeavy armour")]
         public string SurfacedDPSH { get; set; }
+        [DisplayName("Anti-Air\nDPS")]
         public string AADPS { get; set; }
-        public string AABurst { get; set; }
-
+        [DisplayName("Anti-Air\nBurst")]
+        public string AADPSBurst { get; set; }
 
         public Plane(Equipment equipment) : base(equipment)
         {
@@ -429,7 +432,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             var AAGun2Result = CalcAAGunNumerator(AAGun2);
 
             AADPS = string.Format("{0:0.00}", ((AAGun1Result.damage * (magickNumber / AAGun1Result.reload)) + (AAGun2Result.damage * (magickNumber / AAGun2Result.reload))) / denominator);
-            AABurst = string.Format("{0:0.00}", (AAGun1Result.damage + AAGun2Result.damage) / denominator);
+            AADPSBurst = string.Format("{0:0.00}", (AAGun1Result.damage + AAGun2Result.damage) / denominator);
         }
     }
 }

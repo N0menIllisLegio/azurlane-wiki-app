@@ -15,21 +15,24 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         public string Coefficient { get; set; }
         public float VT { get; set; }
         public float Reload { get; set; }
-
         [DisplayName("Rnd/s")]
         public string RndPerS { get; set; }
+
+        //Surface DPS
+        [DisplayName("Surfaced DPS\nRaw")]
+        public string DPSRaw { get; set; }
+        [DisplayName("Surfaced DPS\nLight armour")]
+        public string DPSL { get; set; }
+        [DisplayName("Surfaced DPS\nMedium armour")]
+        public string DPSM { get; set; }
+        [DisplayName("Surfaced DPS\nHeavy armour")]
+        public string DPSH { get; set; }
+
         public int Rng { get; set; }
         public string Sprd { get; set; }
         public string Angle { get; set; }
         public string Ammo { get; set; }
         public string Attr { get; set; }
-
-        //Surface DPS
-        [DisplayName("Rnd\ns")]
-        public string Raw { get; set; }
-        public string L { get; set; }
-        public string M { get; set; }
-        public string H { get; set; }
 
         public MainGun(Equipment equipment, Action<MainGun, double[]> dpsCalc) : base(equipment)
         {

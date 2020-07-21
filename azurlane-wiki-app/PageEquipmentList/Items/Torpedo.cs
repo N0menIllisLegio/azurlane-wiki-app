@@ -1,15 +1,18 @@
 ﻿using azurlane_wiki_app.Data.Tables;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace azurlane_wiki_app.PageEquipmentList.Items
 {
     public class Torpedo : SubmarineTorpedo
     {
         //Preload DPS
-
-        public string PreloadL { get; set; }
-        public string PreloadM { get; set; }
-        public string PreloadH { get; set; }
+        [DisplayName("Preload DPS\nLight armour")]
+        public string PreloadDPSL { get; set; }
+        [DisplayName("Preload DPS\nMedium armour")]
+        public string PreloadDPSM { get; set; }
+        [DisplayName("Preload DPS\nHeavy armour")]
+        public string PreloadDPSH { get; set; }
 
         public Torpedo(Equipment equipment) : base(equipment)
         {
@@ -41,9 +44,9 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             double m = Damage * Rnd * armourModifier.Medium / Reload;
             double h = Damage * Rnd * armourModifier.Heavy / Reload;
 
-            PreloadL = string.Format("{0:0.00}", l + raw * armourModifier.Light);
-            PreloadM = string.Format("{0:0.00}", m + raw * armourModifier.Medium);
-            PreloadH = string.Format("{0:0.00}", h + raw * armourModifier.Heavy);
+            PreloadDPSL = string.Format("{0:0.00}", l + raw * armourModifier.Light);
+            PreloadDPSM = string.Format("{0:0.00}", m + raw * armourModifier.Medium);
+            PreloadDPSH = string.Format("{0:0.00}", h + raw * armourModifier.Heavy);
         }
     }
 }

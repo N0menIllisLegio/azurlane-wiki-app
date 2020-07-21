@@ -151,8 +151,11 @@
                                VerticalAlignment="Center" Text="Equipment Type: " />
                 </DockPanel>
 
-
                 <DataGrid
+                    FrozenColumnCount="2"
+                    BorderBrush="{StaticResource MaterialDesignDivider}"
+                    BorderThickness="1"
+                    Margin="5"
                     Grid.Row="1"
                     ItemsSource="{Binding EquipmentList}"
                     IsReadOnly="True"
@@ -160,6 +163,7 @@
                     CanUserAddRows="False"
                     AlternatingRowBackground="{DynamicResource PrimaryHueLightBrush}"
                     CanUserResizeRows="False"
+                    CanUserResizeColumns="False"
                     ColumnHeaderHeight="75"
                     SelectionMode="Single"
                     SelectionUnit="FullRow"
@@ -169,23 +173,21 @@
                     VirtualizingPanel.VirtualizationMode="Recycling">
 
                     <DataGrid.Resources>
-                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-                            <Setter Property="VerticalAlignment" Value="Stretch" />
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MyDataGridCell}"/>
 
+                        <Style TargetType="{x:Type DataGridColumnHeader}"
+                               BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+
+                        <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MaterialDesignDataGridRow}">
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="Background" Value="{x:Null}" />
                                     <Setter Property="BorderBrush" Value="{x:Null}" />
                                 </Trigger>
                             </Style.Triggers>
-                        </Style>
-
-                        <Style TargetType="{x:Type DataGridColumnHeader}"
-                               BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                            <Setter Property="FontSize" Value="14" />
                         </Style>
                     </DataGrid.Resources>
 
@@ -224,7 +226,7 @@
                         <DataGridTemplateColumn Header="Name" SortMemberPath="." CanUserSort="True">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock FontWeight="Regular" Text="{Binding Name}" VerticalAlignment="Center" />
+                                    <TextBlock FontWeight="Regular" Text="{Binding Name}" VerticalAlignment="Center"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
