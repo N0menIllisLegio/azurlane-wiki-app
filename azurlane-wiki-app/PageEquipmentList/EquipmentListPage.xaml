@@ -178,7 +178,7 @@
                     CanUserResizeColumns="False"
                     ColumnHeaderHeight="75"
                     SelectionMode="Single"
-                    SelectionUnit="FullRow"
+                    SelectionUnit="Cell"
                     AutoGenerateColumns="True"
                     AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
                     VirtualizingPanel.ScrollUnit="Pixel"
@@ -191,15 +191,6 @@
                                BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
                             <Setter Property="VerticalAlignment" Value="Center" />
                             <Setter Property="HorizontalAlignment" Value="Center"/>
-                        </Style>
-
-                        <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MaterialDesignDataGridRow}">
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="{x:Null}" />
-                                    <Setter Property="BorderBrush" Value="{x:Null}" />
-                                </Trigger>
-                            </Style.Triggers>
                         </Style>
                     </DataGrid.Resources>
 
@@ -248,7 +239,6 @@
                                 <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
                                     <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignDivider}"/>
                                     <Setter Property="BorderThickness" Value="0 0 1 0"/>
-
                                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                 </Style>
                             </DataGridTemplateColumn.HeaderStyle>

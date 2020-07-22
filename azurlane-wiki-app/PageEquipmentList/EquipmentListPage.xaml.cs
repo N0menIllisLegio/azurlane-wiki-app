@@ -59,7 +59,6 @@ namespace azurlane_wiki_app.PageEquipmentList
             cellTemplate.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
             cellTemplate.SetValue(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Center);
             cellTemplate.SetValue(TextBlock.TextWrappingProperty, TextWrapping.Wrap);
-            cellTemplate.SetValue(TextBlock.MarginProperty, new Thickness(15, 0, 15, 0));
             cellTemplate.SetBinding(TextBlock.TextProperty, new Binding(columnName));
 
             // Header Template

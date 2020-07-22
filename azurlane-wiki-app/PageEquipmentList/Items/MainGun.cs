@@ -221,3 +221,44 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         }
     }
 }
+
+// CA Gun
+
+//Dictionary<string, double> BurnChance = new Dictionary<string, double>
+//{
+//    { "HE",  .08},
+//    { "HE*", .09},
+//    { "HE+", .04},
+//};
+
+//// CB Gun
+
+//Dictionary<string, double> BurnChance = new Dictionary<string, double>
+//{
+//    { "HE",  .08},
+//    { "HE*", .09},
+//    { "HE+", .04},
+//};
+
+//// BB Gun
+
+//Dictionary<string, double> BurnChance = new Dictionary<string, double>
+//{
+//    { "AP",  .2},
+//    { "AP*", .25},
+//    { "AP^", .25},
+//    { "AP+", .2},
+//};
+
+//Dictionary<string, int> SplashRange = new Dictionary<string, int>
+//{
+//    { "Normal",                     15},
+//    { "HE",                         15},
+//    { "AP",                         15},
+//    { "AP*",                        15},
+//    { "AP^",                        15},
+//    { "AP+",                        16},
+//    { "Type 3 Shell",               0}, // value at wiki = '-'
+//    { "Type 3 Shell Fragments",     0}, // value at wiki = '-'
+//    { "Super-Heavy Shell",          8},
+//};
