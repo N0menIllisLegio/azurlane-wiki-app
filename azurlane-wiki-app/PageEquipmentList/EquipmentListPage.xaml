@@ -137,7 +137,7 @@
                         </i:Interaction.Behaviors>
                     </TextBox>
 
-                    <ComboBox Width="150" DockPanel.Dock="Right" Margin="0"
+                    <ComboBox Width="170" DockPanel.Dock="Right" Margin="0"
                               ItemsSource="{Binding Path=TypeCollection}"
                               SelectedItem="{Binding Path=TypeSelectedItem}">
                         <ComboBox.ItemsPanel>

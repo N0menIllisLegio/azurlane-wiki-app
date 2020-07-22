@@ -160,6 +160,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
                     };
 
                     break;
+                case "SS Gun": // Submarine-mounted Twin 203mm: Surcouf only.
                 case "CA Gun":
                 case "CB Gun":
                     AbsoluteCD = 0.3;
