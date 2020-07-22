@@ -7,19 +7,67 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 {
     public class SubmarineTorpedo : BaseEquipmentItem
     {
+        private int damage;
+        private float reload;
+        private int bufDamage;
+        private float bufReload;
+        private string dPSL;
+        private string dPSM;
+        private string dPSH;
+
         //Surface DPS
         [DisplayName("Surface DPS\nLight armour")]
-        public string DPSL { get; set; }
+        public string DPSL 
+        { 
+            get => dPSL;
+            set
+            {
+                dPSL = value;
+                OnPropertyChanged(nameof(DPSL));
+            }
+        }
         [DisplayName("Surface DPS\nLight armour")]
-        public string DPSM { get; set; }
+        public string DPSM 
+        { 
+            get => dPSM;
+            set
+            {
+                dPSM = value;
+                OnPropertyChanged(nameof(DPSM));
+            }
+        }
         [DisplayName("Surface DPS\nLight armour")]
-        public string DPSH { get; set; }
+        public string DPSH 
+        { 
+            get => dPSH;
+            set 
+            { 
+                dPSH = value;
+                OnPropertyChanged(nameof(DPSH));
+            } 
+        }
 
         [DisplayName("Torpedo")]
         public int Torp { get; set; }
         public int Rnd { get; set; }
-        public int Damage { get; set; }
-        public float Reload { get; set; }
+        public int Damage
+        {
+            get => damage;
+            set
+            {
+                damage = value;
+                OnPropertyChanged(nameof(Damage));
+            }
+        }
+        public float Reload
+        {
+            get => reload;
+            set
+            {
+                reload = value;
+                OnPropertyChanged(nameof(Reload));
+            }
+        }
         public int Rng { get; set; }
         public string Sprd { get; set; }
         public string Angle { get; set; }
@@ -27,15 +75,24 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 
         public SubmarineTorpedo(Equipment equipment) : base(equipment)
         {
-            Torp = equipment.TorpMax ?? 0;
+            Torp = equipment.Torpedo ?? 0;
             Rnd = equipment.Number ?? 0;
+
             Damage = equipment.DamageMax ?? 0;
             Reload = equipment.RoFMax ?? 0;
+            bufDamage = equipment.Damage ?? 0;
+            bufReload = equipment.RoF ?? 0;
+
             Rng = equipment.WepRange ?? 0;
             Sprd = $"{equipment.Spread ?? 0}°";
             Angle = $"{equipment.Angle ?? 0}°";
             Attr = equipment.Characteristic;
 
+            CalcDPS();
+        }
+
+        private void CalcDPS()
+        {
             Dictionary<string, ArmourModifier> ArmourModifiers = new Dictionary<string, ArmourModifier>
             {
                 { "Normal", new ArmourModifier {Light = .8, Medium = 1, Heavy = 1.3, ShellSpeed = 0 } },
@@ -51,7 +108,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             };
 
             string ammo = Attr;
-            
+
             if (!ArmourModifiers.ContainsKey(ammo))
             {
                 ammo = "Normal";
@@ -64,7 +121,14 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             DPSL = string.Format("{0:0.00}", raw * armourModifier.Light);
             DPSM = string.Format("{0:0.00}", raw * armourModifier.Medium);
             DPSH = string.Format("{0:0.00}", raw * armourModifier.Heavy);
+        }
 
+        public override void ChangeStats()
+        {
+            base.ChangeStats();
+            Damage = Swap(Damage, ref bufDamage);
+            Reload = Swap(Reload, ref bufReload);
+            CalcDPS();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using azurlane_wiki_app.Annotations;
-using azurlane_wiki_app.Data;
 using azurlane_wiki_app.PageDownload;
 using azurlane_wiki_app.PageEquipment;
 using azurlane_wiki_app.PageEquipmentList.Items;
@@ -7,7 +6,6 @@ using azurlane_wiki_app.PageShipGirlList;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
 
@@ -18,11 +16,12 @@ namespace azurlane_wiki_app.PageEquipmentList
         private object _equipmentList;
         private string _typeSelectedItem;
         private string _filterString = "";
-        private bool _maxStats;
-        private bool _maxRarity;
+        private bool _maxStats = true;
+        private bool _maxRarity = false;
         private readonly CollectionViewSource _equipmentListViewSource = new CollectionViewSource();
 
         #region Bindings
+
         public Object EquipmentList
         {
             get => _equipmentList;
@@ -66,6 +65,7 @@ namespace azurlane_wiki_app.PageEquipmentList
                 {
                     _maxStats = value;
                     OnPropertyChanged(nameof(MaxStats));
+                    ItemsListsStorage.ChangeCurrentListStats(TypeSelectedItem);
                 }
             }
         }
@@ -148,8 +148,10 @@ namespace azurlane_wiki_app.PageEquipmentList
             EquipmentList = _equipmentListViewSource.View;
             _equipmentListViewSource.View.Filter = Search;
 
-            MaxStats = true;
-            MaxRarity = false;
+            if (!MaxStats)
+            {
+                ItemsListsStorage.ChangeCurrentListStats(TypeSelectedItem);
+            }
         }
 
         private bool Search(object item)

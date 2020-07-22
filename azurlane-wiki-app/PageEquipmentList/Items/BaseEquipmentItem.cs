@@ -8,7 +8,7 @@ using azurlane_wiki_app.Data.Tables;
 
 namespace azurlane_wiki_app.PageEquipmentList.Items
 {
-    public abstract class BaseEquipmentItem : INotifyPropertyChanged
+    public class BaseEquipmentItem : INotifyPropertyChanged
     {
         protected BaseEquipmentItem(Equipment equipment)
         {
@@ -38,6 +38,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             this.Tech = equipment.FK_Tech.Name;
             this.Rarity = rarity;
             this.Stars = equipment.Stars ?? 0;
+            this.DisplayMaxStats = true;
 
             using(CargoContext cargoContext = new CargoContext())
             {
@@ -54,7 +55,10 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             return buf;
         }
 
-        public abstract void ChangeStats();
+        public virtual void ChangeStats()
+        {
+            this.DisplayMaxStats = !this.DisplayMaxStats;
+        }
 
         public int Id { get; set; }
         public string Name { get; set; }
@@ -67,6 +71,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         public string Type { get; set; }
 
         public bool IsMaxRarity;
+        protected bool DisplayMaxStats;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

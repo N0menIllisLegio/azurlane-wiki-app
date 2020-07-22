@@ -6,6 +6,20 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 {
     public class Plane : BaseEquipmentItem
     {
+        private float rld;
+        protected float bufRld;
+
+        private string bombs1;
+        private string bombs2;
+        private string aaGun1;
+        private string aaGun2;
+        private string surfacedDPSL;
+        private string surfacedDPSM;
+        private string surfacedDPSH;
+        private string aADPS;
+        private string aADPSBurst;
+
+        #region Structs
         protected struct BombDamageLevels
         {
             public int Dmg;
@@ -37,32 +51,87 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             public int Dmg6;
             public int DmgMax;
         }
+        #endregion
 
         public int Aviation { get; set; }
-        public string Ordnance { get; set; }
-        public string Guns { get; set; }
-        public float Rld { get; set; }
+        public string Ordnance { get => $"{bombs1}\n{bombs2}".Trim(); }
+        public string Guns { get => $"{aaGun1}\n{aaGun2}".Trim(); }
+        public float Rld
+        {
+            get => rld;
+            set
+            {
+                rld = value;
+                OnPropertyChanged(nameof(Rld));
+            }
+        }
 
-        [DisplayName("Surfaced DPS\nLight armour")]
-        public string SurfacedDPSL { get; set; }
-        [DisplayName("Surfaced DPS\nMedium armour")]
-        public string SurfacedDPSM { get; set; }
-        [DisplayName("Surfaced DPS\nHeavy armour")]
-        public string SurfacedDPSH { get; set; }
+        #region DPS
+        [DisplayName("Surface DPS\nLight armour")]
+        public string SurfacedDPSL 
+        { 
+            get => surfacedDPSL;
+            set
+            {
+                surfacedDPSL = value;
+                OnPropertyChanged(nameof(SurfacedDPSL));
+            }
+        }
+        [DisplayName("Surface DPS\nMedium armour")]
+        public string SurfacedDPSM 
+        { 
+            get => surfacedDPSM;
+            set
+            {
+                surfacedDPSM = value;
+                OnPropertyChanged(nameof(SurfacedDPSM));
+            }
+        }
+        [DisplayName("Surface DPS\nHeavy armour")]
+        public string SurfacedDPSH 
+        { 
+            get => surfacedDPSH;
+            set
+            {
+                surfacedDPSH = value;
+                OnPropertyChanged(nameof(SurfacedDPSH));
+            }
+        }
         [DisplayName("Anti-Air\nDPS")]
-        public string AADPS { get; set; }
+        public string AADPS 
+        { 
+            get => aADPS;
+            set
+            {
+                aADPS = value;
+                OnPropertyChanged(nameof(AADPS));
+            }
+        }
         [DisplayName("Anti-Air\nBurst")]
-        public string AADPSBurst { get; set; }
+        public string AADPSBurst 
+        { 
+            get => aADPSBurst;
+            set
+            {
+                aADPSBurst = value;
+                OnPropertyChanged(nameof(AADPSBurst));
+            }
+        }
+        #endregion
 
         public Plane(Equipment equipment) : base(equipment)
         {
             Aviation = equipment.Aviation ?? 0;
-            Ordnance = $"{equipment.Bombs1}\n{equipment.Bombs2}".Trim();
-            Guns = $"{equipment.AAGun1}\n{equipment.AAGun2}".Trim();
-            Rld = equipment.RoFMax ?? 0;
 
-            CalcBombsDPS(equipment);
-            CalcAAGunsDPS(equipment.AAGun1, equipment.AAGun2);
+            bombs1 = equipment.Bombs1;
+            bombs2 = equipment.Bombs2;
+            aaGun1 = equipment.AAGun1;
+            aaGun2 = equipment.AAGun2;
+
+            Rld = equipment.RoFMax ?? 0;
+            bufRld = equipment.RoF ?? 0;
+
+            CalcDPSes();
         }
 
         protected (int count, BombStats type) ParseBombs(string str)
@@ -172,7 +241,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 
             //string[] splittedStr = str.Trim().Split(' ');
 
-            foreach(string key in Bombs.Keys)
+            foreach (string key in Bombs.Keys)
             {
                 if (str.Contains(key))
                 {
@@ -202,31 +271,38 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             }
 
             int damage;
-            switch (Stars)
+
+            if (DisplayMaxStats)
             {
-                case int stars when stars <= 2:
-                    damage = BombsType.Damages[Tech].Dmg3;
-                    break;
-                case 3:
-                    damage = BombsType.Damages[Tech].Dmg6;
-                    break;
-                default:
-                    damage = BombsType.Damages[Tech].DmgMax;
-                    break;
+                switch (Stars)
+                {
+                    case int stars when stars <= 2:
+                        damage = BombsType.Damages[Tech].Dmg3;
+                        break;
+                    case 3:
+                        damage = BombsType.Damages[Tech].Dmg6;
+                        break;
+                    default:
+                        damage = BombsType.Damages[Tech].DmgMax;
+                        break;
+                }
+            }
+            else
+            {
+                damage = BombsType.Damages[Tech].Dmg;
             }
 
             return damage * armmod * BombsCount;
         }
 
-        protected virtual void CalcBombsDPS(Equipment equipment)
+        protected virtual void CalcBombsDPS(int TorpNumber, int TorpDamage)
         {
             double AbsoluteCD = .1;
             double denominator = Rld * 2.2 + AbsoluteCD;
 
-            var Bombs1 = ParseBombs(equipment.Bombs1);
-            var Bombs2 = ParseBombs(equipment.Bombs2);
+            var Bombs1 = ParseBombs(bombs1);
+            var Bombs2 = ParseBombs(bombs2);
 
-            
             SurfacedDPSL = string.Format("{0:0.00}", (CalcBombDPSNumerator(Bombs1.count, Bombs1.type, 0)
                 + CalcBombDPSNumerator(Bombs2.count, Bombs2.type, 0)) / denominator);
 
@@ -235,7 +311,6 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 
             SurfacedDPSH = string.Format("{0:0.00}", (CalcBombDPSNumerator(Bombs1.count, Bombs1.type, 2)
                 + CalcBombDPSNumerator(Bombs2.count, Bombs2.type, 2)) / denominator);
-
         }
 
         private (double damage, double reload) CalcAAGunNumerator(string gun)
@@ -398,41 +473,60 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
                 },
             };
 
-            switch (Stars)
+            if (DisplayMaxStats)
             {
-                case int stars when stars <= 2:
-                    result.damage = Guns[gun][Tech].Dmg3;
-                    result.reload = Guns[gun][Tech].Rld3;
-                    break;
-                case 3:
-                    result.damage = Guns[gun][Tech].Dmg6;
-                    result.reload = Guns[gun][Tech].Rld6;
-                    break;
-                default:
-                    result.damage = Guns[gun][Tech].DmgMax;
-                    result.reload = Guns[gun][Tech].RldMax;
-                    break;
+                switch (Stars)
+                {
+                    case int stars when stars <= 2:
+                        result.damage = Guns[gun][Tech].Dmg3;
+                        result.reload = Guns[gun][Tech].Rld3;
+                        break;
+                    case 3:
+                        result.damage = Guns[gun][Tech].Dmg6;
+                        result.reload = Guns[gun][Tech].Rld6;
+                        break;
+                    default:
+                        result.damage = Guns[gun][Tech].DmgMax;
+                        result.reload = Guns[gun][Tech].RldMax;
+                        break;
+                }
             }
-
+            else
+            {
+                result.damage = Guns[gun][Tech].Dmg;
+                result.reload = Guns[gun][Tech].Rld;
+            }
 
             return result;
         }
 
-        protected void CalcAAGunsDPS(string equipGun1, string equipGun2)
+        protected void CalcAAGunsDPS()
         {
             double AbsoluteCD = .1;
             double magickNumber = 150.359569; // WIKI
             double denominator = Rld * 2.2 + AbsoluteCD;
 
-            string AAGun1 = !string.IsNullOrEmpty(equipGun1) ? equipGun1.Remove(equipGun1.Length - 2, 2).Trim() : "";
-            string AAGun2 = !string.IsNullOrEmpty(equipGun2) ? equipGun2.Remove(equipGun2.Length - 2, 2).Trim() : "";
-
+            string AAGun1 = !string.IsNullOrEmpty(aaGun1) ? aaGun1.Remove(aaGun1.Length - 2, 2).Trim() : "";
+            string AAGun2 = !string.IsNullOrEmpty(aaGun2) ? aaGun2.Remove(aaGun2.Length - 2, 2).Trim() : "";
 
             var AAGun1Result = CalcAAGunNumerator(AAGun1);
             var AAGun2Result = CalcAAGunNumerator(AAGun2);
 
             AADPS = string.Format("{0:0.00}", ((AAGun1Result.damage * (magickNumber / AAGun1Result.reload)) + (AAGun2Result.damage * (magickNumber / AAGun2Result.reload))) / denominator);
             AADPSBurst = string.Format("{0:0.00}", (AAGun1Result.damage + AAGun2Result.damage) / denominator);
+        }
+
+        public override void ChangeStats()
+        {
+            base.ChangeStats();
+            Rld = Swap(Rld, ref bufRld);
+            CalcDPSes();
+        }
+
+        protected virtual void CalcDPSes()
+        {
+            CalcBombsDPS(0, 0);
+            CalcAAGunsDPS();
         }
     }
 }
