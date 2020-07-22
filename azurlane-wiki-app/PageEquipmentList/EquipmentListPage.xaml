@@ -125,19 +125,19 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <DockPanel Grid.Row="0">
+                <DockPanel Grid.Row="0" VerticalAlignment="Center" Margin="20 30 20 20">
                     <TextBox DockPanel.Dock="Left"
-                             Width="200" Margin="20"
+                             Width="200" VerticalAlignment="Center"
                              materialDesign:HintAssist.Hint="Equipment Name"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                             VerticalAlignment="Center" Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}"
                              HorizontalAlignment="Left">
                         <i:Interaction.Behaviors>
                             <azurlaneWikiApp:TextBoxEnterKeyUpdateBehavior />
                         </i:Interaction.Behaviors>
                     </TextBox>
 
-                    <ComboBox Width="150" DockPanel.Dock="Right" Margin="20"
+                    <ComboBox Width="150" DockPanel.Dock="Right" Margin="0"
                               ItemsSource="{Binding Path=TypeCollection}"
                               SelectedItem="{Binding Path=TypeSelectedItem}">
                         <ComboBox.ItemsPanel>
@@ -147,8 +147,20 @@
                         </ComboBox.ItemsPanel>
                     </ComboBox>
 
-                    <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right"
+                    <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0 0 10 0"
                                VerticalAlignment="Center" Text="Equipment Type: " />
+
+                    <CheckBox DockPanel.Dock="Right" Style="{StaticResource MaterialDesignCheckBox}"
+                              Margin="0 0 50 0" HorizontalAlignment="Right" Content="Max Rarity"
+                              IsChecked="{Binding MaxRarity}"/>
+
+                    <StackPanel Margin="0 0 20 0" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                        <RadioButton GroupName="MinMaxStats" Content="Min Stats"
+                                     Style="{StaticResource MaterialDesignDarkRadioButton}" />
+                        <RadioButton GroupName="MinMaxStats" Content="Max Stats"
+                                     Style="{StaticResource MaterialDesignDarkRadioButton}"
+                                     IsChecked="{Binding MaxStats}" />
+                    </StackPanel>
                 </DockPanel>
 
                 <DataGrid
