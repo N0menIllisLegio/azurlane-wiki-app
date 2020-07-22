@@ -125,19 +125,19 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <DockPanel Grid.Row="0">
+                <DockPanel Grid.Row="0" VerticalAlignment="Center" Margin="20 30 20 20">
                     <TextBox DockPanel.Dock="Left"
-                             Width="200" Margin="20"
+                             Width="200" VerticalAlignment="Center"
                              materialDesign:HintAssist.Hint="Equipment Name"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                             VerticalAlignment="Center" Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}"
                              HorizontalAlignment="Left">
                         <i:Interaction.Behaviors>
                             <azurlaneWikiApp:TextBoxEnterKeyUpdateBehavior />
                         </i:Interaction.Behaviors>
                     </TextBox>
 
-                    <ComboBox Width="150" DockPanel.Dock="Right" Margin="20"
+                    <ComboBox Width="170" DockPanel.Dock="Right" Margin="0"
                               ItemsSource="{Binding Path=TypeCollection}"
                               SelectedItem="{Binding Path=TypeSelectedItem}">
                         <ComboBox.ItemsPanel>
@@ -147,12 +147,27 @@
                         </ComboBox.ItemsPanel>
                     </ComboBox>
 
-                    <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right"
+                    <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0 0 10 0"
                                VerticalAlignment="Center" Text="Equipment Type: " />
+
+                    <CheckBox DockPanel.Dock="Right" Style="{StaticResource MaterialDesignCheckBox}"
+                              Margin="0 0 50 0" HorizontalAlignment="Right" Content="Max Rarity"
+                              IsChecked="{Binding MaxRarity}"/>
+
+                    <StackPanel Margin="0 0 20 0" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                        <RadioButton GroupName="MinMaxStats" Content="Min Stats"
+                                     Style="{StaticResource MaterialDesignDarkRadioButton}" />
+                        <RadioButton GroupName="MinMaxStats" Content="Max Stats"
+                                     Style="{StaticResource MaterialDesignDarkRadioButton}"
+                                     IsChecked="{Binding MaxStats}" />
+                    </StackPanel>
                 </DockPanel>
 
-
                 <DataGrid
+                    FrozenColumnCount="2"
+                    BorderBrush="{StaticResource MaterialDesignDivider}"
+                    BorderThickness="1"
+                    Margin="5"
                     Grid.Row="1"
                     ItemsSource="{Binding EquipmentList}"
                     IsReadOnly="True"
@@ -160,32 +175,22 @@
                     CanUserAddRows="False"
                     AlternatingRowBackground="{DynamicResource PrimaryHueLightBrush}"
                     CanUserResizeRows="False"
+                    CanUserResizeColumns="False"
                     ColumnHeaderHeight="75"
                     SelectionMode="Single"
-                    SelectionUnit="FullRow"
+                    SelectionUnit="Cell"
                     AutoGenerateColumns="True"
                     AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
                     VirtualizingPanel.ScrollUnit="Pixel"
                     VirtualizingPanel.VirtualizationMode="Recycling">
 
                     <DataGrid.Resources>
-                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-                            <Setter Property="VerticalAlignment" Value="Stretch" />
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="{x:Null}" />
-                                    <Setter Property="BorderBrush" Value="{x:Null}" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MyDataGridCell}"/>
 
                         <Style TargetType="{x:Type DataGridColumnHeader}"
                                BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
                             <Setter Property="VerticalAlignment" Value="Center" />
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
                         </Style>
                     </DataGrid.Resources>
 
@@ -221,10 +226,26 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Name" SortMemberPath="." CanUserSort="True">
+                        <DataGridTemplateColumn Header="Name" SortMemberPath="." CanUserSort="True" x:Name="NameColumn">
+                            <DataGridTemplateColumn.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MyDataGridCell}">
+                                    <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignDivider}"/>
+                                    <Setter Property="BorderThickness" Value="0 0 1 0"/>
+                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                </Style>
+                            </DataGridTemplateColumn.CellStyle>
+
+                            <DataGridTemplateColumn.HeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                    <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignDivider}"/>
+                                    <Setter Property="BorderThickness" Value="0 0 1 0"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTemplateColumn.HeaderStyle>
+
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock FontWeight="Regular" Text="{Binding Name}" VerticalAlignment="Center" />
+                                    <TextBlock FontWeight="Regular" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

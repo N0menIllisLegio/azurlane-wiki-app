@@ -34,7 +34,7 @@
             <Button ToolTip="Go Back" Height="Auto" Width="Auto"
                     Grid.Column="0"
                     Margin="3" Style="{StaticResource MaterialDesignFlatButton}"
-                    Command="{Binding ClosePageCommand}">
+                    Command="{Binding ClosePageCommand, IsAsync=True, Mode=OneWay}">
                 <materialDesign:PackIcon Kind="ChevronLeft" Height="40" Width="40"
                                          VerticalAlignment="Center"
                                          Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"/>
@@ -42,7 +42,7 @@
 
             <Viewbox Grid.Column="1" HorizontalAlignment="Left" Stretch="Uniform"
                      VerticalAlignment="Center" Margin="40 0">
-                <TextBlock Text="{Binding EquipmentName}"
+                <TextBlock Text="{Binding EquipmentName, IsAsync=True, Mode=OneWay}"
                            Style="{StaticResource MaterialDesignHeadline3TextBlock}"
                            Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" />
             </Viewbox>
@@ -78,7 +78,7 @@
 
                         <Image RenderOptions.BitmapScalingMode="HighQuality"
                                Width="128" Height="128"
-                               Source="{Binding Image, Converter={StaticResource ImagePathConverter}}" />
+                               Source="{Binding Image, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
                     </materialDesign:Card>
 
                     <materialDesign:Card Margin="5 10 5 0"
@@ -94,12 +94,12 @@
                                     <TextBlock FontWeight="Bold" Text="Type" Margin="0 0 0 2" />
 
                                     <DockPanel>
-                                        <TextBlock Padding="5 0 5 0" Text="{Binding EquipmentType}"
+                                        <TextBlock Padding="5 0 5 0" Text="{Binding EquipmentType, IsAsync=True, Mode=OneWay}"
                                                    VerticalAlignment="Center"
                                                    FontStyle="Italic" FontWeight="Light" />
                                         <Image Margin="5 0 0 0" Width="20" Height="20"
                                                HorizontalAlignment="Right"
-                                               Source="{Binding EquipmentTypeIcon, Converter={StaticResource ImagePathConverter}}"
+                                               Source="{Binding EquipmentTypeIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}"
                                                RenderOptions.BitmapScalingMode="HighQuality" />
                                     </DockPanel>
                                 </StackPanel>
@@ -123,7 +123,7 @@
                                     <StackPanel Margin="8 0 0 0" VerticalAlignment="Center">
                                         <TextBlock FontWeight="Bold" Text="Rarity"
                                                    Margin="0 0 0 2" />
-                                        <TextBlock Padding="5 0 0 0" Text="{Binding Rarity}"
+                                        <TextBlock Padding="5 0 0 0" Text="{Binding Rarity, IsAsync=True, Mode=OneWay}"
                                                    FontStyle="Italic" FontWeight="Light" />
                                     </StackPanel>
 
@@ -131,7 +131,7 @@
                                            VerticalAlignment="Center"
                                            RenderOptions.BitmapScalingMode="HighQuality"
                                            Height="25" Width="50"
-                                           Source="{Binding RarityIcon, Converter={StaticResource ImagePathConverter}}" />
+                                           Source="{Binding RarityIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
                                 </Grid>
                             </Border>
 
@@ -153,7 +153,7 @@
                                     <StackPanel Margin="8 0 0 0" VerticalAlignment="Center">
                                         <TextBlock FontWeight="Bold" Text="Nation"
                                                    Margin="0 0 0 2" />
-                                        <TextBlock Padding="5 0 0 0" Text="{Binding Nation}"
+                                        <TextBlock Padding="5 0 0 0" Text="{Binding Nation, IsAsync=True, Mode=OneWay}"
                                                    FontStyle="Italic" FontWeight="Light" />
                                     </StackPanel>
 
@@ -162,7 +162,7 @@
                                            RenderOptions.BitmapScalingMode="HighQuality"
                                            Width="50"
                                            Height="52"
-                                           Source="{Binding NationIcon, Converter={StaticResource ImagePathConverter}}" />
+                                           Source="{Binding NationIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
                                 </Grid>
                             </Border>
                         </StackPanel>
@@ -182,19 +182,19 @@
 
                         <ScrollViewer>
                             <StackPanel Margin="20 10 20 0">
-                                <StackPanel Visibility="{Binding DropLocation, Converter={StaticResource VisibilityConverter}}">
+                                <StackPanel Visibility="{Binding DropLocation, Converter={StaticResource VisibilityConverter}, IsAsync=True, Mode=OneWay}">
                                     <TextBlock Text="Drop Location"
                                                Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
                                                FontWeight="Medium" FontSize="25" Margin="5 0" />
                                     <Border BorderBrush="{DynamicResource PrimaryHueLightForegroundBrush}"
                                             BorderThickness="0 0 0 1"
                                             Margin="0 5 0 5" />
-                                    <TextBlock TextWrapping="Wrap" Text="{Binding DropLocation}" FontWeight="Normal"
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding DropLocation, IsAsync=True, Mode=OneWay}" FontWeight="Normal"
                                                Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
                                                Padding="5 5 5 20" />
                                 </StackPanel>
 
-                                <StackPanel Visibility="{Binding Notes, Converter={StaticResource VisibilityConverter}}">
+                                <StackPanel Visibility="{Binding Notes, Converter={StaticResource VisibilityConverter}, IsAsync=True, Mode=OneWay}">
                                     <TextBlock Text="Notes"
                                                Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
                                                FontWeight="Medium" FontSize="25" Margin="5 0" />
@@ -202,7 +202,7 @@
                                             BorderThickness="0 0 0 1"
                                             Margin="0 5 0 5" />
 
-                                    <TextBlock TextWrapping="Wrap" Text="{Binding Notes}" FontWeight="Normal"
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Notes, IsAsync=True, Mode=OneWay}" FontWeight="Normal"
                                                Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
                                                Padding="5" />
                                 </StackPanel>
@@ -227,7 +227,7 @@
                                     BorderThickness="0 0 0 1"
                                     Margin="0 5 0 0" />
 
-                            <ListView ItemsSource="{Binding StatsList}" Margin="7 0 7 0"
+                            <ListView ItemsSource="{Binding StatsList, IsAsync=True, Mode=OneWay}" Margin="7 0 7 0"
                                       SizeChanged="StatsList_OnSizeChanged">
                                 <ListView.View>
                                     <GridView AllowsColumnReorder="False">
@@ -239,9 +239,9 @@
                                                                VerticalAlignment="Center"
                                                                Height="20" Width="20"
                                                                Margin="5 0 5 0"
-                                                               Visibility="{Binding Icon, Converter={StaticResource VisibilityConverter}}"
-                                                               Source="{Binding Icon, Converter={StaticResource ImagePathConverter}}" />
-                                                        <TextBlock Margin="5 0" Text="{Binding Name}"
+                                                               Visibility="{Binding Icon, Converter={StaticResource VisibilityConverter}, IsAsync=True, Mode=OneWay}"
+                                                               Source="{Binding Icon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                                        <TextBlock Margin="5 0" Text="{Binding Name, IsAsync=True, Mode=OneWay}"
                                                                    VerticalAlignment="Center"
                                                                    FontWeight="Normal" />
                                                     </StackPanel>
@@ -253,13 +253,13 @@
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding DescriptionFirstPart}" FontWeight="Normal"
+                                                        <TextBlock Text="{Binding DescriptionFirstPart, IsAsync=True, Mode=OneWay}" FontWeight="Normal"
                                                                    VerticalAlignment="Center"/>
                                                         <materialDesign:PackIcon Kind="ChevronTripleRight" Margin="5 0 5 0"
                                                                                  VerticalAlignment="Center"
                                                                                  Visibility="{Binding DescriptionSecondPart, 
-                                                                                Converter={StaticResource VisibilityConverter}}"/>
-                                                        <TextBlock Text="{Binding DescriptionSecondPart}" 
+                                                                                Converter={StaticResource VisibilityConverter}, IsAsync=True, Mode=OneWay}"/>
+                                                        <TextBlock Text="{Binding DescriptionSecondPart, IsAsync=True, Mode=OneWay}" 
                                                                    VerticalAlignment="Center" FontWeight="Normal"/>
                                                     </StackPanel>
                                                 </DataTemplate>
@@ -281,7 +281,7 @@
                                     BorderThickness="0 0 0 1"
                                     Margin="0 5 0 5" />
 
-                            <ItemsControl ItemsSource="{Binding UsedByList}" Margin="7 0 7 0">
+                            <ItemsControl ItemsSource="{Binding UsedByList, IsAsync=True, Mode=OneWay}" Margin="7 0 7 0">
                                 <ItemsControl.Resources>
                                     <Style TargetType="materialDesign:PackIcon">
                                         <Setter Property="Foreground" Value="Gray" />
@@ -304,10 +304,10 @@
                                             <DockPanel>
                                                 <Image RenderOptions.BitmapScalingMode="HighQuality"
                                                        Height="18" Width="30"
-                                                       Source="{Binding Icon, Converter={StaticResource ImagePathConverter}}" />
-                                                <TextBlock Margin="5 0" Text="{Binding Name}"
+                                                       Source="{Binding Icon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                                <TextBlock Margin="5 0" Text="{Binding Name, IsAsync=True, Mode=OneWay}"
                                                            FontWeight="Normal" />
-                                                <materialDesign:PackIcon Kind="{Binding Kind}" ToolTip="{Binding Note}"
+                                                <materialDesign:PackIcon Kind="{Binding Kind, IsAsync=True, Mode=OneWay}" ToolTip="{Binding Note, IsAsync=True, Mode=OneWay}"
                                                                          Background="Transparent"
                                                                          HorizontalAlignment="Right" />
                                             </DockPanel>

@@ -1,9 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using azurlane_wiki_app.Annotations;
+using azurlane_wiki_app.Data;
 using azurlane_wiki_app.Data.Tables;
 
 namespace azurlane_wiki_app.PageEquipmentList.Items
 {
-    public abstract class BaseEquipmentItem
+    public class BaseEquipmentItem : INotifyPropertyChanged
     {
         protected BaseEquipmentItem(Equipment equipment)
         {
@@ -33,6 +38,26 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             this.Tech = equipment.FK_Tech.Name;
             this.Rarity = rarity;
             this.Stars = equipment.Stars ?? 0;
+            this.DisplayMaxStats = true;
+
+            using(CargoContext cargoContext = new CargoContext())
+            {
+                this.IsMaxRarity = equipment.Stars == cargoContext.ShipGirlsEquipment
+                    .Where(equip => equip.Name == equipment.Name).Max(equip => equip.Stars);
+            }
+        }
+
+        protected T Swap<T>(T prop, ref T bufferField)
+        {
+            var buf = bufferField;
+            bufferField = prop;
+
+            return buf;
+        }
+
+        public virtual void ChangeStats()
+        {
+            this.DisplayMaxStats = !this.DisplayMaxStats;
         }
 
         public int Id { get; set; }
@@ -44,5 +69,16 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         public string Nationality { get; set; }
         public string NationalityIcon { get; set; }
         public string Type { get; set; }
+
+        public bool IsMaxRarity;
+        protected bool DisplayMaxStats;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

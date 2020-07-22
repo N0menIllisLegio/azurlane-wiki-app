@@ -108,6 +108,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="VirtualizingWrapPanel, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\VirtualizingWrapPanel.1.5.0\lib\net45\VirtualizingWrapPanel.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -145,15 +148,20 @@
     <Compile Include="ImageChecker.cs" />
     <Compile Include="PageEquipment\EquipmentStats.cs" />
     <Compile Include="PageEquipment\EquipmentUsedBy.cs" />
+    <Compile Include="PageShipGirlList\BaseShipGirlListViewModel.cs" />
+    <Compile Include="PageShipGirlList\GraphicalShipGirlListPage.xaml.cs">
+      <DependentUpon>GraphicalShipGirlListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageShipGirlList\GraphicalShipGirlListPageViewModel.cs" />
     <Compile Include="PageShipGirlList\Items\BaseShipGirlItem.cs" />
     <Compile Include="PageShipGirlList\Items\GraphicShipGirlItem.cs" />
     <Compile Include="PageShipGirlList\IconConverter.cs" />
-    <Compile Include="PageShipGirlList\ShipGirlListPage.xaml.cs">
-      <DependentUpon>ShipGirlListPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PageShipGirlList\ShipGirlListPageViewModel.cs" />
     <Compile Include="PageShipGirlList\ShipGirlSorters.cs" />
     <Compile Include="PageShipGirlList\Items\TableShipGirlItem.cs" />
+    <Compile Include="PageShipGirlList\TableShipGirlListPage.xaml.cs">
+      <DependentUpon>TableShipGirlListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageShipGirlList\TableShipGirlListPageViewModel.cs" />
     <Compile Include="TextBoxEnterKeyUpdateBehavior.cs" />
     <Compile Include="PageShipGirl\DropItem.cs" />
     <Compile Include="PageShipGirl\EquipmentItem.cs" />
@@ -216,15 +224,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PageShipGirlList\GraphicalListTemplate.xaml">
+    <Page Include="PageShipGirlList\GraphicalShipGirlListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PageShipGirlList\ShipGirlListPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PageShipGirlList\TableShipGirlTemplate.xaml">
+    <Page Include="PageShipGirlList\TableShipGirlListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

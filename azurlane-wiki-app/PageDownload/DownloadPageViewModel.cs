@@ -163,7 +163,8 @@ namespace azurlane_wiki_app.PageDownload
 
                     if (mainWindow != null)
                     {
-                        mainWindow.ShipGirlListPageVM = new ShipGirlListPageViewModel();
+                        mainWindow.GraphicalShipGirlListPageVM = new GraphicalShipGirlListPageViewModel();
+                        mainWindow.TableShipGirlListPageVM = new TableShipGirlListPageViewModel();
                         mainWindow.EquipmentListPageVM = new EquipmentListPageViewModel();
                     }
                     
@@ -179,7 +180,7 @@ namespace azurlane_wiki_app.PageDownload
             {
                 if (!Downloading)
                 {
-                    Navigation.Navigate(new ShipGirlListPage(true));
+                    Navigation.Navigate(new GraphicalShipGirlListPage());
                 }
                 else
                 {
@@ -191,7 +192,7 @@ namespace azurlane_wiki_app.PageDownload
             {
                 if (!Downloading)
                 {
-                    Navigation.Navigate(new ShipGirlListPage(false));
+                    Navigation.Navigate(new TableShipGirlListPage());
                 }
                 else
                 {

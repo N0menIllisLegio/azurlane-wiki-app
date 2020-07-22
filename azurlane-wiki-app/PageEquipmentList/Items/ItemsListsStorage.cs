@@ -1,9 +1,20 @@
 ﻿using azurlane_wiki_app.Data;
 using azurlane_wiki_app.Data.Tables;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks.Dataflow;
+using System.Data.Entity;
 
 namespace azurlane_wiki_app.PageEquipmentList.Items
 {
+    public struct ArmourModifier
+    {
+        public double Light;
+        public double Medium;
+        public double Heavy;
+        public double ShellSpeed;
+    }
+
     public class ItemsListsStorage
     {
         private List<MainGun> MainGuns { get; set; } = new List<MainGun>();
@@ -83,20 +94,32 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             {
                 List<Equipment> equipment = new List<Equipment>();
 
-                foreach (string dbType in dbTypes)
-                {
-                    var temp = cargoContext.EquipmentTypes.Find(dbType)?.EquipmentList;
+                var temp = cargoContext.ShipGirlsEquipment.Where(e => dbTypes.Contains(e.Type))
+                    .Include(e => e.FK_Tech)
+                    .Include(e => e.FK_Nationality)
+                    .Include(e => e.FK_Nationality.FK_Icon)
+                    .Include(e => e.FK_Type);
 
-                    if (temp != null)
-                    {
-                        equipment.AddRange(temp);
-                    }
+                if (temp != null)
+                {
+                    equipment.AddRange(temp);
                 }
+                
+
+                ActionBlock<Equipment> loadBlock = new ActionBlock<Equipment>(
+                    (equip) =>
+                    {
+                        AddItemToList(equip, equip.FK_Type.Name);
+                    });
 
                 foreach (Equipment equip in equipment)
                 {
-                    AddItemToList(equip, equip.FK_Type.Name);
+                    //AddItemToList(equip, equip.FK_Type.Name);
+                    loadBlock.Post(equip);
                 }
+
+                loadBlock.Complete();
+                loadBlock.Completion.Wait();
             }
         }
 
@@ -144,6 +167,14 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             MainGuns.Clear();
             Planes.Clear();
             AswItems.Clear();
+        }
+
+        public void ChangeCurrentListStats(string type)
+        {
+            List<BaseEquipmentItem> list = (GetList(type) as IEnumerable<object>)?
+                .Cast<BaseEquipmentItem>()?.ToList();
+
+            list?.ForEach(item => item.ChangeStats());
         }
     }
 }
