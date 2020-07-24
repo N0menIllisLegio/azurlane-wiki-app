@@ -174,7 +174,8 @@
                         SelectionUnit="Cell"
                         AutoGenerateColumns="False"
                         VirtualizingPanel.ScrollUnit="Pixel"
-                        VirtualizingPanel.VirtualizationMode="Recycling">
+                        VirtualizingPanel.VirtualizationMode="Recycling"
+                       >
                         <DataGrid.Resources>
                             <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MyDataGridCell}"/>
 
@@ -257,8 +258,6 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-
-
                             <DataGridTemplateColumn Header="Type" SortMemberPath="Type" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -288,7 +287,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Rarity" SortMemberPath="Rarity" CanUserSort="True">
+                            <DataGridTemplateColumn Header="Rarity" SortMemberPath="RaritySorting" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="Regular" Text="{Binding Rarity, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center" />

@@ -1,5 +1,6 @@
 ﻿using azurlane_wiki_app.Data.Tables;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -27,6 +28,22 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
         public int Torpedo { get; set; }
         public int Aviation { get; set; }
         public int AA { get; set; }
+
+
+
+        // For sorting on ShipGirlList Table
+        public int RaritySorting { get; set; }
+
+        private readonly Dictionary<string, int> Rarities = new Dictionary<string, int>
+        {
+            { "Normal", 1 },
+            { "Rare", 2 },
+            { "Elite", 3 },
+            { "Super Rare", 4 },
+            { "Ultra Rare", 5 },
+            { "Priority", 4 },
+            { "Decisive", 5 }
+        };
 
         public TableShipGirlItem(ShipGirl shipGirl) : base(shipGirl)
         {
@@ -56,6 +73,15 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
             Evasion = shipGirl.Evade120 ?? 0;
             Torpedo = shipGirl.Torp120 ?? 0;
             Firepower = shipGirl.Fire120 ?? 0;
+
+            if (Rarities.ContainsKey(Rarity))
+            {
+                RaritySorting = Rarities[Rarity];
+            }
+            else
+            {
+                RaritySorting = 0;
+            }
         }
     }
 }
