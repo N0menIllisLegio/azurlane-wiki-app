@@ -96,7 +96,9 @@ namespace azurlane_wiki_app.PageEquipmentList
                 CellStyle = cellStyle,
                 MaxWidth = columnName.Contains("Note") ? 300 : Double.PositiveInfinity,
                 HeaderTemplate = new DataTemplate { VisualTree = headerTemplate },
-                HeaderStyle = headerStyle
+                HeaderStyle = headerStyle,
+                CanUserSort = true,
+                SortMemberPath = columnName
             };
 
             e.Column = col;

@@ -181,6 +181,7 @@
                     SelectionUnit="Cell"
                     AutoGenerateColumns="True"
                     AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
+                    
                     VirtualizingPanel.ScrollUnit="Pixel"
                     VirtualizingPanel.VirtualizationMode="Recycling">
 
@@ -195,10 +196,11 @@
                     </DataGrid.Resources>
 
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="Icon">
+                        <DataGridTemplateColumn Header="Icon" CanUserSort="False">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border Padding="1" Margin="3" Background="Black">
+                                    <Border Padding="1" Margin="3" Background="Black" VerticalAlignment="Center"
+                                            HorizontalAlignment="Center">
                                         <Border Padding="1">
                                             <Border.Background>
                                                 <MultiBinding Converter="{StaticResource ColorConverter}"
@@ -226,7 +228,7 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Name" SortMemberPath="." CanUserSort="True" x:Name="NameColumn">
+                        <DataGridTemplateColumn Header="Name" SortMemberPath="Name" CanUserSort="True" x:Name="NameColumn">
                             <DataGridTemplateColumn.CellStyle>
                                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MyDataGridCell}">
                                     <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignDivider}"/>
@@ -250,7 +252,7 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Tech" SortMemberPath="." CanUserSort="True">
+                        <DataGridTemplateColumn Header="Tech" SortMemberPath="Tech" CanUserSort="True">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock FontWeight="Regular" Text="{Binding Tech}" VerticalAlignment="Center" />
@@ -258,7 +260,7 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Stars" SortMemberPath="." CanUserSort="True">
+                        <DataGridTemplateColumn Header="Stars" SortMemberPath="Stars" CanUserSort="True">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock FontWeight="Regular" Text="{Binding Stars}" VerticalAlignment="Center" />
@@ -266,7 +268,7 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Nationality">
+                        <DataGridTemplateColumn Header="Nationality" SortMemberPath="Nationality" CanUserSort="True">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Image RenderOptions.BitmapScalingMode="HighQuality"

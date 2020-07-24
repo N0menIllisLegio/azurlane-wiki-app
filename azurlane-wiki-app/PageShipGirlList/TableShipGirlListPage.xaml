@@ -195,7 +195,7 @@
                         </DataGrid.Resources>
 
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Icon">
+                            <DataGridTemplateColumn Header="Icon" CanUserSort="False">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Border Padding="1" Margin="3" Background="Black">
@@ -223,7 +223,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Name" SortMemberPath="." CanUserSort="True" MinWidth="150">
+                            <DataGridTemplateColumn Header="Name" SortMemberPath="Name" CanUserSort="True" MinWidth="150">
                                 <DataGridTemplateColumn.CellStyle>
                                     <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MyDataGridCell}">
                                         <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignDivider}"/>
@@ -249,7 +249,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="ID" SortMemberPath="." CanUserSort="True" Width="100">
+                            <DataGridTemplateColumn Header="ID" SortMemberPath="ShipID" CanUserSort="True" Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="Regular" Text="{Binding ShipID, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center" />
@@ -257,9 +257,9 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            
 
-                            <DataGridTemplateColumn Header="Type">
+
+                            <DataGridTemplateColumn Header="Type" SortMemberPath="Type" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="Regular" Text="{Binding Type, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center" />
@@ -267,7 +267,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Retrofit">
+                            <DataGridTemplateColumn Header="Retrofit" SortMemberPath="Remodel" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <materialDesign:PackIcon
@@ -277,7 +277,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Nationality">
+                            <DataGridTemplateColumn Header="Nationality" SortMemberPath="Nationality" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Image RenderOptions.BitmapScalingMode="HighQuality"
@@ -288,7 +288,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Rarity">
+                            <DataGridTemplateColumn Header="Rarity" SortMemberPath="Rarity" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="Regular" Text="{Binding Rarity, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center" />
@@ -296,7 +296,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Health">
+                            <DataGridTemplateColumn Header="Health" SortMemberPath="Health" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="Regular" Text="{Binding Health, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center" />
@@ -304,7 +304,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Firepower">
+                            <DataGridTemplateColumn Header="Firepower" SortMemberPath="Firepower" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="Regular" Text="{Binding Firepower, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center" />
@@ -312,7 +312,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="AA">
+                            <DataGridTemplateColumn Header="AA" SortMemberPath="AA" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="Regular" Text="{Binding AA, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center" />
@@ -320,7 +320,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Aviation">
+                            <DataGridTemplateColumn Header="Aviation" SortMemberPath="Aviation" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="Regular" Text="{Binding Aviation, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center" />
@@ -328,7 +328,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Torpedo">
+                            <DataGridTemplateColumn Header="Torpedo" SortMemberPath="Torpedo" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="Regular" Text="{Binding Torpedo, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center" />
@@ -336,7 +336,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Evasion">
+                            <DataGridTemplateColumn Header="Evasion" SortMemberPath="Evasion" CanUserSort="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock FontWeight="Regular" Text="{Binding Evasion, Mode=OneWay, IsAsync=True}" VerticalAlignment="Center" />
