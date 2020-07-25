@@ -146,16 +146,25 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Row="0"
-                     Width="200" Margin="20"
-                     materialDesign:HintAssist.Hint="Ship Name"
-                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                     VerticalAlignment="Center" Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}"
-                     HorizontalAlignment="Left">
-                        <i:Interaction.Behaviors>
-                            <azurlaneWikiApp:TextBoxEnterKeyUpdateBehavior />
-                        </i:Interaction.Behaviors>
-                    </TextBox>
+                    <DockPanel Grid.Row="0" Margin="20">
+                        <TextBox VerticalAlignment="Center" DockPanel.Dock="Left"
+                             materialDesign:HintAssist.Hint="Ship Name" Width="200" 
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}">
+                            <i:Interaction.Behaviors>
+                                <azurlaneWikiApp:TextBoxEnterKeyUpdateBehavior />
+                            </i:Interaction.Behaviors>
+                        </TextBox>
+
+                        <CheckBox Content="Retrofit" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="30 0 0 0"
+                                  IsChecked="{Binding Retrofited}"/>
+
+                        <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <RadioButton GroupName="Stats" Content="Initial Level" />
+                            <RadioButton GroupName="Stats" Content="Max Level" IsChecked="{Binding StatsMaxLevel}"/>
+                        </StackPanel>
+                    </DockPanel>
+                    
 
                     <DataGrid
                         FrozenColumnCount="2"

@@ -7,6 +7,7 @@
     <local:ColorConverter x:Key="ColorConverter" />
     <local:VisibilityConverter x:Key="VisibilityConverter" />
     <local:ImagePathConverter x:Key="ImagePathConverter" />
+    <local:RetrofitRarityConverter x:Key="RetrofitRarityConverter" />
     <pageShipGirl:StarsConverter x:Key="StarsConverter" />
 
     <!--ScrollBar-->

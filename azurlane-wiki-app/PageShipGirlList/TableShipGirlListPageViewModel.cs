@@ -13,6 +13,9 @@ namespace azurlane_wiki_app.PageShipGirlList
     public class TableShipGirlListPageViewModel : BaseShipGirlListViewModel
     {
         private ObservableCollection<TableShipGirlItem> _tableList;
+        private bool statsMaxLevel = true;
+        private bool retrofited = false;
+
         private ObservableCollection<TableShipGirlItem> tableList
         {
             get => _tableList;
@@ -20,6 +23,31 @@ namespace azurlane_wiki_app.PageShipGirlList
             {
                 _tableList = value;
                 BindingOperations.EnableCollectionSynchronization(_tableList, _personCollectionLock);
+            }
+        }
+
+        public bool StatsMaxLevel 
+        { 
+            get => statsMaxLevel;
+            set
+            {
+                if (statsMaxLevel != value)
+                {
+                    statsMaxLevel = value;
+                    OnPropertyChanged(nameof(StatsMaxLevel));
+                    InvertStats();
+                }
+            }
+        }
+
+        public bool Retrofited 
+        { 
+            get => retrofited;
+            set
+            {            
+                retrofited = value;
+                OnPropertyChanged(nameof(Retrofited));
+                InvertRetrofit();
             }
         }
 
@@ -41,19 +69,38 @@ namespace azurlane_wiki_app.PageShipGirlList
                         tableList.Add(tableGirl);
                     });
 
-                using (_shipGirlsList.DeferRefresh())
+                foreach (ShipGirl shipGirl in shipGirls)
                 {
-                    foreach (ShipGirl shipGirl in shipGirls)
-                    {
-                        loadBlock.Post(shipGirl);
-                    }
-
-                    loadBlock.Complete();
-                    loadBlock.Completion.Wait();
+                    loadBlock.Post(shipGirl);
                 }
+
+                loadBlock.Complete();
+                loadBlock.Completion.Wait();
             }
 
             _shipGirlsList.Source = tableList;
+        }
+
+        private void InvertRetrofit()
+        {
+            using (_shipGirlsList.DeferRefresh())
+            {
+                foreach (var shipGirl in tableList.Where(sg => sg.Remodel))
+                {
+                    shipGirl.InvertRetrofit();
+                }
+            }
+        }
+
+        private void InvertStats()
+        {
+            using (_shipGirlsList.DeferRefresh())
+            {
+                foreach (var shipGirl in tableList)
+                {
+                    shipGirl.InvertStats();
+                }
+            }
         }
     }
 }

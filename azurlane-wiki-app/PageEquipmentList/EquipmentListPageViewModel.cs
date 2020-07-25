@@ -19,6 +19,7 @@ namespace azurlane_wiki_app.PageEquipmentList
         private bool _maxStats = true;
         private bool _maxRarity = false;
         private readonly CollectionViewSource _equipmentListViewSource = new CollectionViewSource();
+        private ItemsListsStorage ItemsListsStorage = new ItemsListsStorage();
 
         #region Bindings
 
@@ -84,14 +85,14 @@ namespace azurlane_wiki_app.PageEquipmentList
             }
         }
 
-        #endregion
+        
 
         public RelayCommand OpenEquipmentPageCommand { get; set; }
         public RelayCommand OpenGraphicalShipGirlPageCommand { get; set; }
         public RelayCommand OpenTableShipGirlPageCommand { get; set; }
         public RelayCommand OpenDownloadPageCommand { get; set; }
 
-        private ItemsListsStorage ItemsListsStorage { get; set; } = new ItemsListsStorage();
+        #endregion
 
         public EquipmentListPageViewModel()
         {
@@ -159,6 +160,8 @@ namespace azurlane_wiki_app.PageEquipmentList
             BaseEquipmentItem baseEquipment = item as BaseEquipmentItem;
             return baseEquipment.Name.ToLower().Contains(_filterString.ToLower()) && (baseEquipment.IsMaxRarity || !MaxRarity);
         }
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -156,6 +156,7 @@
     <Compile Include="PageShipGirlList\Items\BaseShipGirlItem.cs" />
     <Compile Include="PageShipGirlList\Items\GraphicShipGirlItem.cs" />
     <Compile Include="PageShipGirlList\IconConverter.cs" />
+    <Compile Include="RetrofitRarityConverter.cs" />
     <Compile Include="PageShipGirlList\ShipGirlSorters.cs" />
     <Compile Include="PageShipGirlList\Items\TableShipGirlItem.cs" />
     <Compile Include="PageShipGirlList\TableShipGirlListPage.xaml.cs">
