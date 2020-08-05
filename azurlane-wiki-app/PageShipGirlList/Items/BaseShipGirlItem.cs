@@ -9,15 +9,20 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
     {
         private string rarity;
         private bool retrofited;
-        public bool Retrofited 
-        { 
+        private string rarityIcon;
+
+        private string bufRarityIcon;
+        private string bufRarity;
+
+        public bool Retrofited
+        {
             get => retrofited;
             set
             {
                 retrofited = value;
                 OnPropertyChanged(nameof(Retrofited));
             }
-        
+
         }
         public string Name { get; set; }
         public string ShipID { get; set; }
@@ -32,11 +37,20 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
                 OnPropertyChanged(nameof(Rarity));
             }
         }
-        public string RarityIcon { get; set; }
+        public string RarityIcon 
+        { 
+            get => rarityIcon;
+            set
+            {
+                rarityIcon = value;
+                OnPropertyChanged(nameof(RarityIcon));
+            }
+        }
         public string NationalityIcon { get; set; }
         public string Nationality { get; set; }
+        public bool Remodel { get; set; }
 
-        public BaseShipGirlItem(ShipGirl shipGirl)
+        public BaseShipGirlItem(ShipGirl shipGirl, string name = null, string iconPath = null)
         {
             ShipID = shipGirl.ShipID;
             Name = shipGirl.Name;
@@ -46,7 +60,26 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
             Nationality = shipGirl.FK_Nationality.Name;
             TypeIcon = shipGirl.FK_ShipType.FK_Icon.FileName;
             Type = shipGirl.FK_ShipType.Name;
+            Remodel = shipGirl.Remodel == "t";
+
+            if (Remodel)
+            {
+                bufRarity = name;
+                bufRarityIcon = iconPath;
+            }
+
             Retrofited = false;
+        }
+
+        public virtual void InvertRetrofit()
+        {
+            if (Remodel)
+            {
+                Retrofited = !Retrofited;
+
+                Rarity = Swap(Rarity, ref bufRarity);
+                RarityIcon = Swap(RarityIcon, ref bufRarityIcon);
+            }
         }
 
         protected T Swap<T>(T prop, ref T bufField)

@@ -10,8 +10,6 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
     {
         private BitmapImage imageShipyardIcon;
 
-        //public string ImageShipyardIcon { get; set; }
-        //public string ImageShipyardIconKai { get; set; }
         public BitmapImage ImageShipyardIcon 
         { 
             get => imageShipyardIcon;
@@ -22,9 +20,9 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
             }
         }
 
-        //public BitmapImage ImageShipyardIconKai { get; set; } 
+        public BitmapImage bufImageShipyardIcon;
 
-        public GraphicShipGirlItem(ShipGirl shipGirl) : base(shipGirl)
+        public GraphicShipGirlItem(ShipGirl shipGirl, string name = null, string iconPath = null) : base(shipGirl, name, iconPath)
         {
             BitmapImage image;
 
@@ -42,21 +40,34 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
                     new Action(() => ImageShipyardIcon = image));
 
-            //if (!string.IsNullOrEmpty(shipGirl.ImageShipyardIconKai))
-            //{
-            //    try
-            //    {
-            //        ImageShipyardIconKai = new BitmapImage(new Uri(@"pack://siteoforigin:,,,"
-            //                                              + shipGirl.ImageShipyardIconKai.Remove(0, 1)));
-            //    }
-            //    catch
-            //    {
-            //        ImageShipyardIconKai = ImagePathConverter.ImagePlaceholder;
-            //    }
-            //}
+            if (Remodel)
+            {
+                BitmapImage imageKai;
 
-            //ImageShipyardIcon = shipGirl.ImageShipyardIcon;
-            //ImageShipyardIconKai = shipGirl.ImageShipyardIconKai;
+                try
+                {
+                    imageKai = new BitmapImage(new Uri(@"pack://siteoforigin:,,,"
+                                                          + shipGirl.ImageShipyardIconKai.Remove(0, 1)));
+                }
+                catch
+                {
+                    imageKai = ImagePathConverter.ImagePlaceholder;
+                }
+
+                imageKai.Freeze();
+                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
+                        new Action(() => bufImageShipyardIcon = imageKai));
+            }
+        }
+
+        public override void InvertRetrofit()
+        {
+            base.InvertRetrofit();
+
+            if (Remodel)
+            {
+                ImageShipyardIcon = Swap(ImageShipyardIcon, ref bufImageShipyardIcon);
+            }
         }
     }
 }

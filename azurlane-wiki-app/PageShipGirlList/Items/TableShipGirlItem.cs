@@ -34,8 +34,7 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
                 shipGirlIcon = value;
                 OnPropertyChanged(nameof(ShipGirlIcon));
             }
-        }
-        public bool Remodel { get; set; }
+        }        
         public int Firepower 
         { 
             get => firepower;
@@ -94,23 +93,7 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
         // For sorting on ShipGirlList Table
         public int RaritySorting { get; set; }
 
-        private readonly Dictionary<string, int> Rarities = new Dictionary<string, int>
-        {
-            { "Normal", 1 },
-            { "Rare", 2 },
-            { "Elite", 3 },
-            { "Super Rare", 4 },
-            { "Ultra Rare", 5 },
-            { "Priority", 4 },
-            { "Decisive", 5 }
-        };
-
-        private readonly List<string> RaritiesList = new List<string>
-        {
-            "Normal", "Rare", "Elite", "Super Rare", "Ultra Rare", "Priority", "Decisive"
-        };
-
-        public TableShipGirlItem(ShipGirl shipGirl) : base(shipGirl)
+        public TableShipGirlItem(ShipGirl shipGirl, string name = null, string iconPath = null) : base(shipGirl, name, iconPath)
         {
             BitmapImage image;
 
@@ -128,10 +111,7 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
 
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
                     new Action(() => ShipGirlIcon = image));
-
-            // ShipGirlIcon = shipGirl.ImageIcon;
-
-            Remodel = shipGirl.Remodel == "t";
+         
 
             Aviation = shipGirl.Air120 ?? 0;
             AA = shipGirl.AA120 ?? 0;
@@ -184,23 +164,12 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
             SetSortPriority();
         }
 
-        public void InvertRetrofit()
+        public override void InvertRetrofit()
         {
+            base.InvertRetrofit();
+
             if (Remodel)
             {
-                Retrofited = !Retrofited;
-
-                int currentRarity = RaritiesList.IndexOf(Rarity);
-
-                if (Retrofited)
-                {                 
-                    Rarity = RaritiesList[++currentRarity];
-                }
-                else
-                {
-                    Rarity = RaritiesList[--currentRarity];
-                }
-
                 SetSortPriority();
 
                 ShipGirlIcon = Swap(ShipGirlIcon, ref bufShipGirlIcon);
@@ -239,6 +208,17 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
 
         private void SetSortPriority()
         {
+            Dictionary<string, int> Rarities = new Dictionary<string, int>
+            {
+                { "Normal", 1 },
+                { "Rare", 2 },
+                { "Elite", 3 },
+                { "Super Rare", 4 },
+                { "Ultra Rare", 5 },
+                { "Priority", 4 },
+                { "Decisive", 5 }
+            };
+
             // SORT
             if (Rarities.ContainsKey(Rarity))
             {

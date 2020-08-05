@@ -84,6 +84,23 @@ namespace azurlane_wiki_app.PageShipGirlList
 
         #endregion
 
+        #region Retrofit
+
+        private bool retrofited = false;
+        public bool Retrofited
+        {
+            get => retrofited;
+            set
+            {
+                retrofited = value;
+                OnPropertyChanged(nameof(Retrofited));
+                InvertRetrofit();
+                _shipGirlsList.View.Refresh();
+            }
+        }
+
+        #endregion
+
         private ObservableCollection<GraphicShipGirlItem> _graphList;
         private ObservableCollection<GraphicShipGirlItem> graphList 
         { 
@@ -101,6 +118,8 @@ namespace azurlane_wiki_app.PageShipGirlList
 
             using (CargoContext cargoContext = new CargoContext())
             {
+                var lists = GetRaritiesLists();
+
                 List<ShipGirl> shipGirls = cargoContext.
                     ShipGirls.Where(sg => sg.FK_Rarity.Name != "Unreleased").
                     Include(sg => sg.FK_Rarity.FK_Icon).Include(sg => sg.FK_Nationality.FK_Icon).
@@ -109,7 +128,22 @@ namespace azurlane_wiki_app.PageShipGirlList
                 ActionBlock<ShipGirl> loadBlock = new ActionBlock<ShipGirl>(
                     (shipGirl) => 
                     {
-                        var graphGirl = new GraphicShipGirlItem(shipGirl);
+                        GraphicShipGirlItem graphGirl;
+
+                        if (shipGirl.Remodel == "t")
+                        {
+                            int currentRarityIndex = lists.rarityNames.IndexOf(shipGirl.Rarity);
+
+                            string retrofittedRarityName = lists.rarityNames[currentRarityIndex + 1];
+                            string retrofittedRarityIcon = lists.rarityIconsPaths[currentRarityIndex + 1];
+
+                            graphGirl = new GraphicShipGirlItem(shipGirl, retrofittedRarityName, retrofittedRarityIcon);
+                        }
+                        else
+                        {
+                            graphGirl = new GraphicShipGirlItem(shipGirl);
+                        }
+                        
                         graphList.Add(graphGirl);
                     });
 
@@ -128,6 +162,17 @@ namespace azurlane_wiki_app.PageShipGirlList
             _shipGirlsList.Source = graphList;
             GroupBySelectedItem = GroupByCollection[0];
             SortBySelectedItem = SortByCollection[0];
+        }
+
+        private void InvertRetrofit()
+        { 
+            using (_shipGirlsList.DeferRefresh())
+            {
+                foreach (var shipGirl in graphList.Where(sg => sg.Remodel))
+                {
+                    shipGirl.InvertRetrofit();
+                }
+            }
         }
     }
 }

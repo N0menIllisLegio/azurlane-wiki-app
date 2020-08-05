@@ -57,6 +57,8 @@ namespace azurlane_wiki_app.PageShipGirlList
 
             using (CargoContext cargoContext = new CargoContext())
             {
+                var lists = GetRaritiesLists();
+                
                 List<ShipGirl> shipGirls = cargoContext.
                     ShipGirls.Where(sg => sg.FK_Rarity.Name != "Unreleased").
                     Include(sg => sg.FK_Rarity.FK_Icon).Include(sg => sg.FK_Nationality.FK_Icon).
@@ -65,7 +67,22 @@ namespace azurlane_wiki_app.PageShipGirlList
                 ActionBlock<ShipGirl> loadBlock = new ActionBlock<ShipGirl>(
                     (shipGirl) =>
                     {
-                        var tableGirl = new TableShipGirlItem(shipGirl);
+                        TableShipGirlItem tableGirl;
+
+                        if (shipGirl.Remodel == "t")
+                        {
+                            int currentRarityIndex = lists.rarityNames.IndexOf(shipGirl.Rarity);
+
+                            string retrofittedRarityName = lists.rarityNames[currentRarityIndex + 1];
+                            string retrofittedRarityIcon = lists.rarityIconsPaths[currentRarityIndex + 1];
+
+                            tableGirl = new TableShipGirlItem(shipGirl, retrofittedRarityName, retrofittedRarityIcon);
+                        }
+                        else
+                        {
+                            tableGirl = new TableShipGirlItem(shipGirl);
+                        }
+
                         tableList.Add(tableGirl);
                     });
 

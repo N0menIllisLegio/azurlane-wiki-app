@@ -171,6 +171,8 @@
                             </ItemsPanelTemplate>
                         </ComboBox.ItemsPanel>
                     </ComboBox>
+
+                    <CheckBox Content="Retrofit" Margin="30 0 0 0" IsChecked="{Binding Retrofited}"/>
                 </StackPanel>
                 
                 <Border BorderBrush="{StaticResource MaterialDesignDivider}" 

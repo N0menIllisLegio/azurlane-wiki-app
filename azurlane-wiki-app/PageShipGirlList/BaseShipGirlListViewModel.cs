@@ -1,12 +1,15 @@
 ﻿using azurlane_wiki_app.Annotations;
+using azurlane_wiki_app.Data;
 using azurlane_wiki_app.PageDownload;
 using azurlane_wiki_app.PageEquipmentList;
 using azurlane_wiki_app.PageShipGirl;
 using azurlane_wiki_app.PageShipGirlList.Items;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
+using System.Windows.Documents;
 
 namespace azurlane_wiki_app.PageShipGirlList
 {
@@ -104,6 +107,34 @@ namespace azurlane_wiki_app.PageShipGirlList
                     Navigation.Navigate(new ShipGirlPage(), new ShipGirlPageViewModel(id));
                 }
             });
+        }
+
+        // Gets icons pathes for rarities in list.
+        // (Rarities in list, because of the retrofit order)
+        protected (List<string> rarityNames, List<string> rarityIconsPaths) GetRaritiesLists(List<string> raritiesNames = null)
+        {
+            List<string> raritiesIcons = new List<string>();
+
+            if (raritiesNames == null)
+            {
+                raritiesNames = new List<string>
+                {
+                    "Normal", "Rare", "Elite", "Super Rare", "Ultra Rare", "Priority", "Decisive"
+                };
+            }
+
+            using (CargoContext cargoContext = new CargoContext())
+            {
+                //List<Rarity> rarities = cargoContext.Rarities.ToList();
+
+                foreach (string rarityName in raritiesNames)
+                {
+                    raritiesIcons.Add(
+                        cargoContext.Rarities.Find(rarityName)?.FK_Icon.FileName ?? "");
+                }
+            }
+
+            return (raritiesNames, raritiesIcons);
         }
     }
 }
