@@ -1,4 +1,4 @@
-﻿using azurlane_wiki_app.Annotations;
+﻿using azurlane_wiki_app.Properties;
 using azurlane_wiki_app.Data.Downloaders;
 using azurlane_wiki_app.PageEquipmentList;
 using azurlane_wiki_app.PageShipGirlList;

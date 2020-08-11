@@ -7,14 +7,6 @@ using System.Data.Entity;
 
 namespace azurlane_wiki_app.PageEquipmentList.Items
 {
-    public struct ArmourModifier
-    {
-        public double Light;
-        public double Medium;
-        public double Heavy;
-        public double ShellSpeed;
-    }
-
     public class ItemsListsStorage
     {
         private List<MainGun> MainGuns { get; set; } = new List<MainGun>();

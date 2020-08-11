@@ -4,6 +4,14 @@ using System.ComponentModel;
 
 namespace azurlane_wiki_app.PageEquipmentList.Items
 {
+    public struct ArmourModifier
+    {
+        public double Light;
+        public double Medium;
+        public double Heavy;
+        public double ShellSpeed;
+    }
+
     public class MainGun : BaseEquipmentItem
     {
         private int bufDamage;

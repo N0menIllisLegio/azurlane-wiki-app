@@ -1,4 +1,4 @@
-﻿using azurlane_wiki_app.Annotations;
+﻿using azurlane_wiki_app.Properties;
 using azurlane_wiki_app.Data.Tables;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;

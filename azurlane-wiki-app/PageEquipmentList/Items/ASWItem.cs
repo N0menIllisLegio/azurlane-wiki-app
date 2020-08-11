@@ -66,6 +66,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         }
         public int Range { get; set; }
 
+        // Empty on wiki table
         //[DisplayName("AoE Radius")]
         //public int AoE { get; set; }
 

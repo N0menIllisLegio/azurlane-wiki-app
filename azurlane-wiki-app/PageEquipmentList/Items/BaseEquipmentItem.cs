@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using azurlane_wiki_app.Annotations;
+using azurlane_wiki_app.Properties;
 using azurlane_wiki_app.Data;
 using azurlane_wiki_app.Data.Tables;
 
