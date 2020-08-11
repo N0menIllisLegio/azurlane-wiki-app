@@ -831,8 +831,7 @@
                                             <materialDesign:PackIcon Grid.Row="4" Grid.Column="1"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
-                                                                     Kind="{Binding ExchangeConstructionIcon, IsAsync=True, Mode=OneWay}"
-                                                                     ToolTip="{Binding ExchangeConstructionNote, IsAsync=True, Mode=OneWay}" />
+                                                                     Kind="{Binding ExchangeConstructionIcon, IsAsync=True, Mode=OneWay}" />
 
                                             <Border BorderThickness="0 0 0 1"
                                                     Background="Transparent"
@@ -855,7 +854,7 @@
                                                     BorderBrush="{DynamicResource MaterialDesignDivider}"
                                                     Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" />
                                             <Border Background="Transparent"
-                                                    ToolTip="{Binding ExchangeConstructionIcon, IsAsync=True, Mode=OneWay}"
+                                                    ToolTip="{Binding ExchangeConstructionNote, IsAsync=True, Mode=OneWay}"
                                                     Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" />
                                         </Grid>
                                     </Border>
