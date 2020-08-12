@@ -114,6 +114,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9e7cd3b544a090dc, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.2.0.0\lib\net40\WpfAnimatedGif.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -163,6 +166,9 @@
       <DependentUpon>TableShipGirlListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="PageShipGirlList\TableShipGirlListPageViewModel.cs" />
+    <Compile Include="SplashScreen.xaml.cs">
+      <DependentUpon>SplashScreen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TextBoxEnterKeyUpdateBehavior.cs" />
     <Compile Include="PageShipGirl\DropItem.cs" />
     <Compile Include="PageShipGirl\EquipmentItem.cs" />
@@ -240,6 +246,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SplashScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -286,6 +296,32 @@
   <ItemGroup>
     <Resource Include="Resources\AppIcon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SplashScreenGifs\akagi-cooks.gif" />
+    <Resource Include="Resources\SplashScreenGifs\FDG.gif" />
+    <Resource Include="Resources\SplashScreenGifs\here-comes-akagi.gif" />
+    <Resource Include="Resources\SplashScreenGifs\mad-akagi.gif" />
+    <Resource Include="Resources\SplashScreenGifs\open-up.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SplashScreenGifs\loader.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SplashScreenGifs\akashi.gif" />
+    <Resource Include="Resources\SplashScreenGifs\amagi.gif" />
+    <Resource Include="Resources\SplashScreenGifs\enter.gif" />
+    <Resource Include="Resources\SplashScreenGifs\excited.gif" />
+    <Resource Include="Resources\SplashScreenGifs\gacha.gif" />
+    <Resource Include="Resources\SplashScreenGifs\gaming.gif" />
+    <Resource Include="Resources\SplashScreenGifs\hehe.gif" />
+    <Resource Include="Resources\SplashScreenGifs\loader_2.gif" />
+    <Resource Include="Resources\SplashScreenGifs\luffy.gif" />
+    <Resource Include="Resources\SplashScreenGifs\numba-wan.gif" />
+    <Resource Include="Resources\SplashScreenGifs\panic.gif" />
+    <Resource Include="Resources\SplashScreenGifs\portland.gif" />
+    <Resource Include="Resources\SplashScreenGifs\scared.gif" />
+    <Resource Include="Resources\SplashScreenGifs\uni.gif" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -301,4 +337,9 @@
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <Import Project="..\packages\MaterialDesignThemes.3.1.2\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.1.2\build\MaterialDesignThemes.targets')" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.112.2\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.112.2\build\net40\System.Data.SQLite.Core.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>; Move all assemblies and related files to lib folder
+ROBOCOPY "$(TargetDir) " "$(TargetDir)Libraries\ " /XF *.exe *.config *.manifest *.txt *.db /XD Libraries logs data Images /E /IS /MOVE
+if %25errorlevel%25 leq 4 exit 0 else exit %25errorlevel%25</PostBuildEvent>
+  </PropertyGroup>
 </Project>

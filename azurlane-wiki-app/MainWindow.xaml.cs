@@ -21,7 +21,6 @@ namespace azurlane_wiki_app
             InitializeComponent();
             Navigation.Service = Main.NavigationService;
 
-            // ViewModels loading should be hided by loading screen on startup
             TableShipGirlListPageVM = new TableShipGirlListPageViewModel();
             GraphicalShipGirlListPageVM = new GraphicalShipGirlListPageViewModel();
 
