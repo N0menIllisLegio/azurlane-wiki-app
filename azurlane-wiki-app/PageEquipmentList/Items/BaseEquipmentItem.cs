@@ -55,7 +55,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             return buf;
         }
 
-        public virtual void ChangeStats()
+        public virtual void ChangeStats(DPSData dpsData = null)
         {
             this.DisplayMaxStats = !this.DisplayMaxStats;
         }

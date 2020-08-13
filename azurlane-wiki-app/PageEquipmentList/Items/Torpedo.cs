@@ -1,5 +1,4 @@
 ﻿using azurlane_wiki_app.Data.Tables;
-using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace azurlane_wiki_app.PageEquipmentList.Items
@@ -42,50 +41,37 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             }
         }
 
-        public Torpedo(Equipment equipment) : base(equipment)
+        public Torpedo(Equipment equipment, DPSData dpsData) : base(equipment, dpsData)
         {
-            CalcDPS();
+            CalcDPS(dpsData);
         }
 
-        private void CalcDPS()
+        private void CalcDPS(DPSData dpsData)
         {
-            Dictionary<string, ArmourModifier> ArmourModifiers = new Dictionary<string, ArmourModifier>
-            {
-                { "Normal", new ArmourModifier {Light = .8, Medium = 1, Heavy = 1.3, ShellSpeed = 0 } },
-                { "Magnetic", new ArmourModifier {Light = .8, Medium = 1, Heavy = 1.3, ShellSpeed = 0 } },
-                { "Oxygen (Sakura)", new ArmourModifier {Light = .8, Medium = 1, Heavy = 1.3, ShellSpeed = 0 } }
-            };
+            ArmourModifier armourModifier = dpsData.GetTorpedoArmourModifier(Attr);
 
-            Dictionary<string, int> TorpedoSpeed = new Dictionary<string, int>
+            if (armourModifier == null)
             {
-                { "Normal", 30 },
-                { "Magnetic", 20 },
-                { "Oxygen (Sakura)", 40 }
-            };
-
-            string ammo = Attr;
-
-            if (!ArmourModifiers.ContainsKey(ammo))
-            {
-                ammo = "Normal";
+                PreloadDPSL = PreloadDPSM = PreloadDPSH = "Error:\nUnknown Attr.";
             }
+            else
+            {
+                double raw = Damage * Rnd / 60.0;
+                double l = Damage * Rnd * armourModifier.Light / Reload;
+                double m = Damage * Rnd * armourModifier.Medium / Reload;
+                double h = Damage * Rnd * armourModifier.Heavy / Reload;
 
-            ArmourModifier armourModifier = ArmourModifiers[ammo];
-
-            double raw = Damage * Rnd / 60.0;
-            double l = Damage * Rnd * armourModifier.Light / Reload;
-            double m = Damage * Rnd * armourModifier.Medium / Reload;
-            double h = Damage * Rnd * armourModifier.Heavy / Reload;
-
-            PreloadDPSL = string.Format("{0:0.00}", l + raw * armourModifier.Light);
-            PreloadDPSM = string.Format("{0:0.00}", m + raw * armourModifier.Medium);
-            PreloadDPSH = string.Format("{0:0.00}", h + raw * armourModifier.Heavy);
+                PreloadDPSL = string.Format("{0:0.00}", l + raw * armourModifier.Light);
+                PreloadDPSM = string.Format("{0:0.00}", m + raw * armourModifier.Medium);
+                PreloadDPSH = string.Format("{0:0.00}", h + raw * armourModifier.Heavy);
+            }
         }
 
-        public override void ChangeStats()
+        public override void ChangeStats(DPSData dpsData)
         {
-            base.ChangeStats();
-            CalcDPS();
+            base.ChangeStats(dpsData);
+
+            CalcDPS(dpsData);
         }
     }
 }

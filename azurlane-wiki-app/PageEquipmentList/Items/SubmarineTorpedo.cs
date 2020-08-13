@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using azurlane_wiki_app.Data.Tables;
 using System.ComponentModel;
-using azurlane_wiki_app.Data.Tables;
 
 namespace azurlane_wiki_app.PageEquipmentList.Items
 {
@@ -9,13 +7,16 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
     {
         private int damage;
         private float reload;
+        private int sprd;
+        private int angle;
+
         private int bufDamage;
         private float bufReload;
+
         private string dPSL;
         private string dPSM;
         private string dPSH;
 
-        //Surface DPS
         [DisplayName("Surface DPS\nLight armour")]
         public string DPSL 
         { 
@@ -69,66 +70,53 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             }
         }
         public int Rng { get; set; }
-        public string Sprd { get; set; }
-        public string Angle { get; set; }
+        public string Sprd { get => $"{sprd}°"; }
+        public string Angle { get => $"{angle}°"; }
         public string Attr { get; set; }
 
-        public SubmarineTorpedo(Equipment equipment) : base(equipment)
+        public SubmarineTorpedo(Equipment equipment, DPSData dpsData) : base(equipment)
         {
             Torp = equipment.Torpedo ?? 0;
             Rnd = equipment.Number ?? 0;
+            Rng = equipment.WepRange ?? 0;
+            sprd = equipment.Spread ?? 0;
+            angle = equipment.Angle ?? 0;
+            Attr = equipment.Characteristic;
 
             Damage = equipment.DamageMax ?? 0;
             Reload = equipment.RoFMax ?? 0;
             bufDamage = equipment.Damage ?? 0;
             bufReload = equipment.RoF ?? 0;
 
-            Rng = equipment.WepRange ?? 0;
-            Sprd = $"{equipment.Spread ?? 0}°";
-            Angle = $"{equipment.Angle ?? 0}°";
-            Attr = equipment.Characteristic;
-
-            CalcDPS();
+            CalcDPS(dpsData);
         }
 
-        private void CalcDPS()
+        private void CalcDPS(DPSData dpsData)
         {
-            Dictionary<string, ArmourModifier> ArmourModifiers = new Dictionary<string, ArmourModifier>
-            {
-                { "Normal", new ArmourModifier {Light = .8, Medium = 1, Heavy = 1.3, ShellSpeed = 0 } },
-                { "Magnetic", new ArmourModifier {Light = .8, Medium = 1, Heavy = 1.3, ShellSpeed = 0 } },
-                { "Oxygen (Type 95)", new ArmourModifier {Light = .8, Medium = 1, Heavy = 1.3, ShellSpeed = 0 } }
-            };
+            ArmourModifier armourModifier = dpsData.GetTorpedoArmourModifier(Attr);
 
-            Dictionary<string, int> TorpedoSpeed = new Dictionary<string, int>
+            if (armourModifier == null)
             {
-                { "Normal", 30 },
-                { "Magnetic", 20 },
-                { "Oxygen (Type 95)", 30 } // + accelirating
-            };
-
-            string ammo = Attr;
-
-            if (!ArmourModifiers.ContainsKey(ammo))
-            {
-                ammo = "Normal";
+                DPSL = DPSM = DPSH = "Error:\nUnknown Attr.";
             }
+            else
+            {
+                float raw = Damage * Rnd / Reload;
 
-            ArmourModifier armourModifier = ArmourModifiers[ammo];
-
-            float raw = Damage * Rnd / Reload;
-
-            DPSL = string.Format("{0:0.00}", raw * armourModifier.Light);
-            DPSM = string.Format("{0:0.00}", raw * armourModifier.Medium);
-            DPSH = string.Format("{0:0.00}", raw * armourModifier.Heavy);
+                DPSL = string.Format("{0:0.00}", raw * armourModifier.Light);
+                DPSM = string.Format("{0:0.00}", raw * armourModifier.Medium);
+                DPSH = string.Format("{0:0.00}", raw * armourModifier.Heavy);
+            }
         }
 
-        public override void ChangeStats()
+        public override void ChangeStats(DPSData dpsData)
         {
-            base.ChangeStats();
+            base.ChangeStats(dpsData);
+
             Damage = Swap(Damage, ref bufDamage);
             Reload = Swap(Reload, ref bufReload);
-            CalcDPS();
+
+            CalcDPS(dpsData);
         }
     }
 }

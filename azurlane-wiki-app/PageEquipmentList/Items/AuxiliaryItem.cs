@@ -150,9 +150,9 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             Note = equipment.Notes;
         }
 
-        public override void ChangeStats()
+        public override void ChangeStats(DPSData dpsData = null)
         {
-            base.ChangeStats();
+            base.ChangeStats(dpsData);
 
             Health = Swap(Health, ref bufHealth);
             Firepower = Swap(Firepower, ref bufFirepower);

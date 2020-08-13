@@ -81,6 +81,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         public void FillList(string newTypeFullName)
         {
             List<string> dbTypes = GetDbTypes(newTypeFullName);
+            DPSData dpsData = new DPSData(newTypeFullName);
 
             using (CargoContext cargoContext = new CargoContext())
             {
@@ -97,16 +98,14 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
                     equipment.AddRange(temp);
                 }
                 
-
                 ActionBlock<Equipment> loadBlock = new ActionBlock<Equipment>(
                     (equip) =>
                     {
-                        AddItemToList(equip, equip.FK_Type.Name);
+                        AddItemToList(equip, equip.FK_Type.Name, dpsData);
                     });
 
                 foreach (Equipment equip in equipment)
                 {
-                    //AddItemToList(equip, equip.FK_Type.Name);
                     loadBlock.Post(equip);
                 }
 
@@ -115,30 +114,30 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             }
         }
 
-        private void AddItemToList(Equipment item, string newType)
+        private void AddItemToList(Equipment item, string newType, DPSData dpsData)
         {
             switch (newType)
             {
                 case "AA Gun":
-                    AAGuns.Add(new AAGun(item));
+                    AAGuns.Add(new AAGun(item, dpsData));
                     break;
                 case "Auxiliary":
                     AuxiliaryItems.Add(new AuxiliaryItem(item));
                     break;
                 case "Submarine Torpedo":
-                    SubmarineTorpedoes.Add(new SubmarineTorpedo(item));
+                    SubmarineTorpedoes.Add(new SubmarineTorpedo(item, dpsData));
                     break;
                 case "Torpedo":
-                    Torpedoes.Add(new Torpedo(item));
+                    Torpedoes.Add(new Torpedo(item, dpsData));
                     break;
                 case "Torpedo Bomber":
-                    TorpedoBomberPlanes.Add(new TorpedoBomberPlane(item));
+                    TorpedoBomberPlanes.Add(new TorpedoBomberPlane(item, dpsData));
                     break;
                 case string s when s.Contains("Gun"):
-                    MainGuns.Add(new MainGun(item));
+                    MainGuns.Add(new MainGun(item, dpsData));
                     break;
                 case string s when s == "Fighter" || s == "Dive Bomber" || s == "Seaplane":
-                    Planes.Add(new Plane(item));
+                    Planes.Add(new Plane(item, dpsData));
                     break;
                 default:
                     AswItems.Add(new ASWItem(item));
@@ -148,9 +147,6 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 
         public void ClearLists()
         {
-            //MainGuns = null;
-            //MainGuns = new List<MainGun>();
-
             AAGuns.Clear();
             AuxiliaryItems.Clear();
             SubmarineTorpedoes.Clear();
@@ -166,7 +162,9 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             List<BaseEquipmentItem> list = (GetList(type) as IEnumerable<object>)?
                 .Cast<BaseEquipmentItem>()?.ToList();
 
-            list?.ForEach(item => item.ChangeStats());
+            DPSData dpsData = new DPSData(type);
+
+            list?.ForEach(item => item.ChangeStats(dpsData));
         }
     }
 }

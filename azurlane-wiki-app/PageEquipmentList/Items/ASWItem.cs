@@ -95,9 +95,9 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             CalcDMG();
         }
 
-        public override void ChangeStats()
+        public override void ChangeStats(DPSData dpsData = null)
         {
-            base.ChangeStats();
+            base.ChangeStats(dpsData);
             ASW = Swap(ASW, ref bufASW);
             Accuracy = Swap(Accuracy, ref bufAccuracy);
             Damage = Swap(Damage, ref bufDamage);

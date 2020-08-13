@@ -18,39 +18,37 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             }
         }
 
-        public TorpedoBomberPlane(Equipment equipment) : base(equipment)
+        public TorpedoBomberPlane(Equipment equipment, DPSData dpsData) : base(equipment, dpsData)
         {
             Damage = equipment.DamageMax ?? 0;
             bufDamage = equipment.Damage ?? 0;
             torpedoNumber = equipment.Number ?? 0;
 
-            CalcDPSes(); // Second time because of Damage
+            CalcDPSes(dpsData); // Second time because of Damage
         }
 
-        protected override void CalcBombsDPS(int TorpNumber, int TorpDamage)
+        protected override void CalcBombsDPS(int TorpNumber, int TorpDamage, DPSData dpsData)
         {
-            double ArmourModifierLight = .8;
-            double ArmourModifierMedium = 1.1;
-            double ArmourModifierHeavy = 1.3;
-            double AbsoluteCD = .1;
+            ArmourModifier armourModifier = dpsData.GetTorpedoArmourModifier("Normal");
+            double AbsoluteCD = dpsData.Cooldown;
 
             double raw = TorpNumber * TorpDamage / (Rld * 2.2 + AbsoluteCD);
 
-            SurfacedDPSL = string.Format("{0:0.00}", raw * ArmourModifierLight);
-            SurfacedDPSM = string.Format("{0:0.00}", raw * ArmourModifierMedium);
-            SurfacedDPSH = string.Format("{0:0.00}", raw * ArmourModifierHeavy);
+            SurfacedDPSL = string.Format("{0:0.00}", raw * armourModifier.Light);
+            SurfacedDPSM = string.Format("{0:0.00}", raw * armourModifier.Medium);
+            SurfacedDPSH = string.Format("{0:0.00}", raw * armourModifier.Heavy);
         }
 
-        public override void ChangeStats()
+        public override void ChangeStats(DPSData dpsData)
         {
             Damage = Swap(Damage, ref bufDamage);
-            base.ChangeStats();
+            base.ChangeStats(dpsData);
         }
 
-        protected override void CalcDPSes()
+        protected override void CalcDPSes(DPSData dpsData)
         {
-            CalcAAGunsDPS();
-            CalcBombsDPS(torpedoNumber, Damage);
+            CalcAAGunsDPS(dpsData);
+            CalcBombsDPS(torpedoNumber, Damage, dpsData);
         }
     }
 }

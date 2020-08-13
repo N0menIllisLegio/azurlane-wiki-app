@@ -46,7 +46,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         }
         public int Rng { get; set; }
 
-        public AAGun(Equipment equipment) : base(equipment)
+        public AAGun(Equipment equipment, DPSData dpsData) : base(equipment)
         {
             Firepower = equipment.Firepower ?? 0;
             AA = equipment.AA ?? 0;
@@ -60,21 +60,21 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 
             Rng = equipment.WepRange ?? 0;
 
-            CalcDPS();
+            CalcDPS(dpsData);
         }
 
-        public override void ChangeStats()
+        public override void ChangeStats(DPSData dpsData)
         {
-            base.ChangeStats();
+            base.ChangeStats(dpsData);
             Damage = Swap(Damage, ref bufDamage);
             Reload = Swap(Reload, ref bufReload);
 
-            CalcDPS();
+            CalcDPS(dpsData);
         }
 
-        private void CalcDPS()
+        private void CalcDPS(DPSData dpsData)
         {
-            double AbsoluteCD = .5;
+            double AbsoluteCD = dpsData.Cooldown;
 
             AADPS = string.Format("{0:0.00}", Damage / (Reload + AbsoluteCD));
         }
