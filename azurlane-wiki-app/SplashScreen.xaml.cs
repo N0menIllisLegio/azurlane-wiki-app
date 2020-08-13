@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using WpfAnimatedGif;
 
@@ -43,6 +44,12 @@ namespace azurlane_wiki_app
                     new Uri($"pack://application:,,,/Resources/SplashScreenGifs/{gifs[random.Next(gifs.Length - 1)]}.gif"));
 
             ImageBehavior.SetAnimatedSource(img, gif);
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
         }
     }
 }

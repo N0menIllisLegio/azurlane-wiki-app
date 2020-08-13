@@ -16,7 +16,8 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         FontFamily="{materialDesign:MaterialDesignFont}"
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        MouseDown="Window_MouseDown">
     <Window.Resources>
         <BitmapImage x:Key="LoadingIcon">pack://application:,,,/Resources/SplashScreenGifs/loader_2.gif</BitmapImage>
     </Window.Resources>
