@@ -105,6 +105,7 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
             catch
             {
                 image = ImagePathConverter.ImagePlaceholder;
+                Logger.Write($"Failed to load image. path: {shipGirl.ImageIcon}", this.GetType().ToString());
             }
 
             image.Freeze();
@@ -139,6 +140,7 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
                 catch
                 {
                     imageKai = ImagePathConverter.ImagePlaceholder;
+                    Logger.Write($"Failed to load image. path: {shipGirl.ImageIconKai}", this.GetType().ToString());
                 }
 
                 imageKai.Freeze();

@@ -44,6 +44,7 @@ namespace azurlane_wiki_app
                     catch
                     {
                         outputImage = null;
+                        Logger.Write($"Failed to display image. Path: {path}", this.GetType().ToString());
                     }
                 }
             }

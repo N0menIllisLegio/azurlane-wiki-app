@@ -34,8 +34,9 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
             catch
             {
                 image = ImagePathConverter.ImagePlaceholder;
+                Logger.Write($"Failed to load image. path: {shipGirl.ImageShipyardIcon}", this.GetType().ToString());
             }
-
+            
             image.Freeze();
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
                     new Action(() => ImageShipyardIcon = image));
@@ -52,6 +53,7 @@ namespace azurlane_wiki_app.PageShipGirlList.Items
                 catch
                 {
                     imageKai = ImagePathConverter.ImagePlaceholder;
+                    Logger.Write($"Failed to load image. path: {shipGirl.ImageShipyardIconKai}", this.GetType().ToString());
                 }
 
                 imageKai.Freeze();
