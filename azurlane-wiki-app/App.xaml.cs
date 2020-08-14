@@ -1,5 +1,7 @@
-﻿using ShowMeTheXAML;
+﻿using azurlane_wiki_app.Data.Downloaders;
+using ShowMeTheXAML;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace azurlane_wiki_app

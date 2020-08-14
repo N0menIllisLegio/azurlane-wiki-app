@@ -123,6 +123,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\Downloaders\DPSDataDownloader.cs" />
     <Compile Include="PageEquipmentList\Items\DPSData.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Navigation.cs" />

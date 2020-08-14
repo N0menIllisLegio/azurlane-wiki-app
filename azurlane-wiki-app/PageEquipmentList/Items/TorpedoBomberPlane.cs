@@ -29,7 +29,7 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 
         protected override void CalcBombsDPS(int TorpNumber, int TorpDamage, DPSData dpsData)
         {
-            ArmourModifier armourModifier = dpsData.GetTorpedoArmourModifier("Normal");
+            ArmourModifier armourModifier = dpsData.GetTorpedoArmourModifier("All");
             double AbsoluteCD = dpsData.Cooldown;
 
             double raw = TorpNumber * TorpDamage / (Rld * 2.2 + AbsoluteCD);

@@ -127,6 +127,7 @@ namespace azurlane_wiki_app.PageDownload
                     EquipmentDownloader equipmentDownloader = new EquipmentDownloader(2);
                     SkillDownloader skillDownloader = new SkillDownloader();
                     WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
+                    DPSDataDownloader dpsDataDownloader = new DPSDataDownloader();
 
                     IconsStatus = iconDownloader.Status;
                     ShipGirlsStatus = shipDownloader.Status;
@@ -139,6 +140,8 @@ namespace azurlane_wiki_app.PageDownload
                     equipmentDownloader.PropertyChanged += StatusChangedEventHandler;
                     skillDownloader.PropertyChanged += StatusChangedEventHandler;
                     wtgShipGirlDownloader.PropertyChanged += StatusChangedEventHandler;
+
+                    Task dpsTask = Task.Run(() => dpsDataDownloader.DownloadDPSData());
 
                     FirstDownloader = iconDownloader;
                     await Task.Run(() => iconDownloader.Download());
@@ -160,6 +163,7 @@ namespace azurlane_wiki_app.PageDownload
                     tasks[1] = Task.Run(() => wtgShipGirlDownloader.Download());
 
                     await Task.WhenAll(tasks);
+                    dpsTask.Wait();
 
                     if (mainWindow != null)
                     {

@@ -15,7 +15,7 @@ namespace azurlane_wiki_app
 
 		public static void Write(string message, string place)
         {
-			WriteToFile($"{place}: message");
+			WriteToFile($"{place}: {message}");
         }
 
 		private static void WriteToFile(string str)

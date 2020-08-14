@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using azurlane_wiki_app.Data.Downloaders;
 using azurlane_wiki_app.Data.Tables;
+using azurlane_wiki_app.PageEquipmentList.Items;
 using SQLite.CodeFirst;
 
 namespace azurlane_wiki_app.Data
@@ -24,6 +25,10 @@ namespace azurlane_wiki_app.Data
         public DbSet<EquipmentTech> EquipmentTeches { get; set; }
         public DbSet<EquipmentType> EquipmentTypes { get; set; }
 
+        public DbSet<ArmourModifier> ArmourModifiers { get; set; }
+        public DbSet<GunStats> GunsStats { get; set; }
+        public DbSet<BombStats> BombsStats { get; set; }
+
         public CargoContext() : base("CargoConnection") { }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -43,6 +48,13 @@ namespace azurlane_wiki_app.Data
             this.Database.ExecuteSqlCommand("DELETE FROM [Skills]");
             this.Database.ExecuteSqlCommand("DELETE FROM [WhereToGetShipGirls]");
             this.Database.ExecuteSqlCommand("DELETE FROM [ShipGirlWhereToGetShipGirls]");
+        }
+
+        public void ClearDPSDataTables()
+        {
+            this.Database.ExecuteSqlCommand("DELETE FROM [ArmourModifiers]");
+            this.Database.ExecuteSqlCommand("DELETE FROM [GunsStats]");
+            this.Database.ExecuteSqlCommand("DELETE FROM [BombsStats]");
         }
 
         /// <summary>

@@ -11,6 +11,8 @@ namespace azurlane_wiki_app.Data.Tables
         [MaxLength(4000)]
         public string Description { get; set; }
 
+        public float? Cooldown { get; set; }
+
         #region Relationships
 
         public EquipmentType()
