@@ -248,6 +248,7 @@
                 <ColumnDefinition Name="IconColumn" Width="Auto" />
                 <ColumnDefinition Name="TitleColumn" Width="*" />
                 <ColumnDefinition Name="RetrofitSliderColumn" Width="Auto" />
+                <ColumnDefinition Name="ReloadColumn" Width="Auto" />
             </Grid.ColumnDefinitions>
 
 
@@ -280,9 +281,11 @@
                            Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" />
             </Viewbox>
 
-            <materialDesign:Chip Grid.Column="3" Margin="0 0 20 0" Visibility="{Binding RetrofitVisibility, IsAsync=True, Mode=OneWay}"
-                                 Background="{DynamicResource PrimaryHueMidForegroundBrush}">
-
+            <Border Grid.Column="3" Margin="0 12 10 12" CornerRadius="5"
+                    Padding="5 0 5 0"
+                    BorderThickness="1" BorderBrush="{StaticResource MaterialDesignDivider}"
+                    Visibility="{Binding RetrofitVisibility, IsAsync=True, Mode=OneWay, FallbackValue=Hidden}"
+                    Background="{DynamicResource PrimaryHueMidForegroundBrush}">
                 <StackPanel Orientation="Horizontal">
                     <ToggleButton
                         x:Name="RetrofitToggler"
@@ -310,7 +313,16 @@
                     <TextBlock Text="Retrofit" Margin="5 0 5 1" FontWeight="Normal"
                                VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </StackPanel>
-            </materialDesign:Chip>
+                
+            </Border>
+
+            <Button ToolTip="Reload ShipGirl data from server." Height="Auto" Width="Auto" Grid.Column="4"
+                    Margin="3" Style="{StaticResource MaterialDesignFlatButton}">
+                <!--Command="{Binding ClosePageCommand, IsAsync=True, Mode=OneWay}">-->
+                <materialDesign:PackIcon Kind="Refresh" Height="30" Width="30"
+                                         VerticalAlignment="Center"
+                                         Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"/>
+            </Button>
         </Grid>
 
         <ScrollViewer Grid.Row="1" Name="ScrollViewer">
@@ -338,7 +350,7 @@
 
                         <Image Name="ChibiImage"
                                RenderOptions.BitmapScalingMode="HighQuality"
-                               Height="150" Width="116"
+                               Height="150" Width="116" Margin="0 10 0 10"
                                Source="{Binding ChibiImage, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}">
                             <Image.Effect>
                                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="4" Opacity="0.5" />
@@ -475,6 +487,10 @@
                                   Background="Transparent"
                                   HorizontalAlignment="Stretch">
                             <Grid Grid.IsSharedSizeScope="True" Margin="0 40 0 40">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Name="BaseStatColumn" />
                                     <ColumnDefinition Name="Level100Column" />
@@ -487,6 +503,17 @@
                                                 DataContext="{Binding Level100Stats, IsAsync=True, Mode=OneWay}" />
                                 <ContentControl Grid.Column="2" Template="{StaticResource StatTableTemplate}"
                                                 DataContext="{Binding Level120Stats, IsAsync=True, Mode=OneWay}" />
+
+                                <StackPanel Orientation="Horizontal" Margin="20 20 0 0"
+                                            Grid.ColumnSpan="3" Grid.Row="1">
+
+                                    <materialDesign:PackIcon Kind="CalendarText" Margin="5 0 5 0"
+                                                             Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"/>
+
+                                    <TextBlock  FontWeight="Light" FontSize="13"
+                                                Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                                Text="Listed stats are at 100 Affection and with maxed enhancements for 100/120 lvls and at 0 Affection and without enhancements for Base lvl." />
+                                </StackPanel>
                             </Grid>
                         </Expander>
 

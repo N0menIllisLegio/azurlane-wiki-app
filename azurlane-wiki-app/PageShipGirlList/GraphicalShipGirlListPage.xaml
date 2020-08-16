@@ -316,12 +316,13 @@
                                         </Border>
 
                                         <Border Background="Gray" CornerRadius="0 0 2 2"
-                                        RenderOptions.EdgeMode="Aliased">
+                                                RenderOptions.EdgeMode="Aliased" Height="35">
                                             <TextBlock Text="{Binding Name, 
-                                                            IsAsync=True, Mode=OneWay}" HorizontalAlignment="Center"
-                                                TextAlignment="Center" TextWrapping="Wrap"
-                                                FontWeight="Normal"
-                                                Foreground="White" />
+                                                            IsAsync=True, Mode=OneWay}" 
+                                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                        TextAlignment="Center" TextWrapping="Wrap"
+                                                        FontWeight="Normal"
+                                                        Foreground="White" />
                                         </Border>
                                     </StackPanel>
                                 </Border>
