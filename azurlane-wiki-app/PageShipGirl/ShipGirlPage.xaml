@@ -25,7 +25,7 @@
                     Margin="0 0 0 25"
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     Style="{DynamicResource MaterialDesignHeadline2TextBlock}"
-                    Text="{Binding StatTableTitle}"
+                    Text="{Binding StatTableTitle, IsAsync=True, Mode=OneWay}"
                     Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
 
                 <Border VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -80,150 +80,150 @@
                         </Grid.Resources>
 
                         <!--First Row-->
-                        <Border Grid.Row="0" Grid.Column="0" ToolTip="Health" Background="{Binding BC_00}">
+                        <Border Grid.Row="0" Grid.Column="0" ToolTip="Health" Background="{Binding BC_00, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding HealthStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding HealthStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding HealthStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding HealthStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="0" Grid.Column="1" ToolTip="Armor" Background="{Binding BC_01}">
+                        <Border Grid.Row="0" Grid.Column="1" ToolTip="Armor" Background="{Binding BC_01, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding ArmorStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding ArmorStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding ArmorStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding ArmorStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="0" Grid.Column="2" ToolTip="Reload" Background="{Binding BC_02}">
+                        <Border Grid.Row="0" Grid.Column="2" ToolTip="Reload" Background="{Binding BC_02, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
                                        Width="{Binding Width}"
-                                       Source="{Binding ReloadStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding ReloadStatValue}" />
+                                       Source="{Binding ReloadStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding ReloadStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="0" Grid.Column="3" ToolTip="Luck" Background="{Binding BC_03}">
+                        <Border Grid.Row="0" Grid.Column="3" ToolTip="Luck" Background="{Binding BC_03, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding LuckStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding LuckStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding LuckStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding LuckStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
 
                         <!--Second Row-->
-                        <Border Grid.Row="1" Grid.Column="0" ToolTip="Firepower" Background="{Binding BC_10}">
+                        <Border Grid.Row="1" Grid.Column="0" ToolTip="Firepower" Background="{Binding BC_10, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding FireStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding FireStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding FireStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding FireStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="1" Grid.Column="1" ToolTip="Torpedo" Background="{Binding BC_11}">
+                        <Border Grid.Row="1" Grid.Column="1" ToolTip="Torpedo" Background="{Binding BC_11, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding TorpStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding TorpStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding TorpStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding TorpStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="1" Grid.Column="2" ToolTip="Evasion" Background="{Binding BC_12}">
+                        <Border Grid.Row="1" Grid.Column="2" ToolTip="Evasion" Background="{Binding BC_12, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding EvadeStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding EvadeStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding EvadeStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding EvadeStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="1" Grid.Column="3" ToolTip="Speed" Background="{Binding BC_13}">
+                        <Border Grid.Row="1" Grid.Column="3" ToolTip="Speed" Background="{Binding BC_13, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
                                 <TextBlock HorizontalAlignment="Center" Text="Spd" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding SpeedStatValue}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding SpeedStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
                         <!--Third Row-->
-                        <Border Grid.Row="2" Grid.Column="0" ToolTip="Anti-Air" Background="{Binding BC_20}">
+                        <Border Grid.Row="2" Grid.Column="0" ToolTip="Anti-Air" Background="{Binding BC_20, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding AAStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding AAStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding AAStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding AAStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="2" Grid.Column="1" ToolTip="Aviation" Background="{Binding BC_21}">
+                        <Border Grid.Row="2" Grid.Column="1" ToolTip="Aviation" Background="{Binding BC_21, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding AirStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding AirStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding AirStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding AirStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="2" Grid.Column="2" ToolTip="Oil Consumption" Background="{Binding BC_22}">
+                        <Border Grid.Row="2" Grid.Column="2" ToolTip="Oil Consumption" Background="{Binding BC_22, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding ConsumptionStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding ConsumptionStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding ConsumptionStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding ConsumptionStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="2" Grid.Column="3" ToolTip="Accuracy" Background="{Binding BC_23}">
+                        <Border Grid.Row="2" Grid.Column="3" ToolTip="Accuracy" Background="{Binding BC_23, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding AccStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding AccStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding AccStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding AccStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
                         <!--Forth Row-->
                         <Border Grid.Row="3" Grid.Column="0" ToolTip="Anti-Submarine warfare"
-                                Background="{Binding BC_30}">
+                                Background="{Binding BC_30, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding ASWStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding ASWStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding ASWStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding ASWStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="3" Grid.Column="1" ToolTip="Oxygen" Background="{Binding BC_31}">
+                        <Border Grid.Row="3" Grid.Column="1" ToolTip="Oxygen" Background="{Binding BC_31, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding OxygenStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding OxygenStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding OxygenStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding OxygenStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
-                        <Border Grid.Row="3" Grid.Column="2" ToolTip="Ammunition" Background="{Binding BC_32}">
+                        <Border Grid.Row="3" Grid.Column="2" ToolTip="Ammunition" Background="{Binding BC_32, IsAsync=True, Mode=OneWay}">
                             <StackPanel>
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding AmmoStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding AmmoStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding AmmoStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding AmmoStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
 
                         <Border Grid.Row="3" Grid.Column="3" Background="{DynamicResource MaterialDesignDivider}">
                             <StackPanel Visibility="Collapsed">
-                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height}"
-                                       Width="{Binding Width}"
-                                       Source="{Binding HuntingRangeStatIcon, Converter={StaticResource ImagePathConverter}}" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding HuntingRangeStatValue}" />
+                                <Image RenderOptions.BitmapScalingMode="HighQuality" Height="{Binding Height, IsAsync=True, Mode=OneWay}"
+                                       Width="{Binding Width, IsAsync=True, Mode=OneWay}"
+                                       Source="{Binding HuntingRangeStatIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding HuntingRangeStatValue, IsAsync=True, Mode=OneWay}" />
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -248,12 +248,13 @@
                 <ColumnDefinition Name="IconColumn" Width="Auto" />
                 <ColumnDefinition Name="TitleColumn" Width="*" />
                 <ColumnDefinition Name="RetrofitSliderColumn" Width="Auto" />
+                <ColumnDefinition Name="ReloadColumn" Width="Auto" />
             </Grid.ColumnDefinitions>
 
 
             <Button ToolTip="Go Back" Height="Auto" Width="Auto"
                     Margin="3" Style="{StaticResource MaterialDesignFlatButton}"
-                    Command="{Binding ClosePageCommand}">
+                    Command="{Binding ClosePageCommand, IsAsync=True, Mode=OneWay}">
                 <materialDesign:PackIcon Kind="ChevronLeft" Height="40" Width="40"
                                          VerticalAlignment="Center"
                                          Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"/>
@@ -270,19 +271,21 @@
                 </Border.Background>
 
                 <Image RenderOptions.BitmapScalingMode="HighQuality"
-                       Name="ImageIcon" Source="{Binding ShipGirlIcon, Converter={StaticResource ImagePathConverter}}" />
+                       Name="ImageIcon" Source="{Binding ShipGirlIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
             </Border>
 
             <Viewbox Grid.Column="2" HorizontalAlignment="Left" Stretch="Uniform" Margin="40 0 0 0"
                      VerticalAlignment="Center">
-                <TextBlock Text="{Binding ShipName}" 
+                <TextBlock Text="{Binding ShipName, IsAsync=True, Mode=OneWay}" 
                            Style="{StaticResource MaterialDesignHeadline3TextBlock}"
                            Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" />
             </Viewbox>
 
-            <materialDesign:Chip Grid.Column="3" Margin="0 0 20 0" Visibility="{Binding RetrofitVisibility}"
-                                 Background="{DynamicResource PrimaryHueMidForegroundBrush}">
-
+            <Border Grid.Column="3" Margin="0 12 10 12" CornerRadius="5"
+                    Padding="5 0 5 0"
+                    BorderThickness="1" BorderBrush="{StaticResource MaterialDesignDivider}"
+                    Visibility="{Binding RetrofitVisibility, IsAsync=True, Mode=OneWay, FallbackValue=Hidden}"
+                    Background="{DynamicResource PrimaryHueMidForegroundBrush}">
                 <StackPanel Orientation="Horizontal">
                     <ToggleButton
                         x:Name="RetrofitToggler"
@@ -292,10 +295,10 @@
 
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Checked">
-                                <i:InvokeCommandAction Command="{Binding RetrofitCommand}" />
+                                <i:InvokeCommandAction Command="{Binding RetrofitCommand, IsAsync=True, Mode=OneWay}" />
                             </i:EventTrigger>
                             <i:EventTrigger EventName="Unchecked">
-                                <i:InvokeCommandAction Command="{Binding UnretrofitCommand}" />
+                                <i:InvokeCommandAction Command="{Binding UnretrofitCommand, IsAsync=True, Mode=OneWay}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
 
@@ -310,7 +313,16 @@
                     <TextBlock Text="Retrofit" Margin="5 0 5 1" FontWeight="Normal"
                                VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </StackPanel>
-            </materialDesign:Chip>
+                
+            </Border>
+
+            <Button ToolTip="Reload ShipGirl data from server." Height="Auto" Width="Auto" Grid.Column="4"
+                    Margin="3" Style="{StaticResource MaterialDesignFlatButton}">
+                <!--Command="{Binding ClosePageCommand, IsAsync=True, Mode=OneWay}">-->
+                <materialDesign:PackIcon Kind="Refresh" Height="30" Width="30"
+                                         VerticalAlignment="Center"
+                                         Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"/>
+            </Button>
         </Grid>
 
         <ScrollViewer Grid.Row="1" Name="ScrollViewer">
@@ -330,7 +342,7 @@
                         </materialDesign:Card.Background>
 
                         <Image RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform"
-                               Source="{Binding MainImage, Converter={StaticResource ImagePathConverter}}" />
+                               Source="{Binding MainImage, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
                     </materialDesign:Card>
 
 
@@ -338,8 +350,8 @@
 
                         <Image Name="ChibiImage"
                                RenderOptions.BitmapScalingMode="HighQuality"
-                               Height="150" Width="116"
-                               Source="{Binding ChibiImage, Converter={StaticResource ImagePathConverter}}">
+                               Height="150" Width="116" Margin="0 10 0 10"
+                               Source="{Binding ChibiImage, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}">
                             <Image.Effect>
                                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="4" Opacity="0.5" />
                             </Image.Effect>
@@ -350,7 +362,7 @@
                                              Background="{DynamicResource PrimaryHueLightBrush}">
                             <StackPanel>
                                 <ItemsControl
-                                    ItemsSource="{Binding GeneralInfoList}"
+                                    ItemsSource="{Binding GeneralInfoList, IsAsync=True, Mode=OneWay}"
                                     VerticalAlignment="Center" x:Name="GeneralInfo">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
@@ -369,17 +381,17 @@
                                                     </Grid.ColumnDefinitions>
 
                                                     <StackPanel Margin="8 0 0 0" VerticalAlignment="Center">
-                                                        <TextBlock FontWeight="Bold" Text="{Binding Name}"
+                                                        <TextBlock FontWeight="Bold" Text="{Binding Name, IsAsync=True, Mode=OneWay}"
                                                                    Margin="0 0 0 2" />
-                                                        <TextBlock Padding="5 0 0 0" Text="{Binding Description}"
+                                                        <TextBlock Padding="5 0 0 0" Text="{Binding Description, IsAsync=True, Mode=OneWay}"
                                                                    FontStyle="Italic" FontWeight="Light" />
                                                     </StackPanel>
 
                                                     <Image Grid.Column="1" Width="{Binding IconWidth}"
                                                            VerticalAlignment="Center"
                                                            RenderOptions.BitmapScalingMode="HighQuality"
-                                                           Height="{Binding IconHeight}"
-                                                           Source="{Binding Icon, Converter={StaticResource ImagePathConverter}}" />
+                                                           Height="{Binding IconHeight, IsAsync=True, Mode=OneWay}"
+                                                           Source="{Binding Icon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
@@ -400,17 +412,17 @@
 
                                         <StackPanel Orientation="Horizontal">
                                             <Image Margin="5 0 0 0" Width="30" Height="18"
-                                                   Source="{Binding ShipGirlTypeIcon, Converter={StaticResource ImagePathConverter}}"
+                                                   Source="{Binding ShipGirlTypeIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}"
                                                    RenderOptions.BitmapScalingMode="HighQuality" />
-                                            <TextBlock Padding="5 0 5 0" Text="{Binding ShipGirlType}"
+                                            <TextBlock Padding="5 0 5 0" Text="{Binding ShipGirlType, IsAsync=True, Mode=OneWay}"
                                                        FontStyle="Italic" FontWeight="Light" />
                                             <materialDesign:PackIcon Kind="ChevronTripleRight"
                                                                      Visibility="{Binding ShipGirlSubtype, 
-                                                Converter={StaticResource VisibilityConverter}}" />
+                                                Converter={StaticResource VisibilityConverter}, IsAsync=True, Mode=OneWay}" />
                                             <Image Margin="5 0 0 0" Width="30" Height="18"
-                                                   Source="{Binding ShipGirlSubtypeIcon, Converter={StaticResource ImagePathConverter}}"
+                                                   Source="{Binding ShipGirlSubtypeIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}"
                                                    RenderOptions.BitmapScalingMode="HighQuality" />
-                                            <TextBlock Padding="5 0 0 0" Text="{Binding ShipGirlSubtype}"
+                                            <TextBlock Padding="5 0 0 0" Text="{Binding ShipGirlSubtype, IsAsync=True, Mode=OneWay}"
                                                        FontStyle="Italic" FontWeight="Light" />
                                         </StackPanel>
                                     </StackPanel>
@@ -425,21 +437,21 @@
                                         <StackPanel Orientation="Horizontal">
 
                                             <Image Margin="5 0 0 0" Width="25" Height="25"
-                                                   Source="{Binding CoinIcon, Converter={StaticResource ImagePathConverter}}"
+                                                   Source="{Binding CoinIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}"
                                                    RenderOptions.BitmapScalingMode="HighQuality" />
-                                            <TextBlock Padding="5 0 0 0" Text="{Binding ScrapCoinsValue}"
+                                            <TextBlock Padding="5 0 0 0" Text="{Binding ScrapCoinsValue, IsAsync=True, Mode=OneWay}"
                                                        VerticalAlignment="Center"
                                                        FontStyle="Italic" FontWeight="Light" />
                                             <Image Margin="5 0 0 0" Width="25" Height="25"
-                                                   Source="{Binding OilIcon, Converter={StaticResource ImagePathConverter}}"
+                                                   Source="{Binding OilIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}"
                                                    RenderOptions.BitmapScalingMode="HighQuality" />
-                                            <TextBlock Padding="5 0 0 0" Text="{Binding ScrapOilValue}"
+                                            <TextBlock Padding="5 0 0 0" Text="{Binding ScrapOilValue, IsAsync=True, Mode=OneWay}"
                                                        VerticalAlignment="Center"
                                                        FontStyle="Italic" FontWeight="Light" />
                                             <Image Margin="5 0 0 0" Width="18" Height="24"
-                                                   Source="{Binding MedalIcon, Converter={StaticResource ImagePathConverter}}"
+                                                   Source="{Binding MedalIcon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}"
                                                    RenderOptions.BitmapScalingMode="HighQuality" />
-                                            <TextBlock Padding="5 0 0 0" Text="{Binding ScrapMedalsValue}"
+                                            <TextBlock Padding="5 0 0 0" Text="{Binding ScrapMedalsValue, IsAsync=True, Mode=OneWay}"
                                                        VerticalAlignment="Center"
                                                        FontStyle="Italic" FontWeight="Light" />
 
@@ -459,7 +471,7 @@
                             </materialDesign:Card.Background>
 
                             <Image Width="360" Height="80" RenderOptions.BitmapScalingMode="HighQuality"
-                                   Source="{Binding BannerImage, Converter={StaticResource ImagePathConverter}}" />
+                                   Source="{Binding BannerImage, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}" />
                         </materialDesign:Card>
                     </StackPanel>
 
@@ -475,6 +487,10 @@
                                   Background="Transparent"
                                   HorizontalAlignment="Stretch">
                             <Grid Grid.IsSharedSizeScope="True" Margin="0 40 0 40">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Name="BaseStatColumn" />
                                     <ColumnDefinition Name="Level100Column" />
@@ -482,11 +498,22 @@
                                 </Grid.ColumnDefinitions>
 
                                 <ContentControl Grid.Column="0" Template="{StaticResource StatTableTemplate}"
-                                                DataContext="{Binding InitialStats}" />
+                                                DataContext="{Binding InitialStats, IsAsync=True, Mode=OneWay}" />
                                 <ContentControl Grid.Column="1" Template="{StaticResource StatTableTemplate}"
-                                                DataContext="{Binding Level100Stats}" />
+                                                DataContext="{Binding Level100Stats, IsAsync=True, Mode=OneWay}" />
                                 <ContentControl Grid.Column="2" Template="{StaticResource StatTableTemplate}"
-                                                DataContext="{Binding Level120Stats}" />
+                                                DataContext="{Binding Level120Stats, IsAsync=True, Mode=OneWay}" />
+
+                                <StackPanel Orientation="Horizontal" Margin="20 20 0 0"
+                                            Grid.ColumnSpan="3" Grid.Row="1">
+
+                                    <materialDesign:PackIcon Kind="CalendarText" Margin="5 0 5 0"
+                                                             Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"/>
+
+                                    <TextBlock  FontWeight="Light" FontSize="13"
+                                                Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                                Text="Listed stats are at 100 Affection and with maxed enhancements for 100/120 lvls and at 0 Affection and without enhancements for Base lvl." />
+                                </StackPanel>
                             </Grid>
                         </Expander>
 
@@ -503,14 +530,14 @@
                             <Grid Margin="40 10 40 40">
                                 <ListView
                                     SizeChanged="EquipmentList_OnSizeChanged"
-                                    ItemsSource="{Binding EquipmentList}">
+                                    ItemsSource="{Binding EquipmentList, IsAsync=True, Mode=OneWay}">
                                     <ListView.View>
                                         <GridView AllowsColumnReorder="False">
                                             <GridViewColumn
                                                 Header="Slot">
                                                 <GridViewColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Text="{Binding Slot}" FontWeight="Normal" />
+                                                        <TextBlock Text="{Binding Slot, IsAsync=True, Mode=OneWay}" FontWeight="Normal" />
                                                     </DataTemplate>
                                                 </GridViewColumn.CellTemplate>
                                             </GridViewColumn>
@@ -519,17 +546,17 @@
                                                 <GridViewColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="{Binding EfficiencyInit}"
+                                                            <TextBlock Text="{Binding EfficiencyInit, IsAsync=True, Mode=OneWay}"
                                                                        FontWeight="Normal" />
                                                             <materialDesign:PackIcon Kind="ChevronTripleRight"
                                                                                      Margin="5 0 5 0" />
-                                                            <TextBlock Text="{Binding EfficiencyMax}"
+                                                            <TextBlock Text="{Binding EfficiencyMax, IsAsync=True, Mode=OneWay}"
                                                                        FontWeight="Normal" />
                                                             <materialDesign:PackIcon Kind="ChevronTripleRight"
                                                                                      Margin="5 0 5 0"
                                                                                      Visibility="{Binding EfficiencyKai, 
-                                                                Converter={StaticResource VisibilityConverter}}" />
-                                                            <TextBlock Text="{Binding EfficiencyKai}"
+                                                                Converter={StaticResource VisibilityConverter}, IsAsync=True, Mode=OneWay}" />
+                                                            <TextBlock Text="{Binding EfficiencyKai, IsAsync=True, Mode=OneWay}"
                                                                        FontWeight="Normal" />
                                                         </StackPanel>
                                                     </DataTemplate>
@@ -540,7 +567,7 @@
                                                 Header="Equippable">
                                                 <GridViewColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Text="{Binding Equippable}" FontWeight="Normal"
+                                                        <TextBlock Text="{Binding Equippable, IsAsync=True, Mode=OneWay}" FontWeight="Normal"
                                                                    TextWrapping="Wrap" />
                                                     </DataTemplate>
                                                 </GridViewColumn.CellTemplate>
@@ -568,7 +595,7 @@
                             <Grid Margin="40 10 40 40">
                                 <ListView
                                     SizeChanged="SkillsListView_SizeChanged"
-                                    ItemsSource="{Binding SkillsList}">
+                                    ItemsSource="{Binding SkillsList, IsAsync=True, Mode=OneWay}">
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem"
                                                BasedOn="{StaticResource MaterialDesignGridViewItem}">
@@ -585,7 +612,7 @@
                                                 <GridViewColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <Image
-                                                            Source="{Binding Icon, Converter={StaticResource ImagePathConverter}}"
+                                                            Source="{Binding Icon, Converter={StaticResource ImagePathConverter}, IsAsync=True, Mode=OneWay}"
                                                             Width="48" Height="48"
                                                             RenderOptions.BitmapScalingMode="HighQuality" />
                                                     </DataTemplate>
@@ -596,7 +623,7 @@
                                                 Header="Skill Name">
                                                 <GridViewColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Text="{Binding Name}" TextWrapping="Wrap" />
+                                                        <TextBlock Text="{Binding Name, IsAsync=True, Mode=OneWay}" TextWrapping="Wrap" />
                                                     </DataTemplate>
                                                 </GridViewColumn.CellTemplate>
                                             </GridViewColumn>
@@ -604,7 +631,7 @@
                                             <GridViewColumn Header="Details">
                                                 <GridViewColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Text="{Binding Detail}" TextWrapping="Wrap"
+                                                        <TextBlock Text="{Binding Detail, IsAsync=True, Mode=OneWay}" TextWrapping="Wrap"
                                                                    FontWeight="Normal"
                                                                    VerticalAlignment="Center" />
                                                     </DataTemplate>
@@ -618,7 +645,7 @@
 
                         <StackPanel
                             Visibility="{Binding LimitBreak1, 
-                            Converter={StaticResource VisibilityConverter}}">
+                            Converter={StaticResource VisibilityConverter}, IsAsync=True, Mode=OneWay}">
                             <Border
                                 Background="{DynamicResource MaterialDesignDivider}"
                                 Height="1"
@@ -683,7 +710,7 @@
                                             </DataTemplate>
                                         </GroupBox.HeaderTemplate>
 
-                                        <TextBlock Text="{Binding LimitBreak1}" />
+                                        <TextBlock Text="{Binding LimitBreak1, IsAsync=True, Mode=OneWay}" />
                                     </GroupBox>
 
                                     <GroupBox Grid.Column="1">
@@ -713,7 +740,7 @@
                                                 </materialDesign:RatingBar>
                                             </DataTemplate>
                                         </GroupBox.HeaderTemplate>
-                                        <TextBlock Text="{Binding LimitBreak2}" />
+                                        <TextBlock Text="{Binding LimitBreak2, IsAsync=True, Mode=OneWay}" />
                                     </GroupBox>
 
                                     <GroupBox Grid.Column="2">
@@ -744,7 +771,7 @@
                                             </DataTemplate>
                                         </GroupBox.HeaderTemplate>
 
-                                        <TextBlock Text="{Binding LimitBreak3}" />
+                                        <TextBlock Text="{Binding LimitBreak3, IsAsync=True, Mode=OneWay}" />
                                     </GroupBox>
                                 </Grid>
                             </Expander>
@@ -777,7 +804,7 @@
                                             VerticalAlignment="Center"
                                             Margin="10">
 
-                                    <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1"
+                                    <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="5"
                                             Background="White">
                                         <Grid IsSharedSizeScope="True">
                                             <Grid.Resources>
@@ -815,56 +842,56 @@
                                             <materialDesign:PackIcon Grid.Row="0" Grid.Column="1"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
-                                                                     Kind="{Binding LightConstructionIcon}" />
+                                                                     Kind="{Binding LightConstructionIcon, IsAsync=True, Mode=OneWay}" />
                                             <materialDesign:PackIcon Grid.Row="1" Grid.Column="1"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
-                                                                     Kind="{Binding HeavyConstructionIcon}" />
+                                                                     Kind="{Binding HeavyConstructionIcon, IsAsync=True, Mode=OneWay}" />
                                             <materialDesign:PackIcon Grid.Row="2" Grid.Column="1"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
-                                                                     Kind="{Binding AviationConstructionIcon}" />
+                                                                     Kind="{Binding AviationConstructionIcon, IsAsync=True, Mode=OneWay}" />
                                             <materialDesign:PackIcon Grid.Row="3" Grid.Column="1"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
-                                                                     Kind="{Binding LimitedConstructionIcon}" />
+                                                                     Kind="{Binding LimitedConstructionIcon, IsAsync=True, Mode=OneWay}" />
                                             <materialDesign:PackIcon Grid.Row="4" Grid.Column="1"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
-                                                                     Kind="{Binding ExchangeConstructionIcon}"
-                                                                     ToolTip="{Binding ExchangeConstructionNote}" />
+                                                                     Kind="{Binding ExchangeConstructionIcon, IsAsync=True, Mode=OneWay}" />
 
                                             <Border BorderThickness="0 0 0 1"
                                                     Background="Transparent"
-                                                    ToolTip="{Binding LightConstructionNote}"
+                                                    ToolTip="{Binding LightConstructionNote, IsAsync=True, Mode=OneWay}"
                                                     BorderBrush="{DynamicResource MaterialDesignDivider}"
                                                     Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" />
                                             <Border BorderThickness="0 0 0 1"
                                                     Background="Transparent"
-                                                    ToolTip="{Binding HeavyConstructionNote}"
+                                                    ToolTip="{Binding HeavyConstructionNote, IsAsync=True, Mode=OneWay}"
                                                     BorderBrush="{DynamicResource MaterialDesignDivider}"
                                                     Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" />
                                             <Border BorderThickness="0 0 0 1"
                                                     Background="Transparent"
-                                                    ToolTip="{Binding AviationConstructionNote}"
+                                                    ToolTip="{Binding AviationConstructionNote, IsAsync=True, Mode=OneWay}"
                                                     BorderBrush="{DynamicResource MaterialDesignDivider}"
                                                     Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" />
                                             <Border BorderThickness="0 0 0 1"
                                                     Background="Transparent"
-                                                    ToolTip="{Binding LimitedConstructionNote}"
+                                                    ToolTip="{Binding LimitedConstructionNote, IsAsync=True, Mode=OneWay}"
                                                     BorderBrush="{DynamicResource MaterialDesignDivider}"
                                                     Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" />
                                             <Border Background="Transparent"
-                                                    ToolTip="{Binding ExchangeConstructionIcon}"
+                                                    ToolTip="{Binding ExchangeConstructionNote, IsAsync=True, Mode=OneWay}"
                                                     Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" />
                                         </Grid>
                                     </Border>
                                 </StackPanel>
 
                                 <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1"
+                                        CornerRadius="5"
                                         Background="White" Grid.Column="1" Grid.Row="0"
                                         VerticalAlignment="Center" Padding="5 0 5 0">
-                                    <ListView ItemsSource="{Binding DropsList}"
+                                    <ListView ItemsSource="{Binding DropsList, IsAsync=True, Mode=OneWay}"
                                               Margin="0 0 0 0"
                                               pageShipGirl:DynamicBindingListView.GenerateColumnsGridView="True"
                                               IsManipulationEnabled="False">

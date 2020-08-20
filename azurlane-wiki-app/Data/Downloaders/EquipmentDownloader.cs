@@ -48,11 +48,13 @@ namespace azurlane_wiki_app.Data.Downloaders
             catch(JsonException)
             {
                 Status = Statuses.ErrorInDeserialization;
+                Logger.Write($"Failed to desirialize equipment.", this.GetType().ToString());
                 return;
             }
             catch
             {
                 Status = Statuses.DownloadError;
+                Logger.Write($"Failed to get data for equipment from server.", this.GetType().ToString());
                 return;
             }
 
@@ -134,11 +136,13 @@ namespace azurlane_wiki_app.Data.Downloaders
             catch(JsonException)
             {
                 Status = Statuses.ErrorInDeserialization;
+                Logger.Write($"Failed to desirialize equipment. ID: {id}", this.GetType().ToString());
                 return;
             }
             catch
             {
                 Status = Statuses.DownloadError;
+                Logger.Write($"Failed to get data for equipment from server. ID: {id}", this.GetType().ToString());
                 return;
             }
 

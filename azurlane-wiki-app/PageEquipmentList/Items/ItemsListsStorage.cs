@@ -1,6 +1,9 @@
 ﻿using azurlane_wiki_app.Data;
 using azurlane_wiki_app.Data.Tables;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks.Dataflow;
+using System.Data.Entity;
 
 namespace azurlane_wiki_app.PageEquipmentList.Items
 {
@@ -78,52 +81,63 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
         public void FillList(string newTypeFullName)
         {
             List<string> dbTypes = GetDbTypes(newTypeFullName);
+            DPSData dpsData = new DPSData(newTypeFullName);
 
             using (CargoContext cargoContext = new CargoContext())
             {
                 List<Equipment> equipment = new List<Equipment>();
 
-                foreach (string dbType in dbTypes)
-                {
-                    var temp = cargoContext.EquipmentTypes.Find(dbType)?.EquipmentList;
+                var temp = cargoContext.ShipGirlsEquipment.Where(e => dbTypes.Contains(e.Type))
+                    .Include(e => e.FK_Tech)
+                    .Include(e => e.FK_Nationality)
+                    .Include(e => e.FK_Nationality.FK_Icon)
+                    .Include(e => e.FK_Type);
 
-                    if (temp != null)
-                    {
-                        equipment.AddRange(temp);
-                    }
+                if (temp != null)
+                {
+                    equipment.AddRange(temp);
                 }
+                
+                ActionBlock<Equipment> loadBlock = new ActionBlock<Equipment>(
+                    (equip) =>
+                    {
+                        AddItemToList(equip, equip.FK_Type.Name, dpsData);
+                    });
 
                 foreach (Equipment equip in equipment)
                 {
-                    AddItemToList(equip, equip.FK_Type.Name);
+                    loadBlock.Post(equip);
                 }
+
+                loadBlock.Complete();
+                loadBlock.Completion.Wait();
             }
         }
 
-        private void AddItemToList(Equipment item, string newType)
+        private void AddItemToList(Equipment item, string newType, DPSData dpsData)
         {
             switch (newType)
             {
                 case "AA Gun":
-                    AAGuns.Add(new AAGun(item));
+                    AAGuns.Add(new AAGun(item, dpsData));
                     break;
                 case "Auxiliary":
                     AuxiliaryItems.Add(new AuxiliaryItem(item));
                     break;
                 case "Submarine Torpedo":
-                    SubmarineTorpedoes.Add(new SubmarineTorpedo(item));
+                    SubmarineTorpedoes.Add(new SubmarineTorpedo(item, dpsData));
                     break;
                 case "Torpedo":
-                    Torpedoes.Add(new Torpedo(item));
+                    Torpedoes.Add(new Torpedo(item, dpsData));
                     break;
                 case "Torpedo Bomber":
-                    TorpedoBomberPlanes.Add(new TorpedoBomberPlane(item));
+                    TorpedoBomberPlanes.Add(new TorpedoBomberPlane(item, dpsData));
                     break;
                 case string s when s.Contains("Gun"):
-                    MainGuns.Add(new MainGun(item));
+                    MainGuns.Add(new MainGun(item, dpsData));
                     break;
                 case string s when s == "Fighter" || s == "Dive Bomber" || s == "Seaplane":
-                    Planes.Add(new Plane(item));
+                    Planes.Add(new Plane(item, dpsData));
                     break;
                 default:
                     AswItems.Add(new ASWItem(item));
@@ -133,9 +147,6 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
 
         public void ClearLists()
         {
-            //MainGuns = null;
-            //MainGuns = new List<MainGun>();
-
             AAGuns.Clear();
             AuxiliaryItems.Clear();
             SubmarineTorpedoes.Clear();
@@ -144,6 +155,16 @@ namespace azurlane_wiki_app.PageEquipmentList.Items
             MainGuns.Clear();
             Planes.Clear();
             AswItems.Clear();
+        }
+
+        public void ChangeCurrentListStats(string type)
+        {
+            List<BaseEquipmentItem> list = (GetList(type) as IEnumerable<object>)?
+                .Cast<BaseEquipmentItem>()?.ToList();
+
+            DPSData dpsData = new DPSData(type);
+
+            list?.ForEach(item => item.ChangeStats(dpsData));
         }
     }
 }

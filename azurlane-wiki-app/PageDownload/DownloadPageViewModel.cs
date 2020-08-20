@@ -1,4 +1,4 @@
-﻿using azurlane_wiki_app.Annotations;
+﻿using azurlane_wiki_app.Properties;
 using azurlane_wiki_app.Data.Downloaders;
 using azurlane_wiki_app.PageEquipmentList;
 using azurlane_wiki_app.PageShipGirlList;
@@ -127,6 +127,7 @@ namespace azurlane_wiki_app.PageDownload
                     EquipmentDownloader equipmentDownloader = new EquipmentDownloader(2);
                     SkillDownloader skillDownloader = new SkillDownloader();
                     WTGShipGirlDownloader wtgShipGirlDownloader = new WTGShipGirlDownloader();
+                    DPSDataDownloader dpsDataDownloader = new DPSDataDownloader();
 
                     IconsStatus = iconDownloader.Status;
                     ShipGirlsStatus = shipDownloader.Status;
@@ -139,6 +140,8 @@ namespace azurlane_wiki_app.PageDownload
                     equipmentDownloader.PropertyChanged += StatusChangedEventHandler;
                     skillDownloader.PropertyChanged += StatusChangedEventHandler;
                     wtgShipGirlDownloader.PropertyChanged += StatusChangedEventHandler;
+
+                    Task dpsTask = Task.Run(() => dpsDataDownloader.DownloadDPSData());
 
                     FirstDownloader = iconDownloader;
                     await Task.Run(() => iconDownloader.Download());
@@ -160,10 +163,12 @@ namespace azurlane_wiki_app.PageDownload
                     tasks[1] = Task.Run(() => wtgShipGirlDownloader.Download());
 
                     await Task.WhenAll(tasks);
+                    dpsTask.Wait();
 
                     if (mainWindow != null)
                     {
-                        mainWindow.ShipGirlListPageVM = new ShipGirlListPageViewModel();
+                        mainWindow.GraphicalShipGirlListPageVM = new GraphicalShipGirlListPageViewModel();
+                        mainWindow.TableShipGirlListPageVM = new TableShipGirlListPageViewModel();
                         mainWindow.EquipmentListPageVM = new EquipmentListPageViewModel();
                     }
                     
@@ -179,7 +184,7 @@ namespace azurlane_wiki_app.PageDownload
             {
                 if (!Downloading)
                 {
-                    Navigation.Navigate(new ShipGirlListPage(true));
+                    Navigation.Navigate(new GraphicalShipGirlListPage());
                 }
                 else
                 {
@@ -191,7 +196,7 @@ namespace azurlane_wiki_app.PageDownload
             {
                 if (!Downloading)
                 {
-                    Navigation.Navigate(new ShipGirlListPage(false));
+                    Navigation.Navigate(new TableShipGirlListPage());
                 }
                 else
                 {

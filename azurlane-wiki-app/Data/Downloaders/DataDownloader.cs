@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.IO;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -275,6 +274,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                 catch
                 {
                     imageUrl = "";
+                    Logger.Write($"Failed to get image info of: {imageName}", this.GetType().ToString());
                 }
             }
             else
@@ -352,14 +352,13 @@ namespace azurlane_wiki_app.Data.Downloaders
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine(e.Message);
-                            //TODO: Add error display
+                            Logger.Write($"Error when recieving image. Image: {imageName}", this.GetType().ToString());
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message); // 404
+                    Logger.Write($"Error 404 for: {imageName}", this.GetType().ToString());
                 }
             }
 

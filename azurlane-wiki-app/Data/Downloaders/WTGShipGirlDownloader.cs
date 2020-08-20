@@ -371,8 +371,6 @@ namespace azurlane_wiki_app.Data.Downloaders
                             "11-1note,11-2note,11-3note,11-4note,12-1note,12-2note,12-3note,12-4note,13-1note,13-2note," +
                             "13-3note,13-4note";
 
-        private object locker = new object();
-
         public WTGShipGirlDownloader(int ThreadsCount = 0) : base(ThreadsCount)
         {
             DownloadTitle = "Downloading Maps...";
@@ -395,11 +393,13 @@ namespace azurlane_wiki_app.Data.Downloaders
             catch(JsonException)
             {
                 Status = Statuses.ErrorInDeserialization;
+                Logger.Write($"Failed to desirialize WTG.", this.GetType().ToString());
                 return;
             }
             catch
             {
                 Status = Statuses.DownloadError;
+                Logger.Write($"Failed to get data for WTG from server.", this.GetType().ToString());
                 return;
             }
 
@@ -467,11 +467,13 @@ namespace azurlane_wiki_app.Data.Downloaders
             catch (JsonException)
             {
                 Status = Statuses.ErrorInDeserialization;
+                Logger.Write($"Failed to desirialize WTG for shipgril. Shipgirl ID: {id}", this.GetType().ToString());
                 return;
             }
             catch
             {
                 Status = Statuses.DownloadError;
+                Logger.Write($"Failed to get WTG data for shipgirl from server. Shipgirl ID: {id}", this.GetType().ToString());
                 return;
             }
 

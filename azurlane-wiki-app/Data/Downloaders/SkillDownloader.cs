@@ -44,11 +44,13 @@ namespace azurlane_wiki_app.Data.Downloaders
             catch(JsonException)
             {
                 Status = Statuses.ErrorInDeserialization;
+                Logger.Write($"Failed to desirialize skills.", this.GetType().ToString());
                 return;
             }
             catch
             {
                 Status = Statuses.DownloadError;
+                Logger.Write($"Failed to get data for skills from server.", this.GetType().ToString());
                 return;
             }
 
@@ -113,11 +115,13 @@ namespace azurlane_wiki_app.Data.Downloaders
             catch (JsonException)
             {
                 Status = Statuses.ErrorInDeserialization;
+                Logger.Write($"Failed to desirialize skill. ID: {id}", this.GetType().ToString());
                 return;
             }
             catch
             {
                 Status = Statuses.DownloadError;
+                Logger.Write($"Failed to get data for skill from server. ID: {id}", this.GetType().ToString());
                 return;
             }
 
@@ -177,11 +181,13 @@ namespace azurlane_wiki_app.Data.Downloaders
             catch (JsonException)
             {
                 Status = Statuses.ErrorInDeserialization;
+                Logger.Write($"Failed to desirialize skills for shipgirl. Shipirl ID: {shipGirl.ShipID}", this.GetType().ToString());
                 return;
             }
             catch
             {
                 Status = Statuses.DownloadError;
+                Logger.Write($"Failed to get skills data for shipgir from server. Shipgirl ID: {shipGirl.ShipID}", this.GetType().ToString());
                 return;
             }
 

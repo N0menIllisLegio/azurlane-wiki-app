@@ -1,4 +1,5 @@
-﻿using azurlane_wiki_app.Annotations;
+﻿using azurlane_wiki_app.Properties;
+using azurlane_wiki_app.PageDownload;
 using azurlane_wiki_app.PageEquipment;
 using azurlane_wiki_app.PageEquipmentList.Items;
 using azurlane_wiki_app.PageShipGirlList;
@@ -7,13 +8,20 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
-using azurlane_wiki_app.PageDownload;
 
 namespace azurlane_wiki_app.PageEquipmentList
 {
     public class EquipmentListPageViewModel : INotifyPropertyChanged
     {
         private object _equipmentList;
+        private string _typeSelectedItem;
+        private string _filterString = "";
+        private bool _maxStats = true;
+        private bool _maxRarity = false;
+        private readonly CollectionViewSource _equipmentListViewSource = new CollectionViewSource();
+        private ItemsListsStorage ItemsListsStorage = new ItemsListsStorage();
+
+        #region Bindings
 
         public Object EquipmentList
         {
@@ -25,11 +33,7 @@ namespace azurlane_wiki_app.PageEquipmentList
             }
         }
 
-        private readonly CollectionViewSource _equipmentListViewSource = new CollectionViewSource();
-
         public ObservableCollection<string> TypeCollection { get; set; }
-
-        private string _typeSelectedItem;
 
         public string TypeSelectedItem
         {
@@ -42,8 +46,6 @@ namespace azurlane_wiki_app.PageEquipmentList
             }
         }
 
-        private string _filterString = "";
-        
         public string FilterString
         {
             get => _filterString;
@@ -55,12 +57,42 @@ namespace azurlane_wiki_app.PageEquipmentList
             }
         }
 
+        public bool MaxStats
+        {
+            get => _maxStats;
+            set
+            {
+                if (value != _maxStats)
+                {
+                    _maxStats = value;
+                    OnPropertyChanged(nameof(MaxStats));
+                    ItemsListsStorage.ChangeCurrentListStats(TypeSelectedItem);
+                }
+            }
+        }
+
+        public bool MaxRarity
+        {
+            get => _maxRarity;
+            set
+            {
+                if (value != _maxRarity)
+                {
+                    _maxRarity = value;
+                    OnPropertyChanged(nameof(MaxRarity));
+                    _equipmentListViewSource.View?.Refresh();
+                }
+            }
+        }
+
+        
+
         public RelayCommand OpenEquipmentPageCommand { get; set; }
         public RelayCommand OpenGraphicalShipGirlPageCommand { get; set; }
         public RelayCommand OpenTableShipGirlPageCommand { get; set; }
         public RelayCommand OpenDownloadPageCommand { get; set; }
 
-        private ItemsListsStorage ItemsListsStorage { get; set; } = new ItemsListsStorage();
+        #endregion
 
         public EquipmentListPageViewModel()
         {
@@ -83,17 +115,15 @@ namespace azurlane_wiki_app.PageEquipmentList
             };
 
             TypeSelectedItem = TypeCollection[0];
-            EquipmentList = _equipmentListViewSource.View;
-            _equipmentListViewSource.View.Filter = Search;
 
             OpenGraphicalShipGirlPageCommand = new RelayCommand(obj =>
             {
-                Navigation.Navigate(new ShipGirlListPage(true));
+                Navigation.Navigate(new GraphicalShipGirlListPage());
             });
 
             OpenTableShipGirlPageCommand = new RelayCommand(obj =>
             {
-                Navigation.Navigate(new ShipGirlListPage(false));
+                Navigation.Navigate(new TableShipGirlListPage());
             });
 
             OpenEquipmentPageCommand = new RelayCommand(obj =>
@@ -118,13 +148,20 @@ namespace azurlane_wiki_app.PageEquipmentList
             _equipmentListViewSource.Source = ItemsListsStorage.GetList(newType);
             EquipmentList = _equipmentListViewSource.View;
             _equipmentListViewSource.View.Filter = Search;
+
+            if (!MaxStats)
+            {
+                ItemsListsStorage.ChangeCurrentListStats(TypeSelectedItem);
+            }
         }
 
         private bool Search(object item)
         {
             BaseEquipmentItem baseEquipment = item as BaseEquipmentItem;
-            return baseEquipment.Name.ToLower().Contains(_filterString.ToLower());
+            return baseEquipment.Name.ToLower().Contains(_filterString.ToLower()) && (baseEquipment.IsMaxRarity || !MaxRarity);
         }
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
