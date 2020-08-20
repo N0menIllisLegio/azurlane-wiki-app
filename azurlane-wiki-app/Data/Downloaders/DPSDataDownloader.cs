@@ -1,5 +1,6 @@
 ﻿using azurlane_wiki_app.PageEquipmentList.Items;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -191,7 +192,7 @@ namespace azurlane_wiki_app.Data.Downloaders
 
             while (match.Success)
             {
-                float cooldown = float.Parse(match.Groups[2].Value);
+                float cooldown = float.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
                 Cooldowns.Add(match.Groups[1].Value, cooldown);
 
                 match = match.NextMatch();
