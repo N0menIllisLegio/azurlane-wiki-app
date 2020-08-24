@@ -298,7 +298,6 @@ namespace azurlane_wiki_app.Data.Downloaders
             public string note133 { get; set; }
             [JsonProperty("13-4note")]
             public string note134 { get; set; }
-            // When new locations are added, the scheme needs to be expanded and don't forget to add locations to request!
 
             /// <summary>
             /// Get names and notes of shipgirl's drop location or construction pool.
@@ -307,50 +306,146 @@ namespace azurlane_wiki_app.Data.Downloaders
             public Dictionary<string, string> GetDrops()
             {
                 Dictionary<string, string> dictionary = new Dictionary<string, string>();
+                // Dictionary<string, string> dictionary1 = new Dictionary<string, string>();
 
-                var properties = GetType()
-                    .GetProperties()
-                    .Where(pi => pi.PropertyType == typeof(string) && pi.GetGetMethod() != null)
-                    .Select(pi =>
-                    {
-                        string attributeName = "";
-
-                        if (pi.CustomAttributes.Any())
-                        {
-                            attributeName = pi.CustomAttributes.ElementAt(0)?.ConstructorArguments[0].Value
-                                .ToString() ?? "";
-                        }
-
-                        return new
-                        {
-                            pi.Name,
-                            Attribute = attributeName,
-                            Value = pi.GetGetMethod().Invoke(this, null)
-                        };
-                    });
-
-                foreach (var property in properties)
+                string[,] data = 
                 {
-                    if (!property.Name.Equals("ID"))
+                    {"Light", Light, LightNote},
+                    {"Heavy", Heavy, HeavyNote},
+                    {"Aviation", Aviation, AviationNote},
+                    {"Limited", Limited, LimitedNote},
+                    {"Exchange", Exchange, ExchangeNote},
+                    {"Collection", Collection, CollectionNote},
+                    {"Event", Event, EventNote},
+
+                    {"1-1", node11, note11 },
+                    {"1-2", node12, note12 },
+                    {"1-3", node13, note13 },
+                    {"1-4", node14, note14 },
+                    {"2-1", node21, note21 },
+                    {"2-2", node22, note22 },
+                    {"2-3", node23, note23 },
+                    {"2-4", node24, note24 },
+                    {"3-1", node31, note31 },
+                    {"3-2", node32, note32 },
+                    {"3-3", node33, note33 },
+                    {"3-4", node34, note34 },
+                    {"3-5", node35, note35 },
+                    {"4-1", node41, note41 },
+                    {"4-2", node42, note42 },
+                    {"4-3", node43, note43 },
+                    {"4-4", node44, note44 },
+                    {"4-5", node45, note45 },
+                    {"5-1", node51, note51 },
+                    {"5-2", node52, note52 },
+                    {"5-3", node53, note53 },
+                    {"5-4", node54, note54 },
+                    {"5-5", node55, note55 },
+                    {"6-1", node61, note61 },
+                    {"6-2", node62, note62 },
+                    {"6-3", node63, note63 },
+                    {"6-4", node64, note64 },
+                    {"6-5", node65, note65 },
+                    {"7-1", node71, note71 },
+                    {"7-2", node72, note72 },
+                    {"7-3", node73, note73 },
+                    {"7-4", node74, note74 },
+                    {"7-5", node75, note75 },
+                    {"8-1", node81, note81 },
+                    {"8-2", node82, note82 },
+                    {"8-3", node83, note83 },
+                    {"8-4", node84, note84 },
+                    {"8-5", node85, note85 },
+                    {"9-1", node91, note91 },
+                    {"9-2", node92, note92 },
+                    {"9-3", node93, note93 },
+                    {"9-4", node94, note94 },
+                    {"9-5", node95, note95 },
+                    {"10-1", node101, note101 },
+                    {"10-2", node102, note102 },
+                    {"10-3", node103, note103 },
+                    {"10-4", node104, note104 },
+                    {"10-5", node105, note105 },
+                    {"11-1", node111, note111 },
+                    {"11-2", node112, note112 },
+                    {"11-3", node113, note113 },
+                    {"11-4", node114, note114 },
+                    {"12-1", node121, note121 },
+                    {"12-2", node122, note122 },
+                    {"12-3", node123, note123 },
+                    {"12-4", node124, note124 },
+                    {"13-1", node131, note131 },
+                    {"13-2", node132, note132 },
+                    {"13-3", node133, note133 },
+                    {"13-4", node134, note134 }
+                };
+
+                //var properties = GetType()
+                //    .GetProperties()
+                //    .Where(pi => pi.PropertyType == typeof(string) && pi.GetGetMethod() != null)
+                //    .Select(pi =>
+                //    {
+                //        string attributeName = "";
+
+                //        if (pi.CustomAttributes.Any())
+                //        {
+                //            attributeName = pi.CustomAttributes.ElementAt(0)?.ConstructorArguments[0].Value
+                //                .ToString() ?? "";
+                //        }
+
+                //        return new
+                //        {
+                //            pi.Name,
+                //            Attribute = attributeName,
+                //            Value = pi.GetGetMethod().Invoke(this, null)
+                //        };
+                //    });
+
+                //foreach (var property in properties)
+                //{
+                //    if (!property.Name.Equals("ID"))
+                //    {
+                //        string searchField = property.Name.Replace("node", "");
+
+                //        var notes = properties.Where(p => p.Name.Contains(searchField)
+                //                                          && (p.Name.Contains("note") || p.Name.Contains("Note")));
+
+                //        string note = notes.ElementAt(0)?.Value.ToString();
+
+                //        // if its field value equals t(true) (means its node property) 
+                //        // or its note is not empty (check Akagi, she drops on 3-4, but there are no t on 3-4, only note)
+                //        // also dictionary should not contain it already
+                //        // and it should be clearly node (or construction) NOT note!
+                //        if ((property.Value.ToString().Equals("t") || !string.IsNullOrEmpty(note)) 
+                //            && !dictionary.ContainsKey(property.Attribute) && !property.Attribute.ToLower().Contains("note"))
+                //        {
+                //            dictionary.Add(property.Attribute, note ?? "");
+                //        }
+                //    }
+                //}
+
+                for (int i = 0; i < data.GetLength(0); i++)
+                {
+                    if ((data[i, 1].Equals("t") || !string.IsNullOrEmpty(data[i, 2])) && !dictionary.ContainsKey(data[i, 0]))
                     {
-                        string searchField = property.Name.Replace("node", "");
-
-                        var notes = properties.Where(p => p.Name.Contains(searchField)
-                                                          && (p.Name.Contains("note") || p.Name.Contains("Note")));
-
-                        string note = notes.ElementAt(0)?.Value.ToString();
-
-                        // if its field value equals t(true) (means its node property) 
-                        // or its note is not empty (check Akagi, she drops on 3-4, but there are no t on 3-4, only note)
-                        // also dictionary should not contain it already
-                        // and it should be clearly node (or construction) NOT note!
-                        if ((property.Value.ToString().Equals("t") || !string.IsNullOrEmpty(note)) 
-                            && !dictionary.ContainsKey(property.Attribute) && !property.Attribute.ToLower().Contains("note"))
-                        {
-                            dictionary.Add(property.Attribute, note ?? "");
-                        }
+                        dictionary.Add(data[i, 0], data[i, 2]);
                     }
                 }
+
+                //foreach (var key in dictionary.Keys)
+                //{
+                //    if (dictionary1.ContainsKey(key))
+                //    {
+                //        if (!dictionary1[key].Equals(dictionary[key]))
+                //        {
+                //            Logger.Write($"Values are not equal. ID: {ID}; Key: {key}");
+                //        }
+                //    }
+                //    else
+                //    {
+                //        Logger.Write($"No key. ID: {ID}; Key: {key}");
+                //    }
+                //}
 
                 return dictionary;
             }

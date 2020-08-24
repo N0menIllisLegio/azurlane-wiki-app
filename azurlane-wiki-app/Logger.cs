@@ -18,6 +18,11 @@ namespace azurlane_wiki_app
 			WriteToFile($"{place}: {message}");
         }
 
+        public static void Write(string message, string place, Exception exception)
+        {
+            WriteToFile($"{place}: {message}\n\t\t{exception}");
+        }
+
 		private static void WriteToFile(string str)
         {
 			lock (locker)

@@ -4,12 +4,6 @@ using Newtonsoft.Json;
 
 namespace azurlane_wiki_app.Data.Tables
 {
-    class SkillJsonWrapper
-    {
-        [JsonProperty("title")]
-        public Skill Skill { get; set; }
-    }
-
     public class Skill
     {
         [Key]

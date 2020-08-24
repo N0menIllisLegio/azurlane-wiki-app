@@ -9,6 +9,12 @@ using Newtonsoft.Json;
 
 namespace azurlane_wiki_app.Data.Downloaders
 {
+    class EquipmentJsonWrapper
+    {
+        [JsonProperty("title")]
+        public Equipment Equipment { get; set; }
+    }
+
     class EquipmentDownloader : DataDownloader
     {
         private static readonly string EquipmentImagesFolderPath = ImagesFolderPath + "/Equipment";
@@ -48,7 +54,7 @@ namespace azurlane_wiki_app.Data.Downloaders
             catch(JsonException)
             {
                 Status = Statuses.ErrorInDeserialization;
-                Logger.Write($"Failed to desirialize equipment.", this.GetType().ToString());
+                Logger.Write($"Failed to deserialize equipment.", this.GetType().ToString());
                 return;
             }
             catch
@@ -65,9 +71,24 @@ namespace azurlane_wiki_app.Data.Downloaders
             {
                 StatusImageMessage = "Adding images to download queue.";
 
+                // Prevent loading duplicate images.
+                HashSet<string> loadingImages = new HashSet<string>();
+
                 foreach (EquipmentJsonWrapper wrpEquipment in wrappedEquipment)
                 {
-                    downloadBlock.Post(wrpEquipment.Equipment.Image);
+                    string loadingImage = wrpEquipment.Equipment.Image;
+
+                    if (loadingImages.Add(loadingImage))
+                    {
+                        downloadBlock.Post(loadingImage);
+                    }
+                    else
+                    {
+                        lock (locker)
+                        {
+                            CurrentImageCount++;
+                        }
+                    }
                 }
 
                 downloadBlock.Complete();

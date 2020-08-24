@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
@@ -8,10 +9,23 @@ namespace azurlane_wiki_app
 {
     class ImagePathConverter : IValueConverter
     {
-        public static readonly BitmapImage ImagePlaceholder = 
-            new BitmapImage(new Uri(@"pack://application:,,,/Resources/Placeholder.png"));
+        public static BitmapImage ImagePlaceholder
+        {
+            get
+            {
+                if (bc_ImagePlaceholder == null)
+                {
+                    BitmapImage image = new BitmapImage(new Uri(@"pack://application:,,,/Resources/Placeholder.png"));
+                    image.Freeze();
+                    Application.Current.Dispatcher.Invoke(new Action(() => bc_ImagePlaceholder = image));
+                }
+
+                return bc_ImagePlaceholder;
+            }
+        }
 
         private static Dictionary<string, BitmapImage> icons = new Dictionary<string, BitmapImage>();
+        private static BitmapImage bc_ImagePlaceholder = null;
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

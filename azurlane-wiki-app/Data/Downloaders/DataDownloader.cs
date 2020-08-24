@@ -307,54 +307,64 @@ namespace azurlane_wiki_app.Data.Downloaders
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls |
                                                        SecurityProtocolType.Tls11 |
                                                        SecurityProtocolType.Tls12;
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(imageUrl);
-                request.Timeout = 14400000;
-                request.KeepAlive = true;
+                int tries = 5;
 
                 try
                 {
-                    using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
+                    do
                     {
-                        try
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(imageUrl);
+                        request.Timeout = 14400000;
+                        request.KeepAlive = true;
+
+                        using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
                         {
-                            Stream stream = response.GetResponseStream();
-
-                            if (stream != null)
+                            try
                             {
-                                using (BinaryReader binaryReader = new BinaryReader(stream))
+                                using (Stream stream = response.GetResponseStream())
                                 {
-                                    using (MemoryStream memoryStream = new MemoryStream())
+                                    if (stream != null)
                                     {
-                                        byte[] buffer = binaryReader.ReadBytes(1024);
-
-                                        while (buffer.Length > 0)
+                                        using (BinaryReader binaryReader = new BinaryReader(stream))
                                         {
-                                            memoryStream.Write(buffer, 0, buffer.Length);
-                                            buffer = binaryReader.ReadBytes(1024);
-                                        }
+                                            using (MemoryStream memoryStream = new MemoryStream())
+                                            {
+                                                byte[] buffer = binaryReader.ReadBytes(1024);
 
-                                        byte[] fileBuffer = new byte[(int)memoryStream.Length];
-                                        memoryStream.Position = 0;
-                                        await memoryStream.ReadAsync(fileBuffer, 0, fileBuffer.Length);
+                                                while (buffer.Length > 0)
+                                                {
+                                                    memoryStream.Write(buffer, 0, buffer.Length);
+                                                    buffer = binaryReader.ReadBytes(1024);
+                                                }
 
-                                        string folderName = GetImageFolder(imageName);
-                                        imagePath = folderName + "/" + imageName;
+                                                byte[] fileBuffer = new byte[(int) memoryStream.Length];
+                                                memoryStream.Position = 0;
+                                                await memoryStream.ReadAsync(fileBuffer, 0, fileBuffer.Length);
 
-                                        using (FileStream fileStream =
-                                            new FileStream(imagePath, FileMode.Create))
-                                        {
-                                            await fileStream.WriteAsync(fileBuffer, 0, fileBuffer.Length);
+                                                string folderName = GetImageFolder(imageName);
+                                                imagePath = folderName + "/" + imageName;
+
+                                                using (FileStream fileStream =
+                                                    new FileStream(imagePath, FileMode.Create))
+                                                {
+                                                    await fileStream.WriteAsync(fileBuffer, 0, fileBuffer.Length);
+                                                }
+
+                                                tries = 0;
+                                            }
                                         }
                                     }
                                 }
                             }
+                            catch (Exception e)
+                            {
+                                tries--;
+                                Logger.Write($"Error when receiving image. Image: {imageName}; Tries left: {tries}",
+                                    this.GetType().ToString(), e);
+                            }
                         }
-                        catch (Exception e)
-                        {
-                            Logger.Write($"Error when recieving image. Image: {imageName}", this.GetType().ToString());
-                        }
-                    }
+
+                    } while (tries > 0);
                 }
                 catch (Exception e)
                 {

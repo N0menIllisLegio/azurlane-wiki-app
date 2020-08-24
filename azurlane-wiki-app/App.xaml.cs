@@ -31,8 +31,6 @@ namespace azurlane_wiki_app
             thread.IsBackground = true;
             thread.Start();
 
-            ImagePathConverter imagePathConverter = new ImagePathConverter();
-
             MainWindow mainWindow = new MainWindow();
             MainWindow = mainWindow;
 

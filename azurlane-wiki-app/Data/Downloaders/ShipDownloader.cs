@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace azurlane_wiki_app.Data.Downloaders
 {
+    class ShipGirlJsonWrapper
+    {
+        [JsonProperty("title")]
+        public ShipGirl ShipGirl { get; set; }
+    }
+
     class ShipDownloader : DataDownloader
     {
         private static readonly string KaiImagesFolderPath = ImagesFolderPath + "/Ships/KaiImages";

@@ -5,12 +5,6 @@ using Newtonsoft.Json;
 
 namespace azurlane_wiki_app.Data.Tables
 {
-    class ShipGirlJsonWrapper
-    {
-        [JsonProperty("title")]
-        public ShipGirl ShipGirl { get; set; }
-    }
-
     public class ShipGirl
     {
         [Key]

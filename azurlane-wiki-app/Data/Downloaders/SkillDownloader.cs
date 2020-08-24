@@ -9,6 +9,12 @@ using Newtonsoft.Json;
 
 namespace azurlane_wiki_app.Data.Downloaders
 {
+    class SkillJsonWrapper
+    {
+        [JsonProperty("title")]
+        public Skill Skill { get; set; }
+    }
+
     class SkillDownloader : DataDownloader
     {
         private static readonly string SkillImagesFolderPath = ImagesFolderPath + "/SkillsIcons";

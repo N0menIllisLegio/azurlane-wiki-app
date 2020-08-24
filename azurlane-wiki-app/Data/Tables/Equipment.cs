@@ -4,12 +4,6 @@ using Newtonsoft.Json;
 
 namespace azurlane_wiki_app.Data.Tables
 {
-    class EquipmentJsonWrapper
-    {
-        [JsonProperty("title")]
-        public Equipment Equipment { get; set; }
-    }
-
     [Table("Equipment")]
     public class Equipment
     {
