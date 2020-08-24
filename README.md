@@ -25,7 +25,7 @@ Offline client for [Azur Lane Wiki](https://azurlane.koumakan.jp/).
 - [x] Add ability to display min equipment stats and only max rarity equipment
 - [x] Fix performance issues
 - [x] Move data from DPS calcs in DB
-- [ ] Add ability to download single shipgirl or equipment
-- [ ] Solve the problem with incorrect images
+- [ ] Add ability to update without reloading all
+- [x] Solve the problem with incorrect images
 - [ ] Add a display of the best equipment for shipgirl
 - [ ] Add comparison of shipgirls and equipment
