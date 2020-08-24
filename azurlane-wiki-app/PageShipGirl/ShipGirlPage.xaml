@@ -316,13 +316,13 @@
                 
             </Border>
 
-            <Button ToolTip="Reload ShipGirl data from server." Height="Auto" Width="Auto" Grid.Column="4"
+            <!--<Button ToolTip="Reload ShipGirl data from server." Height="Auto" Width="Auto" Grid.Column="4"
                     Margin="3" Style="{StaticResource MaterialDesignFlatButton}">
-                <!--Command="{Binding ClosePageCommand, IsAsync=True, Mode=OneWay}">-->
+                --><!--Command="{Binding ClosePageCommand, IsAsync=True, Mode=OneWay}">--><!--
                 <materialDesign:PackIcon Kind="Refresh" Height="30" Width="30"
                                          VerticalAlignment="Center"
                                          Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"/>
-            </Button>
+            </Button>-->
         </Grid>
 
         <ScrollViewer Grid.Row="1" Name="ScrollViewer">
