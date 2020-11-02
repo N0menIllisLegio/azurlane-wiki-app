@@ -31,7 +31,8 @@ namespace azurlane_wiki_app.Data.Downloaders
             ["Battlecruiser"] = "BC",
             ["Monitor"] = "BM",
             ["Submarine Carrier"] = "SSV",
-            ["Aviation Battleship"] = "BBV" 
+            ["Aviation Battleship"] = "BBV",
+            ["Munition Ship"] = "AE"
         };
 
         /// <summary>
@@ -39,6 +40,7 @@ namespace azurlane_wiki_app.Data.Downloaders
         /// </summary>
         private readonly Dictionary<string, (int?, int?, int?)> ScrapValues = new Dictionary<string, (int?, int?, int?)>
         {
+            ["Ultra Rare"] = (4, 3, 30),
             ["Super Rare"] = (4, 3, 10),
             ["Elite"] = (4, 3, 4),
             ["Rare"] = (4, 3, 1),
@@ -138,7 +140,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                     if (await cargoContext.ShipGirls.FindAsync(wrappedGirl.ShipGirl.ShipID) == null)
                     {
                         CreateRelationships(wrappedGirl.ShipGirl, cargoContext);
-                        SavePaths(wrappedGirl.ShipGirl);
+                        SavePaths(wrappedGirl.ShipGirl, cargoContext);
                         wrappedGirl.ShipGirl.Name = Refactor(wrappedGirl.ShipGirl.Name);
                         cargoContext.ShipGirls.Add(wrappedGirl.ShipGirl);
                     }
@@ -209,7 +211,7 @@ namespace azurlane_wiki_app.Data.Downloaders
                 downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIconKai);
                 
                 CreateRelationships(wrappedGirl.ShipGirl, cargoContext);
-                SavePaths(wrappedGirl.ShipGirl);
+                SavePaths(wrappedGirl.ShipGirl, cargoContext);
                 wrappedGirl.ShipGirl.Name = Refactor(wrappedGirl.ShipGirl.Name);
 
                 if (await cargoContext.ShipGirls.FindAsync(wrappedGirl.ShipGirl.ShipID) == null)
@@ -438,6 +440,8 @@ namespace azurlane_wiki_app.Data.Downloaders
             shipGirl.FK_Eq2Type = eq2Type;
             shipGirl.FK_Eq3Type = eq3Type;
 
+            AddStats(shipGirl, cargoContext);
+
             cargoContext.SaveChanges();
         }
 
@@ -445,13 +449,18 @@ namespace azurlane_wiki_app.Data.Downloaders
         /// Change ShipGirls image fields from image name to relative path to image
         /// </summary>
         /// <param name="shipGirl">ShipGirl for changing</param>
-        private void SavePaths(ShipGirl shipGirl)
+        private void SavePaths(ShipGirl shipGirl, CargoContext cargoContext)
         {
-            shipGirl.Image = GetImageFolder(shipGirl.Image) + "/" + RefactorImageName(shipGirl.Image);
-            shipGirl.ImageIcon = GetImageFolder(shipGirl.ImageIcon) + "/" + RefactorImageName(shipGirl.ImageIcon);
-            shipGirl.ImageBanner = GetImageFolder(shipGirl.ImageBanner) + "/" + RefactorImageName(shipGirl.ImageBanner);
-            shipGirl.ImageChibi = GetImageFolder(shipGirl.ImageChibi) + "/" + RefactorImageName(shipGirl.ImageChibi);
-            shipGirl.ImageShipyardIcon = GetImageFolder(shipGirl.ImageShipyardIcon) + "/" + RefactorImageName(shipGirl.ImageShipyardIcon);
+            var images = new ShipGirlImages();
+
+            images.Image = shipGirl.Image = GetImageFolder(shipGirl.Image) + "/" + RefactorImageName(shipGirl.Image);
+            images.ImageIcon = shipGirl.ImageIcon = GetImageFolder(shipGirl.ImageIcon) + "/" + RefactorImageName(shipGirl.ImageIcon);
+            images.ImageBanner = shipGirl.ImageBanner = GetImageFolder(shipGirl.ImageBanner) + "/" + RefactorImageName(shipGirl.ImageBanner);
+            images.ImageChibi = shipGirl.ImageChibi = GetImageFolder(shipGirl.ImageChibi) + "/" + RefactorImageName(shipGirl.ImageChibi);
+            images.ImageShipyardIcon = shipGirl.ImageShipyardIcon = GetImageFolder(shipGirl.ImageShipyardIcon) + "/" + RefactorImageName(shipGirl.ImageShipyardIcon);
+
+            shipGirl.FK_Images = images;
+            cargoContext.ShipGirlsImages.Add(images);
 
             // Kai
             shipGirl.ImageShipyardIconKai = !string.IsNullOrEmpty(shipGirl.ImageShipyardIconKai) 
@@ -469,6 +478,12 @@ namespace azurlane_wiki_app.Data.Downloaders
             shipGirl.ImageChibiKai = !string.IsNullOrEmpty(shipGirl.ImageChibiKai)
                 ? GetImageFolder(shipGirl.ImageChibiKai) + "/" + RefactorImageName(shipGirl.ImageChibiKai)
                 : null;
+
+            if (shipGirl.Remodel == "t")
+            {
+                AddRetrofit(shipGirl, cargoContext);
+            }
+
         }
 
         private string Refactor(string text)
@@ -476,6 +491,141 @@ namespace azurlane_wiki_app.Data.Downloaders
             string refactoredText = text.Replace(@"&amp;#39;", "\'");
 
             return refactoredText;
+        }
+
+        private void AddRetrofit(ShipGirl shipGirl, CargoContext cargoContext)
+        {
+            var retrofitStats = new ShipGirlStats
+            {
+                Health = shipGirl.HealthKai ?? 0,
+                Fire = shipGirl.FireKai ?? 0,
+                AA = shipGirl.AAKai ?? 0,
+                Torp = shipGirl.TorpKai ?? 0,
+                Air = shipGirl.AirKai ?? 0,
+                Reload = shipGirl.ReloadKai ?? 0,
+                Evade = shipGirl.EvadeKai ?? 0,
+                Consumption = shipGirl.ConsumptionKai ?? 0,
+                Accuracy = shipGirl.AccKai ?? 0,
+                ASW = shipGirl.ASWKai ?? 0,
+                Oxygen = shipGirl.OxygenKai ?? 0,
+                Ammo = shipGirl.AmmoKai ?? 0,
+
+                Eq1Efficiency = shipGirl.Eq1EffInitKai,
+                Eq2Efficiency = shipGirl.Eq2EffInitKai,
+                Eq3Efficiency = shipGirl.Eq3EffInitKai
+            };
+
+            var retrofit120Stats = new ShipGirlStats
+            {
+                Health = shipGirl.HealthKai120 ?? 0,
+                Fire = shipGirl.FireKai120 ?? 0,
+                AA = shipGirl.AAKai120 ?? 0,
+                Torp = shipGirl.TorpKai120 ?? 0,
+                Air = shipGirl.AirKai120 ?? 0,
+                Reload = shipGirl.ReloadKai120 ?? 0,
+                Evade = shipGirl.EvadeKai120 ?? 0,
+                Consumption = shipGirl.ConsumptionKai120 ?? 0,
+                Accuracy = shipGirl.AccKai120 ?? 0,
+                ASW = shipGirl.ASWKai120 ?? 0,
+                Oxygen = shipGirl.OxygenKai120 ?? 0,
+                Ammo = shipGirl.AmmoKai120 ?? 0,
+
+                Eq1Efficiency = shipGirl.Eq1EffInitKai,
+                Eq2Efficiency = shipGirl.Eq2EffInitKai,
+                Eq3Efficiency = shipGirl.Eq3EffInitKai
+            };
+
+            var images = new ShipGirlImages
+            {
+                Image = shipGirl.ImageKai,
+                ImageIcon = shipGirl.ImageIconKai,
+                ImageBanner = shipGirl.ImageBannerKai,
+                ImageChibi = shipGirl.ImageChibiKai,
+                ImageShipyardIcon = shipGirl.ImageShipyardIconKai
+            };
+
+            var retrofit = new ShipGirlRetrofit
+            {
+                FK_Images = images,
+                FK_InitialStats = retrofitStats,
+                FK_Level120Stats = retrofit120Stats
+            };
+
+            cargoContext.ShipGirlsStats.Add(retrofitStats);
+            cargoContext.ShipGirlsStats.Add(retrofit120Stats);
+            cargoContext.ShipGirlsImages.Add(images);
+            cargoContext.ShipGirlsRetrofits.Add(retrofit);
+        }
+
+        private void AddStats(ShipGirl shipGirl, CargoContext cargoContext)
+        {
+            var initStats = new ShipGirlStats
+            {
+                Health = shipGirl.HealthInitial ?? 0,
+                Fire = shipGirl.FireInitial ?? 0,
+                AA = shipGirl.AAInitial ?? 0,
+                Torp = shipGirl.TorpInitial ?? 0,
+                Air = shipGirl.AirInitial ?? 0,
+                Reload = shipGirl.ReloadInitial ?? 0,
+                Evade = shipGirl.EvadeInitial ?? 0,
+                Consumption = shipGirl.ConsumptionInitial ?? 0,
+                Accuracy = shipGirl.AccInitial ?? 0,
+                ASW = shipGirl.ASWInitial ?? 0,
+                Oxygen = shipGirl.OxygenInitial ?? 0,
+                Ammo = shipGirl.AmmoInitial ?? 0,
+
+                Eq1Efficiency = shipGirl.Eq1EffInit,
+                Eq2Efficiency = shipGirl.Eq2EffInit,
+                Eq3Efficiency = shipGirl.Eq3EffInit
+            };
+
+            var stats100 = new ShipGirlStats
+            {
+                Health = shipGirl.HealthMax ?? 0,
+                Fire = shipGirl.FireMax ?? 0,
+                AA = shipGirl.AAMax ?? 0,
+                Torp = shipGirl.TorpMax ?? 0,
+                Air = shipGirl.AirMax ?? 0,
+                Reload = shipGirl.ReloadMax ?? 0,
+                Evade = shipGirl.EvadeMax ?? 0,
+                Consumption = shipGirl.ConsumptionMax ?? 0,
+                Accuracy = shipGirl.AccMax ?? 0,
+                ASW = shipGirl.ASWMax ?? 0,
+                Oxygen = shipGirl.OxygenMax ?? 0,
+                Ammo = shipGirl.AmmoMax ?? 0,
+
+                Eq1Efficiency = shipGirl.Eq1EffInitMax,
+                Eq2Efficiency = shipGirl.Eq2EffInitMax,
+                Eq3Efficiency = shipGirl.Eq3EffInitMax
+            };
+
+            var stats120 = new ShipGirlStats
+            {
+                Health = shipGirl.Health120 ?? 0,
+                Fire = shipGirl.Fire120 ?? 0,
+                AA = shipGirl.AA120 ?? 0,
+                Torp = shipGirl.Torp120 ?? 0,
+                Air = shipGirl.Air120 ?? 0,
+                Reload = shipGirl.Reload120 ?? 0,
+                Evade = shipGirl.Evade120 ?? 0,
+                Consumption = shipGirl.Consumption120 ?? 0,
+                Accuracy = shipGirl.Acc120 ?? 0,
+                ASW = shipGirl.ASW120 ?? 0,
+                Oxygen = shipGirl.Oxygen120 ?? 0,
+                Ammo = shipGirl.Ammo120 ?? 0,
+
+                Eq1Efficiency = shipGirl.Eq1EffInitMax,
+                Eq2Efficiency = shipGirl.Eq2EffInitMax,
+                Eq3Efficiency = shipGirl.Eq3EffInitMax
+            };
+
+            shipGirl.FK_InitialStats = initStats;
+            shipGirl.FK_Level100Stats = stats100;
+            shipGirl.FK_Level120Stats = stats120;
+
+            cargoContext.ShipGirlsStats.Add(initStats);
+            cargoContext.ShipGirlsStats.Add(stats100);
+            cargoContext.ShipGirlsStats.Add(stats120);
         }
     }
 }

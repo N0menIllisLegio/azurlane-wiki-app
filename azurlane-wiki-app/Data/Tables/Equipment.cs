@@ -144,6 +144,11 @@ namespace azurlane_wiki_app.Data.Tables
         public string Tech { get; set; }
         public virtual EquipmentTech FK_Tech { get; set; }
 
+
+
+        public virtual EquipmentStats FK_InitialStats { get; set; }
+        public virtual EquipmentStats FK_MaxStats { get; set; }
+
         #endregion
     }
 }

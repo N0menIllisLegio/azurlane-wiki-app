@@ -261,6 +261,8 @@ namespace azurlane_wiki_app.Data.Downloaders
             equipment.FK_Tech = equipmentTech;
             equipment.FK_Type = equipmentType;
 
+            AddStats(equipment, cargoContext);
+
             cargoContext.SaveChanges();
         }
 
@@ -285,6 +287,52 @@ namespace azurlane_wiki_app.Data.Downloaders
             data = data.Replace("]", "");
 
             return data;
+        }
+
+        private void AddStats(Equipment equipment, CargoContext cargoContext)
+        {
+            var initStats = new EquipmentStats
+            {
+                Health = equipment.Health,
+                Torpedo = equipment.Torpedo,
+                Firepower = equipment.Firepower,
+                Aviation = equipment.Aviation,
+                Evasion = equipment.Evasion,
+                PlaneHP = equipment.PlaneHP,
+                Reload = equipment.Reload,
+                ASW = equipment.ASW,
+                Oxygen = equipment.Oxygen,
+                AA = equipment.AA,
+                Luck = equipment.Luck,
+                Acc = equipment.Acc,
+                Spd = equipment.Spd,
+                Damage = equipment.Damage,
+                RoF = equipment.RoF,
+            };
+
+            var maxStats = new EquipmentStats
+            {
+                Health = equipment.HealthMax,
+                Torpedo = equipment.TorpMax,
+                Firepower = equipment.FPMax,
+                Aviation = equipment.AvMax,
+                Evasion = equipment.EvasionMax,
+                PlaneHP = equipment.PlaneHPMax,
+                Reload = equipment.ReloadMax,
+                ASW = equipment.ASWMax,
+                Oxygen = equipment.OxygenMax,
+                AA = equipment.AAMax,
+                Luck = equipment.LuckMax,
+                Acc = equipment.AccMax,
+                Spd = equipment.SpdMax,
+                Damage = equipment.DamageMax,
+                RoF = equipment.RoFMax,
+            };
+
+            equipment.FK_InitialStats = initStats;
+            equipment.FK_MaxStats = maxStats;
+            cargoContext.ShipGirlsEquipmentStats.Add(initStats);
+            cargoContext.ShipGirlsEquipmentStats.Add(maxStats);
         }
     }
 }

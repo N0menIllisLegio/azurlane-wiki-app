@@ -12,7 +12,11 @@ namespace azurlane_wiki_app.Data
     class CargoContext : DbContext
     {
         public DbSet<ShipGirl> ShipGirls { get; set; }
+        public DbSet<ShipGirlStats> ShipGirlsStats { get; set; }
+        public DbSet<ShipGirlRetrofit> ShipGirlsRetrofits { get; set; }
+        public DbSet<ShipGirlImages> ShipGirlsImages { get; set; }
         public DbSet<Equipment> ShipGirlsEquipment { get; set; }
+        public DbSet<EquipmentStats> ShipGirlsEquipmentStats { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<WhereToGetShipGirl> WhereToGetShipGirls { get; set; }
         public DbSet<ShipGirlWhereToGetShipGirl> ShipGirlWhereToGetShipGirl { get; set; }

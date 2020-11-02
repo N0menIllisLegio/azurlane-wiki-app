@@ -124,6 +124,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\Downloaders\DPSDataDownloader.cs" />
+    <Compile Include="Data\Tables\EquipmentStats.cs" />
+    <Compile Include="Data\Tables\ShipGirlImages.cs" />
+    <Compile Include="Data\Tables\ShipGirlRetrofit.cs" />
+    <Compile Include="Data\Tables\ShipGirlStats.cs" />
     <Compile Include="PageEquipmentList\Items\DPSData.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Navigation.cs" />
@@ -324,6 +328,9 @@
     <Resource Include="Resources\SplashScreenGifs\portland.gif" />
     <Resource Include="Resources\SplashScreenGifs\scared.gif" />
     <Resource Include="Resources\SplashScreenGifs\uni.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Downloaders\ServerModels\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

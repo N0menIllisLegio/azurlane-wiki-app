@@ -17,7 +17,7 @@ namespace azurlane_wiki_app
                 {
                     BitmapImage image = new BitmapImage(new Uri(@"pack://application:,,,/Resources/Placeholder.png"));
                     image.Freeze();
-                    Application.Current.Dispatcher.Invoke(new Action(() => bc_ImagePlaceholder = image));
+                    bc_ImagePlaceholder = image;
                 }
 
                 return bc_ImagePlaceholder;

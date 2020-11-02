@@ -12,25 +12,27 @@ namespace azurlane_wiki_app.Data.Tables
         public string ShipID { get; set; }
         [MaxLength(40)]
         public string Name { get; set; }
-        //[MaxLength(10)]
-        //public string Rarity { get; set; }
-        //[MaxLength(40)]
-        //public string ShipGroup { get; set; }
-        //[MaxLength(20)]
-        //public string Nationality { get; set; }
         [MaxLength(30)]
         public string ConstructTime { get; set; }
-        //[MaxLength(40)]
-        //public string Type { get; set; }
-        //[MaxLength(20)]
-        //public string SubtypeRetro { get; set; }
-        //[MaxLength(20)]
-        //public string Class { get; set; }
         [MaxLength(3)]
         public string Remodel { get; set; }
-        public int? HealthInitial { get; set; }
         [MaxLength(10)]
         public string Armor { get; set; }
+        public int? Speed { get; set; }
+        public int? Luck { get; set; }
+
+        [JsonProperty("LB1")]
+        [MaxLength(1000)]
+        public string LimitBreak1 { get; set; }
+        [JsonProperty("LB2")]
+        [MaxLength(1000)]
+        public string LimitBreak2 { get; set; }
+        [JsonProperty("LB3")]
+        [MaxLength(1000)]
+        public string LimitBreak3 { get; set; }
+
+        #region Stats
+        public int? HealthInitial { get; set; }
         public int? FireInitial { get; set; }
         public int? AAInitial { get; set; }
         public int? TorpInitial { get; set; }
@@ -38,8 +40,6 @@ namespace azurlane_wiki_app.Data.Tables
         public int? ReloadInitial { get; set; }
         public int? EvadeInitial { get; set; }
         public int? ConsumptionInitial { get; set; }
-        public int? Speed { get; set; }
-        public int? Luck { get; set; }
         public int? AccInitial { get; set; }
         public int? ASWInitial { get; set; }
         public int? OxygenInitial { get; set; }
@@ -95,7 +95,6 @@ namespace azurlane_wiki_app.Data.Tables
         public int? ASWKai120 { get; set; }
         public int? OxygenKai120 { get; set; }
         public int? AmmoKai120 { get; set; }
-
         [MaxLength(50)]
         public string Eq1EffInit { get; set; }
         [MaxLength(50)]
@@ -115,15 +114,8 @@ namespace azurlane_wiki_app.Data.Tables
         [MaxLength(50)]
         public string Eq3EffInitKai { get; set; }
 
-        [JsonProperty("LB1")]
-        [MaxLength(250)]
-        public string LimitBreak1 { get; set; }
-        [JsonProperty("LB2")]
-        [MaxLength(250)]
-        public string LimitBreak2 { get; set; }
-        [JsonProperty("LB3")]
-        [MaxLength(250)]
-        public string LimitBreak3 { get; set; }
+        #endregion
+
         // Images
         [MaxLength(250)]
         public string Image { get; set; }
@@ -201,6 +193,14 @@ namespace azurlane_wiki_app.Data.Tables
         public string Eq3Type { get; set; }
         public virtual EquipmentType FK_Eq3Type { get; set; }
 
+
+
+        public virtual ShipGirlImages FK_Images { get; set; }
+        public virtual ShipGirlStats FK_InitialStats { get; set; }
+        public virtual ShipGirlStats FK_Level100Stats { get; set; }
+        public virtual ShipGirlStats FK_Level120Stats { get; set; }
+        public virtual ShipGirlStats FK_RetrofitStats { get; set; }
+        public virtual ShipGirlRetrofit FK_ShipGirlRetrofit { get; set; }
         #endregion
     }
 }
