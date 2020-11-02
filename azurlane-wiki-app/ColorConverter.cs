@@ -68,7 +68,8 @@ namespace azurlane_wiki_app
             ["Destroyer"] = Brushes.PowderBlue,
             ["Submarine"] = Brushes.PaleGreen,
             ["Submarine Carrier"] = Brushes.PaleGreen,
-            ["Repair Ship"] = Brushes.Aquamarine
+            ["Repair Ship"] = Brushes.Aquamarine,
+            ["Munition Ship"] = Brushes.Aquamarine
         };
 
         private Dictionary<string, Brush> SkillBrushes = new Dictionary<string, Brush>
