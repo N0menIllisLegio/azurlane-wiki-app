@@ -9,7 +9,7 @@ using SQLite.CodeFirst;
 
 namespace azurlane_wiki_app.Data
 {
-    class CargoContext : DbContext
+    public class CargoContext : DbContext
     {
         public DbSet<ShipGirl> ShipGirls { get; set; }
         public DbSet<ShipGirlStats> ShipGirlsStats { get; set; }

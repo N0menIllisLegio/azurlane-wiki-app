@@ -1,12 +1,238 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using azurlane_wiki_app.Data.Downloaders.ServerModels;
 using Newtonsoft.Json;
 
 namespace azurlane_wiki_app.Data.Tables
 {
     public class ShipGirl
     {
+        private readonly Dictionary<string, string> Abbreviations = new Dictionary<string, string>
+        {
+            ["Destroyer"] = "DD",
+            ["Light Cruiser"] = "CL",
+            ["Heavy Cruiser"] = "CA",
+            ["Aircraft Carrier"] = "CV",
+            ["Light Aircraft Carrier"] = "CVL",
+            ["Battleship"] = "BB",
+            ["Submarine"] = "SS",
+            ["Large Cruiser"] = "CB",
+            ["Repair Ship"] = "AR",
+            ["Battlecruiser"] = "BC",
+            ["Monitor"] = "BM",
+            ["Submarine Carrier"] = "SSV",
+            ["Aviation Battleship"] = "BBV",
+            ["Munition Ship"] = "AE"
+        };
+
+        /// <summary>
+        /// Coin, Oil, Medal
+        /// </summary>
+        private readonly Dictionary<string, (int?, int?, int?)> ScrapValues = new Dictionary<string, (int?, int?, int?)>
+        {
+            ["Ultra Rare"] = (4, 3, 30),
+            ["Super Rare"] = (4, 3, 10),
+            ["Elite"] = (4, 3, 4),
+            ["Rare"] = (4, 3, 1),
+            ["Normal"] = (4, 3, 0),
+            ["Priority"] = (null, null, null),
+            ["Decisive"] = (null, null, null),
+            ["Unreleased"] = (null, null, null)
+        };
+
+        private string Refactor(string text)
+        {
+            string refactoredText = text.Replace(@"&amp;#39;", "\'");
+
+            return refactoredText;
+        }
+
+        public ShipGirl(RequestShipGirlModel shipGirlModel, CargoContext cargoContext)
+        {
+            WhereToGetShipGirl = new List<ShipGirlWhereToGetShipGirl>();
+            Skills = new List<Skill>();
+
+            ShipID = shipGirlModel.ShipID;
+            Name = Refactor(shipGirlModel.Name);
+            ConstructTime = shipGirlModel.ConstructTime;
+            Remodel = shipGirlModel.Remodel;
+            Armor = shipGirlModel.Armor;
+            Speed = shipGirlModel.Speed;
+            Luck = shipGirlModel.Luck;
+            LimitBreak1 = shipGirlModel.LB1;
+            LimitBreak2 = shipGirlModel.LB2;
+            LimitBreak3 = shipGirlModel.LB3;
+
+            var initStats = shipGirlModel.GetStats(Stats.Initial);
+            var level100Stats = shipGirlModel.GetStats(Stats.Level100);
+            var level120Stats = shipGirlModel.GetStats(Stats.Level120);
+
+            cargoContext.ShipGirlsStats.Add(initStats);
+            cargoContext.ShipGirlsStats.Add(level100Stats);
+            cargoContext.ShipGirlsStats.Add(level120Stats);
+
+            var standardImages = shipGirlModel.GetImages(Images.Standard);
+            cargoContext.ShipGirlsImages.Add(standardImages);
+
+            if (shipGirlModel.Remodel == "t")
+            {
+                var initRetrofitedStats = shipGirlModel.GetStats(Stats.RetrofitedInitial);
+                var level120RetrofitedStats = shipGirlModel.GetStats(Stats.Retrofited120);
+                var retrofitedImages = shipGirlModel.GetImages(Images.Retrofited);
+
+                var retrofit = new ShipGirlRetrofit
+                {
+                    FK_Images = retrofitedImages,
+                    FK_InitialStats = initRetrofitedStats,
+                    FK_Level120Stats = level120RetrofitedStats
+                };
+
+                cargoContext.ShipGirlsStats.Add(initRetrofitedStats);
+                cargoContext.ShipGirlsStats.Add(level120RetrofitedStats);
+                cargoContext.ShipGirlsImages.Add(retrofitedImages);
+                cargoContext.ShipGirlsRetrofits.Add(retrofit);
+
+                FK_ShipGirlRetrofit = retrofit;
+            }
+
+            FK_Images = standardImages;
+            FK_InitialStats = initStats;
+            FK_Level100Stats = level100Stats;
+            FK_Level120Stats = level120Stats;
+
+            Rarity rarity = cargoContext.Rarities.Find(shipGirlModel.Rarity);
+            Nationality nationality = cargoContext.Nationalities.Find(shipGirlModel.Nationality);
+            ShipClass shipClass = cargoContext.ShipClasses.Find(shipGirlModel.Class);
+            ShipGroup shipGroup = cargoContext.ShipGroups.Find(shipGirlModel.ShipGroup);
+            ShipType shipType = cargoContext.ShipTypes.Find(shipGirlModel.Type);
+            ShipType subtypeRetro = cargoContext.ShipTypes.Find(shipGirlModel.SubtypeRetro);
+            EquipmentType eq1Type = cargoContext.EquipmentTypes.Find(shipGirlModel.Eq1Type);
+            EquipmentType eq2Type = cargoContext.EquipmentTypes.Find(shipGirlModel.Eq2Type);
+            EquipmentType eq3Type = cargoContext.EquipmentTypes.Find(shipGirlModel.Eq3Type);
+
+            if (rarity == null)
+            {
+                (int? coins, int? oil, int? medals) = ScrapValues[shipGirlModel.Rarity];
+
+                rarity = new Rarity
+                {
+                    Name = shipGirlModel.Rarity,
+                    FK_Icon = cargoContext.Icons.Find(shipGirlModel.Rarity),
+                    ScrapCoins = coins,
+                    ScrapOil = oil,
+                    ScrapMedals = medals
+                };
+
+                cargoContext.Rarities.Add(rarity);
+            }
+
+            if (nationality == null)
+            {
+                nationality = new Nationality
+                {
+                    Name = shipGirlModel.Nationality,
+                    FK_Icon = cargoContext.Icons.Find(shipGirlModel.Nationality)
+                };
+
+                cargoContext.Nationalities.Add(nationality);
+            }
+
+            if (shipClass == null)
+            {
+                shipClass = new ShipClass { Name = shipGirlModel.Class };
+                cargoContext.ShipClasses.Add(shipClass);
+            }
+
+            if (shipGroup == null)
+            {
+                shipGroup = new ShipGroup { Name = shipGirlModel.ShipGroup };
+                cargoContext.ShipGroups.Add(shipGroup);
+            }
+
+            if (shipType == null)
+            {
+                shipType = new ShipType
+                {
+                    Name = shipGirlModel.Type,
+                    Abbreviation = Abbreviations[shipGirlModel.Type],
+                    FK_Icon = cargoContext.Icons.Find(Abbreviations[shipGirlModel.Type])
+                };
+
+                cargoContext.ShipTypes.Add(shipType);
+            }
+
+            if (subtypeRetro == null)
+            {
+                if (shipGirlModel.SubtypeRetro.Trim() == "")
+                {
+                    shipGirlModel.SubtypeRetro = null;
+                }
+                else
+                {
+                    subtypeRetro = new ShipType
+                    {
+                        Name = shipGirlModel.SubtypeRetro,
+                        Abbreviation = Abbreviations[shipGirlModel.SubtypeRetro],
+                        FK_Icon = cargoContext.Icons.Find(Abbreviations[shipGirlModel.SubtypeRetro])
+                    };
+
+                    cargoContext.ShipTypes.Add(subtypeRetro);
+                }
+            }
+
+            if (eq1Type == null && !string.IsNullOrEmpty(shipGirlModel.Eq1Type))
+            {
+                eq1Type = new EquipmentType { Name = shipGirlModel.Eq1Type };
+                cargoContext.EquipmentTypes.Add(eq1Type);
+            }
+
+            if (eq2Type == null && !string.IsNullOrEmpty(shipGirlModel.Eq1Type))
+            {
+                if (shipGirlModel.Eq2Type == shipGirlModel.Eq1Type)
+                {
+                    eq2Type = eq1Type;
+                }
+                else
+                {
+                    eq2Type = new EquipmentType { Name = shipGirlModel.Eq2Type };
+                    cargoContext.EquipmentTypes.Add(eq2Type);
+                }
+            }
+
+            if (eq3Type == null && !string.IsNullOrEmpty(shipGirlModel.Eq1Type))
+            {
+                if (shipGirlModel.Eq3Type == shipGirlModel.Eq1Type)
+                {
+                    eq3Type = eq1Type;
+                }
+                else
+                {
+                    if (shipGirlModel.Eq3Type == shipGirlModel.Eq2Type)
+                    {
+                        eq3Type = eq2Type;
+                    }
+                    else
+                    {
+                        eq3Type = new EquipmentType { Name = shipGirlModel.Eq3Type };
+                        cargoContext.EquipmentTypes.Add(eq3Type);
+                    }
+                }
+            }
+
+            FK_Rarity = rarity;
+            FK_Nationality = nationality;
+            FK_ShipClass = shipClass;
+            FK_ShipGroup = shipGroup;
+            FK_ShipType = shipType;
+            FK_SubtypeRetro = subtypeRetro;
+
+            FK_Eq1Type = eq1Type;
+            FK_Eq2Type = eq2Type;
+            FK_Eq3Type = eq3Type;
+        }
+
+
         [Key]
         [MaxLength(40)]
         public string ShipID { get; set; }
@@ -21,13 +247,10 @@ namespace azurlane_wiki_app.Data.Tables
         public int? Speed { get; set; }
         public int? Luck { get; set; }
 
-        [JsonProperty("LB1")]
         [MaxLength(1000)]
         public string LimitBreak1 { get; set; }
-        [JsonProperty("LB2")]
         [MaxLength(1000)]
         public string LimitBreak2 { get; set; }
-        [JsonProperty("LB3")]
         [MaxLength(1000)]
         public string LimitBreak3 { get; set; }
 
@@ -199,7 +422,6 @@ namespace azurlane_wiki_app.Data.Tables
         public virtual ShipGirlStats FK_InitialStats { get; set; }
         public virtual ShipGirlStats FK_Level100Stats { get; set; }
         public virtual ShipGirlStats FK_Level120Stats { get; set; }
-        public virtual ShipGirlStats FK_RetrofitStats { get; set; }
         public virtual ShipGirlRetrofit FK_ShipGirlRetrofit { get; set; }
         #endregion
     }

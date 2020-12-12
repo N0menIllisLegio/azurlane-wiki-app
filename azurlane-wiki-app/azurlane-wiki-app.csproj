@@ -42,6 +42,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -51,6 +52,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>
@@ -124,6 +126,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\Downloaders\DPSDataDownloader.cs" />
+    <Compile Include="Data\Downloaders\ServerModels\RequestEquipmentModel.cs" />
+    <Compile Include="Data\Downloaders\ServerModels\RequestShipGirlModel.cs" />
     <Compile Include="Data\Tables\EquipmentStats.cs" />
     <Compile Include="Data\Tables\ShipGirlImages.cs" />
     <Compile Include="Data\Tables\ShipGirlRetrofit.cs" />
@@ -329,9 +333,7 @@
     <Resource Include="Resources\SplashScreenGifs\scared.gif" />
     <Resource Include="Resources\SplashScreenGifs\uni.gif" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Downloaders\ServerModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

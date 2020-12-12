@@ -1,5 +1,7 @@
-﻿using azurlane_wiki_app.Data.Tables;
+﻿using azurlane_wiki_app.Data.Downloaders.ServerModels;
+using azurlane_wiki_app.Data.Tables;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,45 +12,20 @@ namespace azurlane_wiki_app.Data.Downloaders
     class ShipGirlJsonWrapper
     {
         [JsonProperty("title")]
-        public ShipGirl ShipGirl { get; set; }
+        public RequestShipGirlModel ShipGirl { get; set; }
+    }
+
+    class ShipGirlJsonWrapper2
+    {
+        //ShipGirl
+        [JsonProperty("title")]
+        public RequestShipGirlModel ShipGirl { get; set; }
     }
 
     class ShipDownloader : DataDownloader
     {
         private static readonly string KaiImagesFolderPath = ImagesFolderPath + "/Ships/KaiImages";
         private static readonly string NonKaiImagesFolderPath = ImagesFolderPath + "/Ships/Images";
-        private readonly Dictionary<string, string> Abbreviations = new Dictionary<string, string>
-        {
-            ["Destroyer"] = "DD",
-            ["Light Cruiser"] = "CL",
-            ["Heavy Cruiser"] = "CA",
-            ["Aircraft Carrier"] = "CV",
-            ["Light Aircraft Carrier"] = "CVL",
-            ["Battleship"] = "BB",
-            ["Submarine"] = "SS",
-            ["Large Cruiser"] = "CB",
-            ["Repair Ship"] = "AR",
-            ["Battlecruiser"] = "BC",
-            ["Monitor"] = "BM",
-            ["Submarine Carrier"] = "SSV",
-            ["Aviation Battleship"] = "BBV",
-            ["Munition Ship"] = "AE"
-        };
-
-        /// <summary>
-        /// Coin, Oil, Medal
-        /// </summary>
-        private readonly Dictionary<string, (int?, int?, int?)> ScrapValues = new Dictionary<string, (int?, int?, int?)>
-        {
-            ["Ultra Rare"] = (4, 3, 30),
-            ["Super Rare"] = (4, 3, 10),
-            ["Elite"] = (4, 3, 4),
-            ["Rare"] = (4, 3, 1),
-            ["Normal"] = (4, 3, 0),
-            ["Priority"] = (null, null, null),
-            ["Decisive"] = (null, null, null),
-            ["Unreleased"] = (null, null, null)
-        };
 
         private const string ShipFields = "ShipGroup,ShipID,Name,Rarity,Nationality,ConstructTime,Type," +
                                           "SubtypeRetro,Class,Remodel,Image,ImageShipyardIcon,ImageChibi,ImageIcon," +
@@ -115,7 +92,7 @@ namespace azurlane_wiki_app.Data.Downloaders
             {
                 StatusImageMessage = "Adding images to download queue.";
 
-                foreach (ShipGirlJsonWrapper wrappedGirl in wrappedGirls)
+                foreach (var wrappedGirl in wrappedGirls)
                 {
                     // Add images in queue for download
                     downloadBlock.Post(wrappedGirl.ShipGirl.Image);
@@ -135,14 +112,13 @@ namespace azurlane_wiki_app.Data.Downloaders
                 StatusImageMessage = "Downloading images.";
                 StatusDataMessage = "Saving data.";
 
-                foreach (ShipGirlJsonWrapper wrappedGirl in wrappedGirls)
+                foreach (var wrappedGirl in wrappedGirls)
                 {
                     if (await cargoContext.ShipGirls.FindAsync(wrappedGirl.ShipGirl.ShipID) == null)
                     {
-                        CreateRelationships(wrappedGirl.ShipGirl, cargoContext);
-                        SavePaths(wrappedGirl.ShipGirl, cargoContext);
-                        wrappedGirl.ShipGirl.Name = Refactor(wrappedGirl.ShipGirl.Name);
-                        cargoContext.ShipGirls.Add(wrappedGirl.ShipGirl);
+                        SetImagesPaths(wrappedGirl.ShipGirl);
+                        cargoContext.ShipGirls.Add(new ShipGirl(wrappedGirl.ShipGirl, cargoContext));
+                        await cargoContext.SaveChangesAsync();
                     }
 
                     lock (locker)
@@ -165,6 +141,8 @@ namespace azurlane_wiki_app.Data.Downloaders
         /// <param name="id">Ship Girl's id</param>
         public override async Task Download(string id)
         {
+            throw new NotImplementedException();
+
             Status = Statuses.InProgress;
             List<ShipGirlJsonWrapper> wrappedGirls;
 
@@ -209,22 +187,24 @@ namespace azurlane_wiki_app.Data.Downloaders
                 downloadBlock.Post(wrappedGirl.ShipGirl.ImageIconKai);
                 downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIcon);
                 downloadBlock.Post(wrappedGirl.ShipGirl.ImageShipyardIconKai);
+
                 
-                CreateRelationships(wrappedGirl.ShipGirl, cargoContext);
-                SavePaths(wrappedGirl.ShipGirl, cargoContext);
-                wrappedGirl.ShipGirl.Name = Refactor(wrappedGirl.ShipGirl.Name);
+                
+                //CreateRelationships(wrappedGirl.ShipGirl, cargoContext);
+                //SavePaths(wrappedGirl.ShipGirl, cargoContext);
+                //wrappedGirl.ShipGirl.Name = Refactor(wrappedGirl.ShipGirl.Name);
 
-                if (await cargoContext.ShipGirls.FindAsync(wrappedGirl.ShipGirl.ShipID) == null)
-                {
-                    cargoContext.ShipGirls.Add(wrappedGirl.ShipGirl);
-                    await cargoContext.SaveChangesAsync();
-                }
-                else
-                {
-                    await cargoContext.Update(wrappedGirl.ShipGirl);
-                }
+                //if (await cargoContext.ShipGirls.FindAsync(wrappedGirl.ShipGirl.ShipID) == null)
+                //{
+                //    cargoContext.ShipGirls.Add(wrappedGirl.ShipGirl);
+                //    await cargoContext.SaveChangesAsync();
+                //}
+                //else
+                //{
+                //    await cargoContext.Update(wrappedGirl.ShipGirl);
+                //}
 
-                downloadBlock.Complete();
+                //downloadBlock.Complete();
             }
 
             downloadBlock.Completion.Wait();
@@ -300,190 +280,46 @@ namespace azurlane_wiki_app.Data.Downloaders
             return folderName;
         }
 
-        /// <summary>
-        /// Create relationships depending on values of shipGirl.{ nationality, rarity, class, type, group }.
-        /// If { nationality, rarity, class, type, group } doesn't exists, creates it.
-        /// </summary>
-        /// <param name="shipGirl">ShipGirl</param>
-        /// <param name="cargoContext">CargoContext</param>
-        private void CreateRelationships(ShipGirl shipGirl, CargoContext cargoContext)
-        {
-            Rarity rarity = cargoContext.Rarities.Find(shipGirl.Rarity);
-            Nationality nationality = cargoContext.Nationalities.Find(shipGirl.Nationality);
-            ShipClass shipClass = cargoContext.ShipClasses.Find(shipGirl.Class);
-            ShipGroup shipGroup = cargoContext.ShipGroups.Find(shipGirl.ShipGroup);
+        //private void SaveShipGirl(RequestShipGirlModel requestedShipGirl, CargoContext cargoContext)
+        //{
+        //    CreateRelationships(wrappedGirl.ShipGirl, cargoContext);
+        //    SavePaths(wrappedGirl.ShipGirl, cargoContext);
+        //    wrappedGirl.ShipGirl.Name = Refactor(wrappedGirl.ShipGirl.Name);
+        //    cargoContext.ShipGirls.Add(wrappedGirl.ShipGirl);
+        //}
 
-            ShipType shipType = cargoContext.ShipTypes.Find(shipGirl.Type);
-            ShipType subtypeRetro = cargoContext.ShipTypes.Find(shipGirl.SubtypeRetro);
-
-            EquipmentType eq1Type = cargoContext.EquipmentTypes.Find(shipGirl.Eq1Type);
-            EquipmentType eq2Type = cargoContext.EquipmentTypes.Find(shipGirl.Eq2Type);
-            EquipmentType eq3Type = cargoContext.EquipmentTypes.Find(shipGirl.Eq3Type);
-
-            if (rarity == null)
-            {
-                (int? coins, int? oil, int? medals) = ScrapValues[shipGirl.Rarity];
-
-                rarity = new Rarity
-                {
-                    Name = shipGirl.Rarity,
-                    FK_Icon = cargoContext.Icons.Find(shipGirl.Rarity),
-                    ScrapCoins = coins,
-                    ScrapOil = oil,
-                    ScrapMedals = medals
-                };
-
-                cargoContext.Rarities.Add(rarity);
-            }
-            
-            if (nationality == null)
-            {
-                nationality = new Nationality
-                {
-                    Name = shipGirl.Nationality,
-                    FK_Icon = cargoContext.Icons.Find(shipGirl.Nationality)
-                };
-
-                cargoContext.Nationalities.Add(nationality);
-            }
-
-            if (shipClass == null)
-            {
-                shipClass = new ShipClass { Name = shipGirl.Class };
-                cargoContext.ShipClasses.Add(shipClass);
-            }
-
-            if (shipGroup == null)
-            {
-                shipGroup = new ShipGroup { Name = shipGirl.ShipGroup };
-                cargoContext.ShipGroups.Add(shipGroup);
-            }
-
-            if (shipType == null)
-            {
-                shipType = new ShipType
-                {
-                    Name = shipGirl.Type,
-                    Abbreviation = Abbreviations[shipGirl.Type],
-                    FK_Icon = cargoContext.Icons.Find(Abbreviations[shipGirl.Type])
-                };
-
-                cargoContext.ShipTypes.Add(shipType);
-            }
-
-            if (subtypeRetro == null)
-            {
-                if (shipGirl.SubtypeRetro.Trim() == "")
-                {
-                    shipGirl.SubtypeRetro = null;
-                }
-                else
-                {
-                    subtypeRetro = new ShipType
-                    {
-                        Name = shipGirl.SubtypeRetro,
-                        Abbreviation = Abbreviations[shipGirl.SubtypeRetro],
-                        FK_Icon = cargoContext.Icons.Find(Abbreviations[shipGirl.SubtypeRetro])
-                    };
-
-                    cargoContext.ShipTypes.Add(subtypeRetro);
-                }
-            }
-
-            if (eq1Type == null && !string.IsNullOrEmpty(shipGirl.Eq1Type))
-            {
-                eq1Type = new EquipmentType {Name = shipGirl.Eq1Type};
-                cargoContext.EquipmentTypes.Add(eq1Type);
-            }
-
-            if (eq2Type == null && !string.IsNullOrEmpty(shipGirl.Eq1Type))
-            {
-                if (shipGirl.Eq2Type == shipGirl.Eq1Type)
-                {
-                    eq2Type = eq1Type;
-                }
-                else
-                {
-                    eq2Type = new EquipmentType { Name = shipGirl.Eq2Type };
-                    cargoContext.EquipmentTypes.Add(eq2Type);
-                }
-            }
-
-            if (eq3Type == null && !string.IsNullOrEmpty(shipGirl.Eq1Type))
-            {
-                if (shipGirl.Eq3Type == shipGirl.Eq1Type)
-                {
-                    eq3Type = eq1Type;
-                }
-                else
-                {
-                    if (shipGirl.Eq3Type == shipGirl.Eq2Type)
-                    {
-                        eq3Type = eq2Type;
-                    }
-                    else
-                    {
-                        eq3Type = new EquipmentType { Name = shipGirl.Eq3Type };
-                        cargoContext.EquipmentTypes.Add(eq3Type);
-                    }
-                }
-            }
-
-            shipGirl.FK_Rarity = rarity;
-            shipGirl.FK_Nationality = nationality;
-            shipGirl.FK_ShipClass = shipClass;
-            shipGirl.FK_ShipGroup = shipGroup;
-            shipGirl.FK_ShipType = shipType;
-            shipGirl.FK_SubtypeRetro = subtypeRetro;
-
-            shipGirl.FK_Eq1Type = eq1Type;
-            shipGirl.FK_Eq2Type = eq2Type;
-            shipGirl.FK_Eq3Type = eq3Type;
-
-            AddStats(shipGirl, cargoContext);
-
-            cargoContext.SaveChanges();
-        }
+        
 
         /// <summary>
         /// Change ShipGirls image fields from image name to relative path to image
         /// </summary>
         /// <param name="shipGirl">ShipGirl for changing</param>
-        private void SavePaths(ShipGirl shipGirl, CargoContext cargoContext)
+        private void SetImagesPaths(RequestShipGirlModel shipGirl)
         {
-            var images = new ShipGirlImages();
-
-            images.Image = shipGirl.Image = GetImageFolder(shipGirl.Image) + "/" + RefactorImageName(shipGirl.Image);
-            images.ImageIcon = shipGirl.ImageIcon = GetImageFolder(shipGirl.ImageIcon) + "/" + RefactorImageName(shipGirl.ImageIcon);
-            images.ImageBanner = shipGirl.ImageBanner = GetImageFolder(shipGirl.ImageBanner) + "/" + RefactorImageName(shipGirl.ImageBanner);
-            images.ImageChibi = shipGirl.ImageChibi = GetImageFolder(shipGirl.ImageChibi) + "/" + RefactorImageName(shipGirl.ImageChibi);
-            images.ImageShipyardIcon = shipGirl.ImageShipyardIcon = GetImageFolder(shipGirl.ImageShipyardIcon) + "/" + RefactorImageName(shipGirl.ImageShipyardIcon);
-
-            shipGirl.FK_Images = images;
-            cargoContext.ShipGirlsImages.Add(images);
-
-            // Kai
-            shipGirl.ImageShipyardIconKai = !string.IsNullOrEmpty(shipGirl.ImageShipyardIconKai) 
-                ? GetImageFolder(shipGirl.ImageShipyardIconKai) + "/" + RefactorImageName(shipGirl.ImageShipyardIconKai)
-                : null;
-            shipGirl.ImageBannerKai = !string.IsNullOrEmpty(shipGirl.ImageBannerKai) 
-                ? GetImageFolder(shipGirl.ImageBannerKai) + "/" + RefactorImageName(shipGirl.ImageBannerKai)
-                : null;
-            shipGirl.ImageKai = !string.IsNullOrEmpty(shipGirl.ImageKai) 
-                ? GetImageFolder(shipGirl.ImageKai) + "/" + RefactorImageName(shipGirl.ImageKai)
-                : null;
-            shipGirl.ImageIconKai = !string.IsNullOrEmpty(shipGirl.ImageIconKai)
-                ? GetImageFolder(shipGirl.ImageIconKai) + "/" + RefactorImageName(shipGirl.ImageIconKai)
-                : null;
-            shipGirl.ImageChibiKai = !string.IsNullOrEmpty(shipGirl.ImageChibiKai)
-                ? GetImageFolder(shipGirl.ImageChibiKai) + "/" + RefactorImageName(shipGirl.ImageChibiKai)
-                : null;
+            shipGirl.Image = GetImageFolder(shipGirl.Image) + "/" + RefactorImageName(shipGirl.Image);
+            shipGirl.ImageIcon = GetImageFolder(shipGirl.ImageIcon) + "/" + RefactorImageName(shipGirl.ImageIcon);
+            shipGirl.ImageBanner = GetImageFolder(shipGirl.ImageBanner) + "/" + RefactorImageName(shipGirl.ImageBanner);
+            shipGirl.ImageChibi = GetImageFolder(shipGirl.ImageChibi) + "/" + RefactorImageName(shipGirl.ImageChibi);
+            shipGirl.ImageShipyardIcon = GetImageFolder(shipGirl.ImageShipyardIcon) + "/" + RefactorImageName(shipGirl.ImageShipyardIcon);
 
             if (shipGirl.Remodel == "t")
             {
-                AddRetrofit(shipGirl, cargoContext);
+                shipGirl.ImageShipyardIconKai = !string.IsNullOrEmpty(shipGirl.ImageShipyardIconKai)
+                    ? GetImageFolder(shipGirl.ImageShipyardIconKai) + "/" + RefactorImageName(shipGirl.ImageShipyardIconKai)
+                    : null;
+                shipGirl.ImageBannerKai = !string.IsNullOrEmpty(shipGirl.ImageBannerKai)
+                    ? GetImageFolder(shipGirl.ImageBannerKai) + "/" + RefactorImageName(shipGirl.ImageBannerKai)
+                    : null;
+                shipGirl.ImageKai = !string.IsNullOrEmpty(shipGirl.ImageKai)
+                    ? GetImageFolder(shipGirl.ImageKai) + "/" + RefactorImageName(shipGirl.ImageKai)
+                    : null;
+                shipGirl.ImageIconKai = !string.IsNullOrEmpty(shipGirl.ImageIconKai)
+                    ? GetImageFolder(shipGirl.ImageIconKai) + "/" + RefactorImageName(shipGirl.ImageIconKai)
+                    : null;
+                shipGirl.ImageChibiKai = !string.IsNullOrEmpty(shipGirl.ImageChibiKai)
+                    ? GetImageFolder(shipGirl.ImageChibiKai) + "/" + RefactorImageName(shipGirl.ImageChibiKai)
+                    : null;
             }
-
         }
 
         private string Refactor(string text)
